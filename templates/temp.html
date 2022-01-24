@@ -1,0 +1,348 @@
+<!--
+sudo service apache2 restart
+-->
+
+<link rel="shortcut icon" href="static/icon_wht.png">
+<head>
+<title>Fandom Map</title>
+<meta name="google-signin-scope" content="profile email">
+<meta name="google-signin-client_id" content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com">
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css">
+<link rel="stylesheet"href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://unpkg.com/konva@8/konva.min.js"></script>
+
+</head>
+<style>
+html,body{
+font-family: Arial;
+padding: 0;
+margin: 0;
+height:100%;
+overflow-y:hidden;
+}
+#sidebar,#userbar{
+float: left;
+height: 100%;
+position: fixed;
+z-index: 5;
+width: 25%;
+background-image:linear-gradient(to right,black,rgba(255,0,0,0));
+padding-top: 100px;
+color: white;
+}
+#userbar{
+right:0;
+background-image:linear-gradient(to left,black,rgba(255,0,0,0));
+text-align: right;
+align-items: right;
+margin-left:100%;
+margin-right:0;
+text-align: right;
+margin: auto;
+
+}
+#sidebarbox>a>div,#sidebarclose{
+z-index: 10;
+margin: 5%;
+cursor: pointer;
+padding: 5%;
+}
+#sidebarbox>a:link{text-decoration: none}
+#sidebarbox>a>div:hover,#sidebarclose:hover{background-color: blue}
+.sidebarbutton,.userbutton{
+position:fixed;
+height: 60px;
+width:60px;
+border-radius: 5px;
+display:block;
+background: #0080ff;
+z-index:9;
+text-align:center;
+color: white;
+padding: 10px 15px 10px;
+top: 0;
+}
+.important{
+height: 60px;
+border-radius: 5px;
+display:block;
+background: #0080ff;
+text-align:center;
+color: white;
+padding: 10px 15px 10px;
+border: none;
+margin: 5%;
+align-items: center;
+margin-left:auto;
+margin-right:auto;
+}
+.userbutton,#signin{right:0}
+#userbar>div>div{
+margin: 5%;
+padding: 5%;
+}
+#signout{display:none}
+#popupbox{
+background-color: black;
+margin-left: auto;
+margin-right: auto;
+display:block;
+width:80%;
+z-index:9;
+left: 0;
+right: 0;
+position:fixed;
+height: 60px;
+border-radius: 5px;
+background: #0080ff;
+text-align:center;
+color: white;
+padding:20px;
+bottom: 0;
+display: none;
+}
+#popupbox>button{
+float: right;
+background-color: #ffffff00;
+border: none;
+cursor: pointer;
+color: white;
+}
+#dropimgdiv{
+width: 100%;
+height: 100%;
+z-index: 2;
+align-items: center;
+margin-left:auto;
+margin-right:auto;
+text-align: center;
+margin: auto;
+padding: 20% 0;
+
+}
+#c{
+    z-index: 0;
+}
+
+</style>
+<button class="w3-button w3-xlarge sidebarbutton" onclick="sidebarbtn()">☰</button>
+<button class="w3-button w3-xlarge userbutton" onclick="userbarbtn()"><img src="static/user.png" height="50%"></button>
+<div id='popupbox'><a id=popupmsg>Message</a><button  onclick='popupbtn()'>X</button></div>
+<div class="sidebar" style="display:none" id="sidebar">
+<div id='sidebarclose' onclick="sidebarbtn()">Close X</div>
+<div id='sidebarbox'></div>
+</div><!--sidebar-->
+<div style="display:none" id="userbar">
+<div id='sidebarclose' onclick="userbarbtn()">Close X</div>
+<div id='signin'class="g-signin2"data-onsuccess="onSignIn"data-theme="dark"></div>
+<button id='signout' onclick="signOut()">Sign out</button>
+<div id='profile'></div>
+</div><!--userbar-->
+
+<div id="c" style="position: fixed;"></div>
+
+<script>
+var stage
+var mobile=false
+let data={id:'{{id}}',
+name:'{{name}}',
+email:'{{email}}',
+author:'{{author}}',
+json:'{{json}}'}
+var id=data.id
+$(document).ready(function(){
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){mobile=true}
+
+Konva.hitOnDragEnabled = true;
+var stage = new Konva.Stage({
+container: 'c',
+width: window.innerWidth,
+height: window.innerHeight,
+draggable: true
+
+});
+var layer = new Konva.Layer();
+var map = new Konva.Layer();
+var rect1 = new Konva.Rect({
+x: 0,
+y: 0,
+width: 200,
+height: 200,
+fill: 'green',
+stroke: 'black',
+strokeWidth: 4,
+});
+map.add(rect1) 
+Konva.Image.fromURL('static/1_map.png', function (mapimg) {
+    mapimg.setAttrs({
+          x: 0,
+          y: 0,
+        });
+        map.add(mapimg);
+    })
+if(!mobile){stage.add(layer)}
+stage.add(map);
+var SIZE = 200;
+checkShapes(SIZE);
+layer.draw();
+stage.on('wheel',(e)=>{
+SIZE=Math.round(1/stage.scaleX())*200
+})
+
+stage.on('dragend touchend wheel', () => {
+layer.destroyChildren();
+checkShapes(SIZE);
+layer.draw();
+})
+stagesetup(stage)
+function checkShapes(SIZE) {
+const startX = Math.floor((-stage.x()-stage.width())/stage.scaleX()/SIZE)*SIZE
+const endX = Math.floor((-stage.x()+stage.width()*2)/stage.scaleX()/SIZE)*SIZE
+const startY = Math.floor((-stage.y()-stage.height())/stage.scaleX()/SIZE)*SIZE
+const endY = Math.floor((-stage.y()+stage.height()*2)/stage.scaleX()/SIZE)*SIZE
+for (var x=startX;x<endX;x+=SIZE) {
+for (var y=startY;y<endY;y+=SIZE) {
+layer.add(new Konva.Rect({
+x,y,width:SIZE,height:SIZE,
+stroke:'#e6e6e6',
+strokeWidth:1
+}))}}}//checkShapes
+
+//url:'static/'+id+'_maps.png',
+
+
+$.ajax({
+url:'static/'+id+'_map.png',
+error:function(){
+   // $('#dropimgdiv').show()
+
+    popup(data.name+' does not have map image, please insert image from dialog above.')
+},
+success:function(){console.log('file exists')}
+});
+})//ready
+function dragOverHandler(ev){ev.preventDefault()}
+
+$('#upload').on('click', function () {
+var form_data = new FormData();
+form_data.append("files[]", document.getElementById('multiFiles').files[0]);
+$.ajax({
+url: '$upload'+data.id,
+dataType: 'json',
+cache: false,
+contentType: false,
+processData: false,
+data: form_data,
+type: 'post',
+success:function (response){$('#msg').append(response)}});
+});//upload
+
+
+function stagesetup(stage){
+stage.on('dragmove',()=>{document.body.style.cursor='move'});
+stage.on('dragend',()=>{document.body.style.cursor='default'});
+stage.on('wheel', (e) => {
+e.evt.preventDefault();
+var oldScale = stage.scaleX();
+var pointer = stage.getPointerPosition();
+var mousePointTo = {x: (pointer.x - stage.x()) / oldScale,y: (pointer.y - stage.y()) / oldScale,};
+var newScale =e.evt.deltaY > 0 ?  oldScale / 1.1: oldScale * 1.1;
+stage.scale({ x: newScale, y: newScale });
+var newPos = {x: pointer.x - mousePointTo.x * newScale,y: pointer.y - mousePointTo.y * newScale,};
+stage.position(newPos);
+stage.batchDraw();
+})
+
+function getDistance(p1, p2) {
+return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+}
+
+function getCenter(p1, p2) {
+return {
+x: (p1.x + p2.x) / 2,
+y: (p1.y + p2.y) / 2,
+};
+}
+var lastCenter = null;
+var lastDist = 0;
+
+stage.on('touchmove', function (e) {
+e.evt.preventDefault();
+var touch1 = e.evt.touches[0];
+var touch2 = e.evt.touches[1];
+if (touch1 && touch2) {//touch1 && touch2
+if (stage.isDragging()) {
+stage.stopDrag();
+}
+
+var p1={x:touch1.clientX,y:touch1.clientY}
+var p2={x:touch2.clientX,y:touch2.clientY}
+if (!lastCenter) {
+lastCenter = getCenter(p1, p2);
+return;
+}
+var newCenter = getCenter(p1, p2);
+var dist = getDistance(p1, p2);
+if (!lastDist) {
+lastDist = dist;
+}
+var pointTo = {
+x: (newCenter.x - stage.x()) / stage.scaleX(),
+y: (newCenter.y - stage.y()) / stage.scaleX(),
+};
+var scale = stage.scaleX() * (dist / lastDist);
+stage.scaleX(scale);
+stage.scaleY(scale);
+var dx = newCenter.x - lastCenter.x;
+var dy = newCenter.y - lastCenter.y;
+var newPos = {
+x: newCenter.x - pointTo.x * scale + dx,
+y: newCenter.y - pointTo.y * scale + dy,
+};
+stage.position(newPos);
+lastDist = dist;
+lastCenter = newCenter;
+}
+});
+
+stage.on('touchend', function () {
+lastDist = 0;
+lastCenter = null;
+});
+
+
+}//stagesetup
+function signOut(){
+$('#signout').hide()
+$('#signin').show()
+gapi.auth2.getAuthInstance().signOut()
+$('#profile').html('')
+}
+
+function onSignIn(googleUser){
+$('#signin').hide()
+$('#signout').show()
+
+var profile=googleUser.getBasicProfile();
+console.log('Full Name: '+profile.getName());
+console.log('Email: '+profile.getEmail());
+$('#profile').html('<div>Full Name:</div><div>'+profile.getName()+'</div><div>Email:</div><div>'+profile.getEmail()+'</div>')
+}
+
+function sidebarbtn(){$('#sidebar').toggle("slide")}
+function userbarbtn(){$('#userbar').toggle("slide")}
+function popupbtn(){$('#popupbox').slideToggle()}
+
+function popup(msg){
+if($('#popupbox').is(':visible')){$('#popupbox').slideToggle()}
+$('#popupmsg').html(msg)
+$('#popupbox').slideToggle()
+}//popup
+
+
+</script>

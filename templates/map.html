@@ -1,0 +1,639 @@
+<!--
+sudo service apache2 restart
+-->
+
+<link rel="shortcut icon" href="static/icon_wht.png">
+<head>
+<title>Fandom Map</title>
+<meta name="google-signin-scope" content="profile email">
+<meta name="google-signin-client_id" content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com">
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css">
+<link rel="stylesheet"href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://unpkg.com/konva@8/konva.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+
+</head>
+<style>
+html,body{
+font-family: Arial;
+padding: 0;
+margin: 0;
+height:100%;
+overflow-y:hidden;
+}
+#sidebar,#userbar{
+overflow-y: scroll;
+overflow-x: hidden;
+float: left;
+height: 100%;
+position: fixed;
+z-index: 5;
+width: 25%;
+background-image:linear-gradient(to right,black,rgba(0, 0, 0, 0.05));
+padding-top: 60px;
+color: white;
+}
+
+#userbar{
+right:0;
+background-image:linear-gradient(to left,black,rgba(0, 0, 0, 0.05 ));
+text-align: right;
+align-items: right;
+margin-left:100%;
+margin-right:0;
+text-align: right;
+margin: auto;
+
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgb(0, 0, 0,0); 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+#sidebarbox>a>div,#sidebarclose,#edit,.edittool{
+z-index: 10;
+margin: 3%;
+cursor: pointer;
+padding: 3%;
+}
+#sidebarbox>a:link{text-decoration: none}
+#sidebarbox>a>div:hover,#edit:hover,.edittool:hover,#sidebarclose:hover{
+background-color: #0080ff}
+.sidebarbutton,.userbutton{
+position:fixed;
+height: 60px;
+width:60px;
+border-radius: 5px;
+display:block;
+background: #0080ff;
+z-index:9;
+text-align:center;
+color: white;
+padding: 10px 15px 10px;
+top: 0;
+}
+.important{
+height: 60px;
+border-radius: 5px;
+display:block;
+background: #0080ff;
+text-align:center;
+color: white;
+padding: 10px 15px 10px;
+border: none;
+margin: 5%;
+align-items: center;
+margin-left:auto;
+margin-right:auto;
+}
+.userbutton,#signin{right:0}
+#userbar>div>div{
+margin: 5%;
+padding: 5%;
+}
+#signout{display:none}
+#popupbox{
+background-color: black;
+margin-left: auto;
+margin-right: auto;
+display:block;
+width:80%;
+bottom:0px;
+position: fixed;
+z-index:9;
+left: 0;
+right: 0;
+position:fixed;
+height: 60px;
+border-radius: 5px;
+background: #0080ff;
+z-index:9;
+text-align:center;
+color: white;
+padding:20px;
+bottom: 0;
+margin-left: auto;
+margin-right: auto;
+display:block;
+width:80%;
+display: none;
+}
+
+#popupbox>button{
+float: right;
+background-color: #ffffff00;
+border: none;
+cursor: pointer;
+color: white;
+}
+#dropimgdiv{
+width: 100%;
+height: 100%;
+z-index: 2;
+align-items: center;
+margin-left:auto;
+margin-right:auto;
+text-align: center;
+margin: auto;
+padding: 20% 0;
+display: none;
+}
+#c{
+z-index: 0;
+}
+#mapinfo>div>h2,#mapinfo>div>a,#sortable>div>a{
+display: inline;
+}
+#mapinfo>div>a,#sortable>div>a{
+padding-top: 5%;
+float: right;
+font-size: 150%;
+
+}
+#mapinfo>div>h2{
+width: 90%;
+overflow-x: hidden;
+line-height: normal;
+display:inline-block;
+margin: 0;
+}
+#mapinfo>div,#mapinfo>div>p{
+
+padding-top: 3%;
+padding-bottom: 3%;
+border-radius: 5px;
+border:2px #0080ff;
+border-style:solid ;
+background-color:rgb(0, 128, 255,0.5);
+margin-left: 5%;
+
+cursor: pointer;
+padding-left: 2%;
+line-height: 0;
+margin-bottom: 5%;
+}
+
+#mapinfo,#sortable{
+margin-right: 5%;
+
+}
+#mapinfo>div>p{
+line-height: 0;
+}
+#mapinfo>div>div>p:nth-child(even){
+font-weight:bold;
+}
+#mapinfo>div>div>p:nth-child(odd){
+color: grey;
+margin-top:10%
+}
+#edit{
+display: none;
+}
+.edittool{
+display: none;
+}
+#sortable>div>h2{
+width: 90%;
+overflow-x: hidden;
+line-height: normal;
+display:inline-block;
+margin: 0;
+}
+#sortable>div,#sortable>p {
+padding-top: 3%;
+padding-bottom: 3%;
+border-radius: 5px;
+border:2px #0080ff;
+border-style:solid ;
+background-color:rgb(0, 128, 255,0.5);
+margin-left: 5%;
+cursor: pointer;
+padding-left: 2%;
+line-height: 0;
+
+border-radius: 5px;
+border:2px #0080ff;
+border-style: solid;
+margin-bottom: 5%;
+}
+
+
+#sortable>div > h2 {
+display: inline;
+}
+
+#sortable {
+height: 100%;
+}
+input{
+width: 100%;
+
+outline:0;
+border-width: 0 0 2px;
+border-color: #0080ff;
+background-color: rgba(0,0,0,0.1);
+color: white;
+}
+#sortable>div>div{
+min-height:5%
+  }
+</style>
+
+
+<button class="w3-button w3-xlarge sidebarbutton" onclick="sidebarbtn()">☰</button>
+<button class="w3-button w3-xlarge userbutton" onclick="userbarbtn()"><img src="static/user.png" height="50%"></button>
+<div id='popupbox'><a id=popupmsg>Message</a><button  onclick='popupbtn()'>X</button></div>
+<div class="sidebar" style="display:none" id="sidebar">
+<div id='sidebarclose' onclick="sidebarbtn()">X Close</div>
+<div id='edit'>✎ Map Author only: Edit Mode</div>
+<div class='edittool' id='addcategory'>+ Add Category</div>
+<div class='edittool' id='addwaypoint'>+ Add Waypoint</div>
+
+<div id='mapinfo'></div>
+<div id='sortable'></div>
+</div><!--sidebar-->
+<div style="display:none" id="userbar">
+<div id='sidebarclose' onclick="userbarbtn()">Close X</div>
+<div id='signin'class="g-signin2"data-onsuccess="onSignIn"data-theme="dark"></div>
+<button id='signout' onclick="signOut()">Sign out</button>
+<div id='profile'></div>
+</div><!--userbar-->
+<div id='dropimgdiv'>
+<h1>Create Map Image by inserting .jpeg / .png files.</h1>
+<p id="msg"></p>
+<input type="file" id="multiFiles" name="files[]"/>
+<button id="upload">Choose an image to upload</button>
+</div>
+<div id="c" style="position: fixed;"></div>
+
+<script>
+var enableedit=false
+var stage
+var filename
+var mobile=false
+var layer
+var map
+var json
+var user
+let data={id:'{{id}}',
+name:'{{name}}'.replaceAll('&#39;',"'"),
+email:'{{email}}',
+author:'{{author}}',
+json:['{{json}}'.replaceAll('&#34;','"').replaceAll("'s Map",'s Map').replaceAll('&#39;',"")],
+sortable:'{{sortable}}',
+}
+console.log(data.name)
+
+var id=data.id
+$(document).ready(function(){
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){mobile=true}
+
+Konva.hitOnDragEnabled = true;
+stage = new Konva.Stage({
+container: 'c',
+width: window.innerWidth,
+height: window.innerHeight,
+draggable: true
+
+});
+layer = new Konva.Layer();
+map = new Konva.Layer();
+if(!mobile){stage.add(layer)}
+stage.add(map);
+var SIZE = 200;
+checkShapes(SIZE);
+layer.draw();
+stage.on('wheel',(e)=>{
+SIZE=Math.round(1/stage.scaleX())*200
+})
+
+stage.on('dragend touchend wheel', () => {
+layer.destroyChildren();
+checkShapes(SIZE);
+layer.draw();
+})
+stagesetup(stage)
+function checkShapes(SIZE) {
+const startX = Math.floor((-stage.x()-stage.width())/stage.scaleX()/SIZE)*SIZE
+const endX = Math.floor((-stage.x()+stage.width()*2)/stage.scaleX()/SIZE)*SIZE
+const startY = Math.floor((-stage.y()-stage.height())/stage.scaleX()/SIZE)*SIZE
+const endY = Math.floor((-stage.y()+stage.height()*2)/stage.scaleX()/SIZE)*SIZE
+for (var x=startX;x<endX;x+=SIZE) {
+for (var y=startY;y<endY;y+=SIZE) {
+layer.add(new Konva.Rect({
+x,y,width:SIZE,height:SIZE,
+stroke:'#e6e6e6',
+strokeWidth:1
+}))}}}//checkShapes
+
+filename=false
+$.ajax({url:'static/'+id+'_map.png',
+success:function(){
+filename= id+'_map.png'},error:function(){
+$.ajax({url:'static/'+id+'_map.jpg',
+success:function(){filename= id+'_map.jpg'},error:function(){
+$.ajax({url:'static/'+id+'_map.jpeg',
+success:function(){ filename= id+'_map.jpeg'},error:function(){filename=false}
+})}})}}).done(function(){
+if(filename){
+addmap()
+}else{
+$('#dropimgdiv').show()
+popup(data.name+' does not have map image, please insert image from dialog above.')
+}}).fail(function(){
+$('#dropimgdiv').show()
+popup(data.name+' does not have map image, please insert image from dialog above.')
+})
+
+$.fn.extend({
+toggleText: function(a, b){
+return this.text(this.text() == b ? a : b);
+}
+});
+
+$(document).on('click','#mapinfo>div',function(){
+if(!$(event.target).is('#mapinfo>div>div,#mapinfo>div>div>p')){
+$(this).children('div').toggle()
+$(this).children('a').toggleText(' ▲',' ▼')}
+})
+
+$(document).on("dblclick", "p,h2", function(){
+if(enableedit){
+$(this).html('<input rows="1" value="'+$(this).text()+'">')
+$("input").focus();
+$("input").focus(function() {
+}).blur(function() {
+$(this).parent().html($("input").val());
+});
+}
+})
+
+$('#addcategory').click(function(){
+$('#sortable').append('<div id='+json.count+'><h2>Category '+json.count+'</h2><div></div></div>')
+json.count=json.count+1
+
+update()
+
+activesort()
+
+})//+category
+$('#addwaypoint').click(function(){
+$('#sortable').append('<p id='+json.count+'>Waypoint '+json.count+'</p>')
+json.count=json.count+1
+update()
+activesort()
+})//+waypoint
+
+
+/*
+<div id="sortable">
+<div><h2>Category A</h2>
+<div>
+<p>Channel 1</p>
+<p>Channel 2</p>
+<p>Channel 3</p>
+<p>Channel 4</p>
+</div>
+</div>
+
+<div>
+<h2>Category B</h2>
+<div>
+<p>Channel 5</p>
+<p>Channel 6</p>
+<p>Channel 7</p>
+<p>Channel 8</p>
+</div>
+</div>
+</div>
+*/
+
+})//ready
+function dragOverHandler(ev){ev.preventDefault()}
+
+$('#upload').on('click', function () {
+var form_data = new FormData();
+form_data.append("files[]", document.getElementById('multiFiles').files[0]);
+$.ajax({
+url: '$upload'+data.id,
+cache: false,
+contentType: false,
+processData: false,
+data: form_data,
+type: 'post',
+}).done(function(data){
+filename=data.result
+addmap()
+}).fail(function(data){
+popup(data)
+})
+});//upload
+
+function addmap(){
+$('#dropimgdiv').hide()
+Konva.Image.fromURL('static/'+filename, function (mapimg) {
+mapimg.setAttrs({
+x: 0,
+y: 0,
+});
+map.add(mapimg);
+})
+stage.draw();
+initJson()
+}
+
+function initJson(){
+if (data.json=='{}'){
+json={}
+json.count=0
+json.name=data.name
+json.author=data.author
+var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0');
+var yyyy = today.getFullYear();
+json.date= mm + '/' + dd + '/' + yyyy;
+json.visibility='Public'
+json.waypoint={}
+update()
+}else{
+json=JSON.parse(data.json)
+}
+addbox($('#mapinfo'),json.name,false,['Author',json.author,'Creation Date',json.date,'Visibility',json.visibility,'Share Link','fandommap.github.io/?'+id])
+console.log(data.sortable)
+$('#sortable').parseHTML(data.sortable)
+
+activesort()
+//add category/wp
+}
+function addbox(location,header,id,list,ids){
+
+if (list){
+temp="<div id="+id+"><h2>"+header+"</h2><a> ▼</a><div>"
+for (var i=0;i<list.length;i++){
+if(ids){temp=temp.concat('<p id='+ids[i]+'>'+list[i]+'</p>')
+}else{temp=temp.concat('<p>'+list[i]+'</p>')}}
+location.append(temp.concat("</div></div>"))
+}else{location.append('<p id='+id+'>'+header+'</p>')
+}}
+function update(){
+$.ajax({data:{json:JSON.stringify(json),id:data.id,sortable:$('#sortable').html()},type:'POST',url:'/$update'}).done(function(data){
+console.log('updated')})}
+
+function stagesetup(stage){
+stage.on('dragmove',()=>{document.body.style.cursor='move'});
+stage.on('dragend',()=>{document.body.style.cursor='default'});
+stage.on('wheel', (e) => {
+e.evt.preventDefault();
+var oldScale = stage.scaleX();
+var pointer = stage.getPointerPosition();
+var mousePointTo = {x: (pointer.x - stage.x()) / oldScale,y: (pointer.y - stage.y()) / oldScale,};
+var newScale =e.evt.deltaY > 0 ?  oldScale / 1.1: oldScale * 1.1;
+stage.scale({ x: newScale, y: newScale });
+var newPos = {x: pointer.x - mousePointTo.x * newScale,y: pointer.y - mousePointTo.y * newScale,};
+stage.position(newPos);
+stage.batchDraw();
+})
+
+function getDistance(p1, p2) {
+return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+}
+
+function getCenter(p1, p2) {
+return {
+x: (p1.x + p2.x) / 2,
+y: (p1.y + p2.y) / 2,
+};
+}
+var lastCenter = null;
+var lastDist = 0;
+
+stage.on('touchmove', function (e) {
+e.evt.preventDefault();
+var touch1 = e.evt.touches[0];
+var touch2 = e.evt.touches[1];
+if (touch1 && touch2) {//touch1 && touch2
+if (stage.isDragging()) {
+stage.stopDrag();
+}
+
+var p1={x:touch1.clientX,y:touch1.clientY}
+var p2={x:touch2.clientX,y:touch2.clientY}
+if (!lastCenter) {
+lastCenter = getCenter(p1, p2);
+return;
+}
+var newCenter = getCenter(p1, p2);
+var dist = getDistance(p1, p2);
+if (!lastDist) {
+lastDist = dist;
+}
+var pointTo = {
+x: (newCenter.x - stage.x()) / stage.scaleX(),
+y: (newCenter.y - stage.y()) / stage.scaleX(),
+};
+var scale = stage.scaleX() * (dist / lastDist);
+stage.scaleX(scale);
+stage.scaleY(scale);
+var dx = newCenter.x - lastCenter.x;
+var dy = newCenter.y - lastCenter.y;
+var newPos = {
+x: newCenter.x - pointTo.x * scale + dx,
+y: newCenter.y - pointTo.y * scale + dy,
+};
+stage.position(newPos);
+lastDist = dist;
+lastCenter = newCenter;
+}
+});
+
+stage.on('touchend', function () {
+lastDist = 0;
+lastCenter = null;
+});
+
+
+}//stagesetup
+function signOut(){
+$('#signout').hide()
+$('#signin').show()
+gapi.auth2.getAuthInstance().signOut()
+$('#profile').html('')
+}
+
+function onSignIn(googleUser){
+$('#signin').hide()
+$('#signout').show()
+
+var profile=googleUser.getBasicProfile();
+console.log('Full Name: '+profile.getName());
+console.log('Email: '+profile.getEmail());
+user=profile.getName()
+$('#profile').html('<div>Full Name:</div><div>'+profile.getName()+'</div><div>Email:</div><div>'+profile.getEmail()+'</div>')
+if(data.author==user){
+$('#edit').show()
+$('#edit').click(function(){
+
+$('#edit').toggleText('✎ Map Author only: Edit Mode','✎ Exit Edit Mode')
+if(enableedit){
+$('.edittool').hide()
+$('#sortable,#sortable>div>div').sortable( "disable" )
+enableedit=false
+}else{
+$('.edittool').show()
+activesort()
+enableedit=true
+
+}
+})  
+}
+
+}
+
+function activesort(){
+  $("#sortable").sortable({revert:true,
+connectWith: "#sortable>div>div,#sortable",
+stop:function(event,ui){
+if(ui.item.children().length>0){$(this).sortable('cancel')}
+update()
+}})
+
+$("#sortable>div>div").sortable({
+connectWith: "#sortable>div>div,#sortable",
+stop:function(event,ui){
+  update()
+}
+});
+}
+function sidebarbtn(){$('#sidebar').toggle("slide")}
+function userbarbtn(){$('#userbar').toggle("slide")}
+function popupbtn(){$('#popupbox').slideToggle()}
+
+function popup(msg){
+if($('#popupbox').is(':visible')){$('#popupbox').slideToggle()}
+$('#popupmsg').html(msg)
+$('#popupbox').slideToggle()
+}//popup
+
+
+</script>

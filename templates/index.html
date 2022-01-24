@@ -1,0 +1,278 @@
+<!--
+sudo service apache2 restart
+-->
+
+<link rel="shortcut icon" href="static/icon_wht.png">
+<head>
+<title>Fandom Map</title>
+<meta name="google-signin-scope" content="profile email">
+<meta name="google-signin-client_id" content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com">
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css">
+<link rel="stylesheet"href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+</head>
+
+<style>
+html,body{
+font-family: Arial;
+padding: 0;
+margin: 0;
+height: 100%;
+}
+h1{
+font-weight: bold;
+font-size: 80px;
+}
+.section, .middle{
+align-items: center;
+margin-left:auto;
+margin-right:auto;
+text-align: center;
+margin: auto;
+}
+#Redirect>div{
+font-weight: bold;
+font-size: 30px;
+height: 50%;
+border: 1px solid #dedede;
+padding: 5%;
+margin: 10%;
+box-shadow: 0px 0px 30px #fff;
+}
+#redirect-left,#redirect-right{
+width:45%;
+min-height: 50%;
+cursor: pointer;
+padding: 70px 0;
+
+}
+#redirect-left{float:left}
+#redirect-right{float:right}
+#redirect-right:hover,#redirect-left:hover{box-shadow: 0px 0px 30px #0080ff}
+.sidebarbtn{
+float: left;
+z-index: 5;
+position: fixed;
+}
+#sidebar,#userbar{
+float: left;
+height: 100%;
+position: fixed;
+z-index: 5;
+width: 25%;
+background-image:linear-gradient(to right,black,rgba(0, 0, 0, 0.05));
+padding-top: 100px;
+color: white;
+}
+#userbar{
+right:0;
+background-image:linear-gradient(to left,black,rgba(0, 0, 0, 0.05 ));
+text-align: right;
+align-items: right;
+margin-left:100%;
+margin-right:0;
+text-align: right;
+margin: auto;
+
+}
+#sidebarbox>a>div,#sidebarclose{
+z-index: 10;
+margin: 5%;
+cursor: pointer;
+padding: 5%;
+}
+#sidebarbox>a:link{text-decoration: none}
+#sidebarbox>a>div:hover,#sidebarclose:hover{background-color: #0080ff}
+.sidebarbutton,.userbutton{
+position:fixed;
+height: 60px;
+width:60px;
+border-radius: 5px;
+display:block;
+background: #0080ff;
+z-index:9;
+text-align:center;
+color: white;
+padding: 10px 15px 10px;
+}
+.important{
+cursor: pointer;
+height: 60px;
+border-radius: 5px;
+display:block;
+background: #0080ff;
+text-align:center;
+color: white;
+padding: 10px 15px 10px;
+border: none;
+margin: 5%;
+align-items: center;
+margin-left:auto;
+margin-right:auto;
+}
+.userbutton,#signin{right:0}
+#userbar>div>div{
+margin: 5%;
+padding: 5%;
+}
+#fadein{
+position: absolute;
+top: 20%;
+display:block;
+left: 0;
+right: 0;
+margin-left: auto;
+margin-right: auto;
+display: none
+}
+#signout{display:none}
+
+#bk{
+height: 100%;
+background-image: url("/static/slideshow.gif");
+backdrop-filter: blur(5px);
+background-repeat: no-repeat;
+background-attachment: fixed;
+background-size: cover;
+background-position:center;
+filter: blur(5px) saturate(30%);
+}
+
+#popupbox{
+background-color: black;
+margin-left: auto;
+margin-right: auto;
+display:block;
+width:80%;
+bottom:0px;
+position: fixed;
+z-index:9;
+left: 0;
+right: 0;
+position:fixed;
+height: 60px;
+border-radius: 5px;
+background: #0080ff;
+z-index:9;
+text-align:center;
+color: white;
+padding:20px;
+bottom: 0;
+margin-left: auto;
+margin-right: auto;
+display:block;
+width:80%;
+display: none;
+}
+
+#popupbox>button{
+float: right;
+background-color: #ffffff00;
+border: none;
+cursor: pointer;
+color: white;
+}
+
+</style>
+<button class="w3-button w3-xlarge sidebarbutton" onclick="sidebarbtn()">☰</button>
+<button class="w3-button w3-xlarge userbutton" onclick="userbarbtn()"><img src="static/user.png" height="50%"></button>
+<div id='popupbox'><a id=popupmsg>Message</a><button  onclick='popupbtn()'>X</button></div>
+<div class="sidebar" style="display:none" id="sidebar">
+<div id='sidebarclose' onclick="sidebarbtn()">Close X</div>
+<div id='sidebarbox'></div>
+</div><!--sidebar-->
+<div style="display:none" id="userbar">
+<div id='sidebarclose' onclick="userbarbtn()">Close X</div>
+<div id='signin'class="g-signin2"data-onsuccess="onSignIn"data-theme="dark"></div>
+<button id='signout' onclick="signOut()">Sign out</button>
+<div id='profile'></div>
+</div><!--userbar-->
+<div id="fullpage">
+<div id="Welcome" class="section" data-anchor='$Welcome'>
+<div id='bk'></div>
+<div id='fadein'>
+<img src="/static/icon.png">
+<h1>Fandom Map</h1>
+Interactive Map for Fandom Wikipedia
+</div><!--fadein-->
+</div><!--welcome-->
+<div id="Redirect" class="section" data-anchor='$Redirect'>
+<div id='redirect-left'>
+Explore Public Maps
+</div><div id='redirect-right'>
+Sign in by Google Account to create your own map<br>
+<button class='important' id='create'>CREATE</button>
+</div>
+</div><!--redirect-->
+<div id="FAQ" class="section"  data-anchor='$FAQ'>
+<h2>FAQ</h2>
+<b>Is Fandom Map Under Fandom wiki platform?</b><br>
+No, fandom is common word to decribe a fanbase of a fictional series.
+</div><!--faq-->
+
+<div id="About" class="section"  data-anchor='$About'>
+<h2>About</h2>
+Fandom Map was made for a univsersity final year project, please contact me on discord Zachary#6611. Thank you <3
+</div><!--about-->
+</div><!--fullpage-->
+
+<script>
+var name,email
+popup('{{popup}}')
+new fullpage('#fullpage',{sectionsColor:['#9999ff','#ccccff','#9999ff','#ccccff'],
+scrollOverflow:true,
+normalScrollElements: '.w3-sidebar,.sidebarbtn'});
+$(document).ready(function(){
+$.ajax({data:{Username:''},type:'POST',url:'/$fetch'}).done(function(data){
+console.log(data)
+})
+let sidebarlist=['Welcome','Redirect','FAQ','About']
+for (let i=0;i<sidebarlist.length;i++){
+$('#sidebarbox').append('<a href="#$'+sidebarlist[i]+'"><div>'+sidebarlist[i]+'</div></a>')
+}
+$('#fadein').delay(300).fadeIn(800);
+})//ready
+function signOut(){
+$('#signout').hide()
+$('#signin').show()
+gapi.auth2.getAuthInstance().signOut()
+$('#profile').html('')
+}
+function onSignIn(googleUser){
+$('#signin').hide()
+$('#signout').show()
+
+var profile=googleUser.getBasicProfile();
+console.log('Full Name: '+profile.getName());
+console.log('Email: '+profile.getEmail());
+email=profile.getEmail()
+name=profile.getName()
+
+$('#profile').html('<div>Full Name:</div><div>'+profile.getName()+'</div><div>Email:</div><div>'+profile.getEmail()+'</div>')
+}
+
+function sidebarbtn(){$('#sidebar').toggle("slide")}
+function userbarbtn(){$('#userbar').toggle("slide")}
+function popupbtn(){$('#popupbox').slideToggle()}
+
+function popup(msg){
+$('#popupmsg').html(msg)
+if($('#popupbox').is(':visible')){
+$('#popupbox').slideToggle()
+}
+$('#popupbox').slideToggle()
+
+}
+$('#create').click(function(){
+console.log('create')
+$.ajax({data:{email:email,name:name},type:'POST',url:'/$create'})
+.done(function(data){
+window.location.href='/'+String(data.result)
+})
+})
+
+</script>
