@@ -2,347 +2,545 @@
 sudo service apache2 restart
 -->
 
-<link rel="shortcut icon" href="static/icon_wht.png">
+<link rel="shortcut icon" href="static/icon_blue.png">
+
 <head>
-<title>Fandom Map</title>
-<meta name="google-signin-scope" content="profile email">
-<meta name="google-signin-client_id" content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com">
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css">
-<link rel="stylesheet"href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<script src="https://unpkg.com/konva@8/konva.min.js"></script>
+    <title>Fandom Map</title>
+    <script src="https://apis.google.com/js/api:client.js"></script>
+
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id"
+        content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 
 </head>
+
 <style>
-html,body{
-font-family: Arial;
-padding: 0;
-margin: 0;
-height:100%;
-overflow-y:hidden;
-}
-#sidebar,#userbar{
+    html,
+    body {
+        font-family: Arial;
+        padding: 0;
+        margin: 0;
+        height: 100%;
+    }
+
+    h1 {
+        font-weight: bold;
+        font-size: 80px;
+    }
+
+    .section,
+    .middle {
+        align-items: center;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        margin: auto;
+        padding: 5%;
+        padding-left: 20%;
+        padding-right: 20%;
+
+    }
+
+    .sidebarbtn {
+        float: left;
+        z-index: 5;
+        position: fixed;
+    }
+
+    #sidebar,
+    #userbar {
+        float: left;
+        height: 100%;
+        position: fixed;
+        z-index: 5;
+        width: 25%;
+        background-image: linear-gradient(to right, black, rgba(0, 0, 0, 0.05));
+        padding-top: 100px;
+        color: white;
+    }
+
+    #userbar {
+        overflow-y: scroll;
+overflow-x: hidden;
 float: left;
 height: 100%;
 position: fixed;
 z-index: 5;
 width: 25%;
-background-image:linear-gradient(to right,black,rgba(255,0,0,0));
-padding-top: 100px;
 color: white;
-}
-#userbar{
 right:0;
-background-image:linear-gradient(to left,black,rgba(255,0,0,0));
-text-align: right;
-align-items: right;
-margin-left:100%;
-margin-right:0;
-text-align: right;
-margin: auto;
-
-}
-#sidebarbox>a>div,#sidebarclose{
-z-index: 10;
-margin: 5%;
-cursor: pointer;
-padding: 5%;
-}
-#sidebarbox>a:link{text-decoration: none}
-#sidebarbox>a>div:hover,#sidebarclose:hover{background-color: blue}
-.sidebarbutton,.userbutton{
-position:fixed;
-height: 60px;
-width:60px;
-border-radius: 5px;
-display:block;
-background: #0080ff;
-z-index:9;
-text-align:center;
-color: white;
-padding: 10px 15px 10px;
-top: 0;
-}
-.important{
-height: 60px;
-border-radius: 5px;
-display:block;
-background: #0080ff;
-text-align:center;
-color: white;
-padding: 10px 15px 10px;
-border: none;
-margin: 5%;
+background-image:linear-gradient(to left,black,rgba(0, 0, 0, 0.05 ));
 align-items: center;
-margin-left:auto;
-margin-right:auto;
-}
-.userbutton,#signin{right:0}
-#userbar>div>div{
-margin: 5%;
-padding: 5%;
-}
-#signout{display:none}
-#popupbox{
-background-color: black;
-margin-left: auto;
-margin-right: auto;
-display:block;
-width:80%;
-z-index:9;
-left: 0;
-right: 0;
-position:fixed;
-height: 60px;
-border-radius: 5px;
-background: #0080ff;
-text-align:center;
-color: white;
-padding:20px;
-bottom: 0;
-display: none;
-}
-#popupbox>button{
-float: right;
-background-color: #ffffff00;
-border: none;
-cursor: pointer;
-color: white;
-}
-#dropimgdiv{
-width: 100%;
-height: 100%;
-z-index: 2;
-align-items: center;
-margin-left:auto;
-margin-right:auto;
 text-align: center;
-margin: auto;
-padding: 20% 0;
+overflow-y: auto;
+    }
+    #sidebarclose{
+text-align: right;
+    }
+    #sidebarbox>div,
+    #sidebarclose {
+        z-index: 10;
+        margin: 5%;
+        cursor: pointer;
+        padding: 5%;
+        
+    }
 
-}
-#c{
-    z-index: 0;
-}
+    #sidebarbox>div:hover,
+    #sidebarclose:hover {
+        background-color: #0080ff
+    }
 
+    .sidebarbutton,
+    .userbutton {
+        position: fixed;
+        height: 60px;
+        width: 60px;
+        border-radius: 5px;
+        display: block;
+        background: #0080ff;
+        z-index: 9;
+        text-align: center;
+        color: white;
+        padding: 10px 15px 10px;
+    }
+
+    .important {
+        cursor: pointer;
+        height: 60px;
+        border-radius: 5px;
+        display: block;
+        background: #0080ff;
+        text-align: center;
+        color: white;
+        padding: 10px 15px 10px;
+        border: none;
+        margin: 5%;
+        align-items: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .userbutton,
+    #signin {
+        right: 0
+    }
+    #fadein {
+        position: absolute;
+        top: 20%;
+        display: block;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        display: none;
+        color: white
+    }
+
+    #signout {
+        display: none
+    }
+
+    #bk {
+        height: 100%;
+        background-image: url("/static/slideshow.gif");
+        backdrop-filter: blur(5px);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+        filter: blur(5px) saturate(30%);
+    }
+
+    #popupbox {
+        background-color: black;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        width: 80%;
+        bottom: 0px;
+        position: fixed;
+        z-index: 9;
+        left: 0;
+        right: 0;
+        position: fixed;
+        height: 60px;
+        border-radius: 5px;
+        background: #0080ff;
+        z-index: 9;
+        text-align: center;
+        color: white;
+        padding: 20px;
+        bottom: 0;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        width: 80%;
+        display: none;
+    }
+
+    #popupbox>button {
+        float: right;
+        background-color: #ffffff00;
+        border: none;
+        cursor: pointer;
+        color: white;
+    }
+
+    #About>img,
+    #About>a>img {
+        height: 40;
+        display: inline-block;
+    }
+
+    .icon {
+        height: 50;
+        display: inline-block;
+    }
+
+    h2 {
+        display: inline-block;
+    }
+
+    .section {
+        width: 100%;
+        display: block;
+        width: 100vm;
+        min-height: 20%;
+    }
+
+    input {
+        width: 50%;
+        outline: 0;
+        border-width: 0 0 2px;
+        border-color: #0080ff;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    #exploreresult>div {
+        border-radius: 5px;
+        border: 2px #0080ff;
+        border-style: solid;
+        background-color: rgb(0, 128, 255, 0.5);
+        cursor: pointer;
+        width: 43%;
+        margin: 3%;
+        display: inline-block;
+    }
+
+    #exploreresult>div>img {
+        width: 100%;
+    }
+
+    .section:nth-child(odd) {
+        background-color: #96D4D4;
+    }
+
+    td {
+        width: 45%;
+        font-weight: bold;
+        font-size: 30px;
+        height: 30%;
+        width: 50%;
+        padding: 3%;
+        cursor: pointer;
+        text-align: center;
+
+    }
+
+    #FAQ>p {
+        color: black;
+        font-weight: bold;
+        display: block;
+        margin: 0;
+        padding: 0;
+        margin-top: 3%;
+
+    }
+
+    #Welcome {
+        padding: 0;
+
+    }
+
+    #exploreresult>div>p,
+    #exploreresult>div>a {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        padding-left: 2%;
+        padding-right: 2%;
+
+    }
+
+    #exploreresult>div>a {
+        color: grey
+    }
+
+    #exploreresult>div>p {
+        font-weight: bold
+    }
+
+    table {
+        width: 100%;
+    }
+    #explore{
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+    td:hover,#exploreresult>div:hover{
+        background-color: #3399ff;
+    }
+
+    #signin{
+        width: 100%;
+    }
+    #create{
+        display: none;
+    }
 </style>
+
 <button class="w3-button w3-xlarge sidebarbutton" onclick="sidebarbtn()">☰</button>
 <button class="w3-button w3-xlarge userbutton" onclick="userbarbtn()"><img src="static/user.png" height="50%"></button>
-<div id='popupbox'><a id=popupmsg>Message</a><button  onclick='popupbtn()'>X</button></div>
+<div id='popupbox'><a id=popupmsg>Message</a><button onclick='popupbtn()'>X</button></div>
 <div class="sidebar" style="display:none" id="sidebar">
-<div id='sidebarclose' onclick="sidebarbtn()">Close X</div>
-<div id='sidebarbox'></div>
-</div><!--sidebar-->
+    <div id='sidebarclose' onclick="sidebarbtn()">Close X</div>
+    <div id='sidebarbox'></div>
+</div>
+<!--sidebar-->
 <div style="display:none" id="userbar">
-<div id='sidebarclose' onclick="userbarbtn()">Close X</div>
-<div id='signin'class="g-signin2"data-onsuccess="onSignIn"data-theme="dark"></div>
-<button id='signout' onclick="signOut()">Sign out</button>
-<div id='profile'></div>
-</div><!--userbar-->
+    <div id='sidebarclose' onclick="userbarbtn()">Close X</div>
+    <div id=my-signin2></div>
+    <!--<div id='signin' class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>-->
+    <button id='signout' onclick="signOut()">Sign out</button>
+    <div id='profile'></div>
+</div>
+<!--userbar-->
+<div id="fullpage">
+    <div id="Welcome" class="section" data-anchor='$Welcome'>
+        <h2 style="display:none">Welcome</h2>
+        <div id='bk'></div>
+        <div id='fadein'>
+            <img src="/static/icon_wht.png">
+            <h1>Fandom Map</h1>
+            Public Interactive Map for Fandom Wikipedia
+        </div>
+        <!--fadein-->
 
-<div id="c" style="position: fixed;"></div>
+    </div>
+    <!--welcome-->
+</div>
+<!--fullpage-->
 
+<div id="Redirect" class="section fp-auto-height" data-anchor='$Redirect'>
+    <table>
+        <td id='createtd'>
+            <h3>Sign in by Google Account to create your own map</h3>
+            <button class='important' id='signin'>SIGN IN</button>
+
+            <button class='important' id='create'>CREATE</button>
+        </td>
+        <td id=exploretd>
+            <h3>Explore Public Maps</h3>
+            <button class='important' id='explorebtn'>EXPLORE</button>
+        </td>
+        <h2 style="display:none">Redirect</h2>
+
+    </table>
+</div>
+<div id="About" class="section">
+    <img class=icon src=static/wp.png>
+    <h2>About</h2><br>
+    Fandom Map is an open sourced website made for a univsersity final year project, using Amazon AWS cloud to host
+    community based serving website.
+    Please contact me on discord Zachary#6611 or fill <a href=https://forms.gle/jJarQ8e6vK9y839f7>this questionnaire</a>
+    for any issues and needs. Thank you
+    <br><a href=http://github.com/fandommap/fandommap.github.io><img src=static/git.png> Github Repository</a>
+    <br><img src=static/dis.png> Zachary#6611
+</div>
+<!--about-->
+<div id=T&S class=Section>
+    <img class=icon src=static/wp.png>
+    <h2>Terms and Service</h2>
+    <br>
+    We are committed to providing a friendly, safe and welcome environment for all fandom communities,
+    regardless of gender identity and expression. The below terms established what you can expect from our website
+    services.
+    And what we expect from you:
+    <br>
+    • Using website resources resonably.
+    <br>
+    • Collaborate with other community fandom members, gracefully accept criticism against your map.
+    <br>
+    • Being respectful of others viewpoints and experience to not creating offensive materials.
+</div>
+<!--COC-->
+
+<div id="FAQ" class="section">
+    <img class=icon src=static/wp.png>
+    <h2>FAQ Frequently Asked Questions</h2><br>
+    <p>What is Fandom Map and how does it work?</p>
+    Fandom user are free to create their maps. By adding map image and add waypoints on the map, using the map link to
+    share it your other favourite communties out there!
+    <p>Why should I use Fandom Map?</p>
+    Fandom Map isn't just a place to share map images online, but also share the information on a 2-dimension scale!
+    <p>Is Fandom Map Under Fandom wiki platform?</p>
+    No, fandom is a common word to decribe a fanbase of a fictional series.
+    <p>Who is Fandom Map for?</p>
+    You! And for the fandom communties love their fictional serires and willing to produce top-notch map.
+    <p>Is Fandom Map free?</p>
+    All the reasources are free, unlimited access to public avaliable maps with unlimited map creation power!
+    <p>I have issues, bugs or other questions!</p>
+    Please contact on discord Zachary#6611 or by filling this <a
+        href=https://forms.gle/jJarQ8e6vK9y839f7>questionnaire</a>.
+</div>
+<!--faq-->
+
+<div id="Explore" class="section  fp-auto-height" data-anchor='$Explore'>
+    <img class=icon src=static/wp.png>
+    <h2>Explore</h2><br>
+    <input placeholder='Search Map Names...'></input>
+    <div id=exploreresult></div>
+</div>
+<!--explore-->
 <script>
-var stage
-var mobile=false
-let data={id:'{{id}}',
-name:'{{name}}',
-email:'{{email}}',
-author:'{{author}}',
-json:'{{json}}'}
-var id=data.id
-$(document).ready(function(){
-if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){mobile=true}
+    if ('{{popup}}') { popup('{{popup}}') }
+    var name, email
+    new fullpage('#fullpage', {
+        sectionsColor: ['white', 'white', 'white', 'white', 'white'],
+        autoScrolling: false,
+        fitToSection: false,
+        verticalCentered: true,
+        normalScrollElements: '.w3-sidebar,.sidebarbtn'
+    });
+    $(document).ready(function () {
+        let sidebarlist = ['Welcome', 'Redirect', 'About', 'Terms and Service', 'FAQ', 'Explore']
+        for (let i = 0; i < sidebarlist.length; i++) {
+            $('#sidebarbox').append('<div>' + sidebarlist[i] + '</div>')
+        }
+        $('#fadein').delay(300).fadeIn(800);
+    })//ready
+    function signOut() {
+        $('#my-signin2,#signin').show()
+        $('#signout,#create').hide()
+        gapi.auth2.getAuthInstance().signOut()
+        $('#profile').html('')
+    }
 
-Konva.hitOnDragEnabled = true;
-var stage = new Konva.Stage({
-container: 'c',
-width: window.innerWidth,
-height: window.innerHeight,
-draggable: true
+    function redirectsuccess(googleUser) {
+      
+    }
+    function onSignIn(googleUser) {
+        $('#my-signin2,#signin').hide()
+        $('#signout,#create').show()
+        var profile = googleUser.getBasicProfile();
+        console.log('Full Name ' + profile.getName());
+        console.log('Email ' + profile.getEmail());
+        email = profile.getEmail()
+        name = profile.getName()
+        $('#profile').html('<div>Name</div><div>' + profile.getName() + '</div><div>Email</div><div>' + profile.getEmail() + '</div>')
+    }
+    function sidebarbtn() { $('#sidebar').toggle("slide") }
+    function userbarbtn() { $('#userbar').toggle("slide") }
+    function popupbtn() { $('#popupbox').slideToggle() }
 
-});
-var layer = new Konva.Layer();
-var map = new Konva.Layer();
-var rect1 = new Konva.Rect({
-x: 0,
-y: 0,
-width: 200,
-height: 200,
-fill: 'green',
-stroke: 'black',
-strokeWidth: 4,
-});
-map.add(rect1) 
-Konva.Image.fromURL('static/1_map.png', function (mapimg) {
-    mapimg.setAttrs({
-          x: 0,
-          y: 0,
-        });
-        map.add(mapimg);
+    function popup(msg) {
+        if ($('#popupbox').is(':visible')) { $('#popupbox').slideToggle() }
+        $('#popupmsg').html(msg)
+        $('#popupbox').slideToggle().delay(10000).slideToggle()
+    }//popup
+    $('#createtd').click(function () {
+        $.ajax({ data: { email: email, name: name }, type: 'POST', url: '/$create' })
+            .done(function (data) { window.location.href = '/' + String(data.result) })
     })
-if(!mobile){stage.add(layer)}
-stage.add(map);
-var SIZE = 200;
-checkShapes(SIZE);
-layer.draw();
-stage.on('wheel',(e)=>{
-SIZE=Math.round(1/stage.scaleX())*200
-})
+    var elementglobal
+    var decodeglobal
+    var finishresult = []
+    result = decodeHtml('{{result}}').split("行行")
+    result.forEach(function (element, index) {
+        result[index] = element.split("列列")
+    })
+    result.pop()
+    function decodeHtml(html) {
+        var txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        return txt.value;
+    }
+    result.forEach(function (element) {
+        $.ajax({
+            url: 'static/' + element[0] + '_map.png', success: function () {
+                adddiv(element, element[0] + '_map.png')
+            }, error: function () {
+                $.ajax({
+                    url: 'static/' + element[0] + '_map.jpg', success: function () {
+                        adddiv(element, element[0] + '_map.jpg')
+                    }, error: function () {
+                        $.ajax({
+                            url: 'static/' + element[0] + '_map.jpeg', success: function () {
+                                adddiv(element, element[0] + '_map.jpeg')
+                            }, error: function () { adddiv(element, false) }
+                        })
+                    }
+                })
+            }
+        })
+    })
+    heading = ['Name', 'Author', 'Creation Date']
+    function adddiv(element, filename) {
+        id = element.shift()
+        desc = ''
+        element.forEach(function (elementelement, index) {
+            desc += '<a>' + heading[index] + '</a><p>' + elementelement + '</p><br>'
+        })
+        if (filename) { $('#exploreresult').append('<div id=' + id + '><img src=static/' + filename + '>' + desc + '<p><p></div>') }
+        else $('#exploreresult').append('<div id=' + id + '>' + desc + '</div>')
+    }
+    $(document).on("click", "#exploreresult>div", function () {
+        window.location.href = '/' + $(this).attr('id')
+    })
+    $('#explore>input').keyup(function () {
+        if ($(this).val() == '') { $('#exploreresult>div').show() }
+        list = $('#exploreresult>div');
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].textContent.toUpperCase().indexOf($(this).val().toUpperCase()) > -1 && list[i].style.display == "") {
+                list[i].style.display = ""
+            } else { list[i].style.display = "none" }
+        }
+    })
+    $(document).on("click", "#sidebarbox>div", function () {
+        $('html,body').animate({ scrollTop: $("h2:contains(" + $(this).text() + ')').offset().top }, 800);
+    })
+    $('#exploretd').click(function () {
+        $('html,body').animate({ scrollTop: $("h2:contains(Explore)").offset().top }, 800);
 
-stage.on('dragend touchend wheel', () => {
-layer.destroyChildren();
-checkShapes(SIZE);
-layer.draw();
-})
-stagesetup(stage)
-function checkShapes(SIZE) {
-const startX = Math.floor((-stage.x()-stage.width())/stage.scaleX()/SIZE)*SIZE
-const endX = Math.floor((-stage.x()+stage.width()*2)/stage.scaleX()/SIZE)*SIZE
-const startY = Math.floor((-stage.y()-stage.height())/stage.scaleX()/SIZE)*SIZE
-const endY = Math.floor((-stage.y()+stage.height()*2)/stage.scaleX()/SIZE)*SIZE
-for (var x=startX;x<endX;x+=SIZE) {
-for (var y=startY;y<endY;y+=SIZE) {
-layer.add(new Konva.Rect({
-x,y,width:SIZE,height:SIZE,
-stroke:'#e6e6e6',
-strokeWidth:1
-}))}}}//checkShapes
-
-//url:'static/'+id+'_maps.png',
-
-
-$.ajax({
-url:'static/'+id+'_map.png',
-error:function(){
-   // $('#dropimgdiv').show()
-
-    popup(data.name+' does not have map image, please insert image from dialog above.')
-},
-success:function(){console.log('file exists')}
+    })
+    var googleUser = {};
+var startApp = function() {
+gapi.load('auth2', function(){
+    auth2 = gapi.auth2.init({
+    client_id: '507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com',
+    cookiepolicy: 'single_host_origin',
+    });
+    attachSignin(document.getElementById('createtd'));
 });
-})//ready
-function dragOverHandler(ev){ev.preventDefault()}
-
-$('#upload').on('click', function () {
-var form_data = new FormData();
-form_data.append("files[]", document.getElementById('multiFiles').files[0]);
-$.ajax({
-url: '$upload'+data.id,
-dataType: 'json',
-cache: false,
-contentType: false,
-processData: false,
-data: form_data,
-type: 'post',
-success:function (response){$('#msg').append(response)}});
-});//upload
-
-
-function stagesetup(stage){
-stage.on('dragmove',()=>{document.body.style.cursor='move'});
-stage.on('dragend',()=>{document.body.style.cursor='default'});
-stage.on('wheel', (e) => {
-e.evt.preventDefault();
-var oldScale = stage.scaleX();
-var pointer = stage.getPointerPosition();
-var mousePointTo = {x: (pointer.x - stage.x()) / oldScale,y: (pointer.y - stage.y()) / oldScale,};
-var newScale =e.evt.deltaY > 0 ?  oldScale / 1.1: oldScale * 1.1;
-stage.scale({ x: newScale, y: newScale });
-var newPos = {x: pointer.x - mousePointTo.x * newScale,y: pointer.y - mousePointTo.y * newScale,};
-stage.position(newPos);
-stage.batchDraw();
-})
-
-function getDistance(p1, p2) {
-return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
-}
-
-function getCenter(p1, p2) {
-return {
-x: (p1.x + p2.x) / 2,
-y: (p1.y + p2.y) / 2,
 };
-}
-var lastCenter = null;
-var lastDist = 0;
+function attachSignin(element) {
+auth2.attachClickHandler(element,{},function(googleUser){
+    var profile = googleUser.getBasicProfile();
+        email = profile.getEmail()
+        name = profile.getName()
+        $.ajax({ data: { email: email, name: name }, type: 'POST', url: '/$create' })
+            .done(function (data) { window.location.href = '/' + String(data.result) })
 
-stage.on('touchmove', function (e) {
-e.evt.preventDefault();
-var touch1 = e.evt.touches[0];
-var touch2 = e.evt.touches[1];
-if (touch1 && touch2) {//touch1 && touch2
-if (stage.isDragging()) {
-stage.stopDrag();
-}
-
-var p1={x:touch1.clientX,y:touch1.clientY}
-var p2={x:touch2.clientX,y:touch2.clientY}
-if (!lastCenter) {
-lastCenter = getCenter(p1, p2);
-return;
-}
-var newCenter = getCenter(p1, p2);
-var dist = getDistance(p1, p2);
-if (!lastDist) {
-lastDist = dist;
-}
-var pointTo = {
-x: (newCenter.x - stage.x()) / stage.scaleX(),
-y: (newCenter.y - stage.y()) / stage.scaleX(),
-};
-var scale = stage.scaleX() * (dist / lastDist);
-stage.scaleX(scale);
-stage.scaleY(scale);
-var dx = newCenter.x - lastCenter.x;
-var dy = newCenter.y - lastCenter.y;
-var newPos = {
-x: newCenter.x - pointTo.x * scale + dx,
-y: newCenter.y - pointTo.y * scale + dy,
-};
-stage.position(newPos);
-lastDist = dist;
-lastCenter = newCenter;
-}
 });
-
-stage.on('touchend', function () {
-lastDist = 0;
-lastCenter = null;
-});
-
-
-}//stagesetup
-function signOut(){
-$('#signout').hide()
-$('#signin').show()
-gapi.auth2.getAuthInstance().signOut()
-$('#profile').html('')
 }
-
-function onSignIn(googleUser){
-$('#signin').hide()
-$('#signout').show()
-
-var profile=googleUser.getBasicProfile();
-console.log('Full Name: '+profile.getName());
-console.log('Email: '+profile.getEmail());
-$('#profile').html('<div>Full Name:</div><div>'+profile.getName()+'</div><div>Email:</div><div>'+profile.getEmail()+'</div>')
-}
-
-function sidebarbtn(){$('#sidebar').toggle("slide")}
-function userbarbtn(){$('#userbar').toggle("slide")}
-function popupbtn(){$('#popupbox').slideToggle()}
-
-function popup(msg){
-if($('#popupbox').is(':visible')){$('#popupbox').slideToggle()}
-$('#popupmsg').html(msg)
-$('#popupbox').slideToggle()
-}//popup
-
-
 </script>
+<script>startApp();</script>
