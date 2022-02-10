@@ -1,2 +1,4 @@
-/error.log
-/init.py
+error.log
+password.txt
+temp.py
+templates/temp.html

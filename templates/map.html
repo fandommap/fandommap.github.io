@@ -2,783 +2,1173 @@
 sudo service apache2 restart
 -->
 <link rel="shortcut icon" href="static/icon_wht.png">
+
 <head>
-<title>Fandom Map</title>
-<meta name="google-signin-scope" content="profile email">
-<meta name="google-signin-client_id" content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com">
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css">
-<link rel="stylesheet"href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<script src="https://unpkg.com/konva@8.3.2/konva.min.js"></script>
-<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='index.css') }}">
+  <title>Fandom Map</title>
+  <script src="https://apis.google.com/js/api:client.js"></script>
+  <meta name="google-signin-scope" content="profile email">
+  <meta name="google-signin-client_id"
+    content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com">
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <script src="https://unpkg.com/konva@8.3.2/konva.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='index.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
 </head>
-
-
 <div id=confirmdeletebackground></div>
 <div id=confirmdeletewindow>
-To delete <a class=mapdeletename></a>. You must enter <a class=mapdeletename></a> below. Then press DELETE
-<br>
-<a id='mapdeletemsg'>Input incorrect</a>
-<br>
-<input></input>
-<br>
-<button id=mapdeletecancel>CANCEL</button>
-<button id=mapdeleteconfirm>DELETE</button>
+  To delete <a class=mapdeletename></a>. You must enter <a class=mapdeletename></a> below. Then press DELETE
+  <br>
+  <a id='mapdeletemsg'>Input incorrect</a>
+  <br>
+  <input></input>
+  <br>
+  <button id=mapdeletecancel>CANCEL</button>
+  <button id=mapdeleteconfirm>DELETE</button>
 </div>
+<section id=private>
+  <img src="/static/icon_blue.png"><br>
+  This map is privated. If you are the owner of the map, please...
+  <button class='important' id='signin'><img class=g src=static/goo.png>SIGN IN</button>
 
+</section>
 <button class="w3-button w3-xlarge sidebarbutton" onclick="sidebarbtn()">☰</button>
 <button class="w3-button w3-xlarge userbutton" onclick="userbarbtn()"><img src="static/user.png" height="50%"></button>
 <div id='popupbox'><a id=popupmsg>Message</a><button onclick='popupbtn()'>X</button></div>
-<Button class="w3-button w3-xlarge" onclick='home()' id='home' href=http://fandommap.github.io><img src=static/icon_wht.png height="100%"></button>
+<Button class="w3-button w3-xlarge" onclick='home()' id='home' href=http://fandommap.github.io><img
+    src=static/icon_wht.png height="100%"></button>
 <div class="sidebar" style="display:none" id="sidebar">
-<div id='sidebarclose' onclick="sidebarbtn()">X Close</div>
-<div id='mapinfo'></div>
-<div id='edit'>✎ Map Author only: Edit Mode</div>
-<div class='edittool' id='addcategory'>+ Add Category</div>
-<div class='edittool' id='addwaypoint'>+ Add Waypoint</div>
-<div id='sortable'></div>
-</div><!--sidebar-->
+  <div id='sidebarclose' onclick="sidebarbtn()">X Close</div>
+  <div id='mapinfo'></div>
+  <div id='edit'>✎ Map Author only: Edit Mode</div>
+  <div class='edittool' id='addcategory'>+ Add Category</div>
+  <div class='edittool' id='addwaypoint'>+ Add Waypoint</div>
+  <div class='edittool' id='addroute'>+ Add Route</div>
+  <input id=search placeholder='Search Waypoints...'>
+  <div id='sortable'></div>
+</div>
+<!--sidebar-->
 <div style="display:none" id="userbar">
-  <div id='sidebarclose' onclick="userbarbtn()">Close X</div>
+  <div id='userbarclose' onclick="userbarbtn()">Close X</div>
   <div id=signin2><img class=g src=static/goo.png>Google Sign In</div>
-  <div id='signin0'class="g-signin2"data-onsuccess="onSignIn"data-theme="dark"></div>
-  <button id='signout' onclick="signOut()">Sign out</button>
+  <div id='signin0' class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+  <div id='signout' onclick="signOut()"><img class=g src=static/goo.png>Sign Out</div>
   <div id='profile'></div>
+
+  <br>
+  Theme<br>
+  <select id=select theme="google" width="400" placeholder="Choose theme..." data-search="true">
+    <option value="white">White</option>
+    <option value="dark">Dark</option>
+  </select>
+
 </div>
 <!--userbar-->
 <div style="display:none" id="optionbar" class=righty>
-<div id='optionbarclose' onclick="optionbarbtn()">Close X</div>
+  <div id='optionbarclose' onclick="optionbarbtn()">Close X</div>
 
 
-<div id=mapinfooption>
-  <a>Rename</a>
-  <input></input>
-  <div id='mapdelete'>Delete 🗑</div>
-<div class='twotoggles'>
-  Visibility <br>
-  <div>Public</div>
-  <div>Private</div>
+  <div id=mapinfooption>
+    <a>Rename</a>
+    <input></input>
+    <div id='mapdelete'>Delete 🗑</div>
+    <div class='twotoggles'>
+      Visibility <br>
+      <div>Public</div>
+      <div>Private</div>
+    </div>
   </div>
-</div><!--mapinfooption-->
+  <!--mapinfooption-->
 
 
-<div id=notmapinfo>
-<a>Rename</a>
-<input></input>
-<div id='optiondelete'>Delete 🗑</div>
-<div class='waypointed toggles'>
-Waypoint Description<br>
-<div>Off</div>
-<div>Markdown</div>
-<div>Website</div>
-</div>
-<div class='desc waypointed'  id=descoff>
-User click on this waypoint will not appear descriptions.</div>
-<div class='desc waypointed' id=descmarkdown>
-User click on this waypoint will appear manual written markdown text.
-<br><br>
-Editor
-<textarea></textarea>
-<br><br>
-Preview
-<div id=preview></div>
-</div>
-<div class='desc waypointed' id=descwebsite>
-User click on this waypoint will appear a redirected website or fandom url
-<br><br>
-<input placeholder='Website Url..'></input>
-<br><br>
-Preview
-<div id=iframepreview></div>
+  <div id=notmapinfo>
+    <a>Rename</a>
+    <input id=optname></input>
+    <div id='optiondelete'>Delete 🗑</div>
+    <div class=waypointed>
+      Waypoint Coordinate X
+      <input id=optx></input>
+      Waypoint Coordinate Y
+      <input id=opty></input>
+    </div>
 
+
+    <div class='waypointed toggles'>
+      Waypoint Description<br>
+      <div>Off</div>
+      <div>Markdown</div>
+      <div>Website</div>
+    </div>
+    <div class='desc waypointed' id=descoff>
+      User click on this waypoint will not appear descriptions.</div>
+    <div class='desc waypointed' id=descmarkdown>
+      User click on this waypoint will appear manual written markdown text.
+      <br><br>
+      Editor
+      <textarea></textarea>
+      <br><br>
+      Preview
+      <div id=preview></div>
+    </div>
+    <div class='desc waypointed' id=descwebsite>
+      User click on this waypoint will appear a redirected website or fandom url
+      <br><br>
+      <input placeholder='Website Url..'></input>
+      <br><br>
+      Preview
+      <div id=iframepreview></div>
+
+    </div>
+  </div>
+  <!--not mapinfo-->
 </div>
-</div><!--not mapinfo-->
-</div><!--optionbar-->
+<!--optionbar-->
 
 
 <div style="display:none" id="descriptionbar" class=righty>
-<div id='descriptionbarclose' class=rightyclose onclick="descriptionbarbtn()">Close X</div>
-<h2></h2>
-<div id=desciption></div>
-</div><!--descriptionbar-->
+  <div id='descriptionbarclose' class=rightyclose onclick="descriptionbarbtn()">Close X</div>
+  <h2></h2>
+  <div id=desciption></div>
+</div>
+<!--descriptionbar-->
 
 
 
 <div id='dropimgdiv'>
-<h1>Create Map Image by inserting .jpeg / .png files.</h1>
-<p id="msg"></p>
-<input type="file" id="multiFiles" name="files[]"/>
-<button id="upload">Upload the file</button>
+  <img src="/static/icon_blue.png"><br>
+  <h1>Create Map Image by inserting .jpeg / .png files.</h1>
+  <p id="msg"></p>
+  <input type="file" id="multiFiles" name="files[]" />
+  <button id="upload">Upload the file</button>
 </div>
 <div id="c" style="position: fixed"></div>
 <script>
-
-var enableedit=false
-var stage
-var filename
-var mobile=false
-var layer
-var map
-var json
-var user
-var otpion
-var text
-var waypoints=[]
-var legends
-var datax,datay,dataid
-var tooltipLayer
-var tooltip
-let data={id:'{{id}}',
-name:'{{name}}'.replaceAll('&#39;',"'"),
-email:'{{email}}',
-author:'{{author}}',
-json:['{{json}}'.replaceAll('&#34;','"').replaceAll("'s Map",'s Map').replaceAll('&#39;',"")],
-sortable:'{{sortable}}',
-visibility:'{{visibility}}',
-date:'{{date}}',
-}
-var id=data.id
-$(document).ready(function(){
-if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){mobile=true}
-Konva.hitOnDragEnabled = true;
-stage = new Konva.Stage({
-container: 'c',
-width: window.innerWidth,
-height: window.innerHeight,
-draggable: true,
-});
-layer = new Konva.Layer();
-map = new Konva.Layer();
-legends = new Konva.Layer();
-tooltipLayer = new Konva.Layer();
-tooltip = new Konva.Text({
-text: '',
-fontFamily: 'Calibri',
-fontSize: 30,
-padding: 5,
-textFill: 'white',
-fill: 'white',
-alpha: 1,
-visible: false,
-offsetY:-100,
-shadowColor: 'black',
-shadowBlur: 15,
-shadowOpacity: 1,
-stroke:'black',
-strokeWidth:0.5,
-});
-
-tooltipLayer.add(tooltip);
-if(!mobile){stage.add(layer)}
-stage.add(map);
-stage.add(legends)
-stage.add(tooltipLayer)
-var SIZE = 200;
-checkShapes(SIZE);
-layer.draw();
-stage.on('click', function (e) {
-if($('#sidebar').is(':visible')){$('#sidebar').toggle("slide")}
-if($('#userbar').is(':visible')){$('#userbar').toggle("slide",{direction:'right'})}
-if($('#optionbar').is(':visible')){$('#optionbar').toggle("slide",{direction:'right'})}
-})
-
-
-stage.on('wheel',(e)=>{
-SIZE=Math.round(1/stage.scaleX())*200
-})
-
-stage.on('dragend touchend wheel', () => {
-layer.destroyChildren();
-checkShapes(SIZE);
-layer.draw();
-})
-stagesetup(stage)
-function checkShapes(SIZE) {
-const startX = Math.floor((-stage.x()-stage.width())/stage.scaleX()/SIZE)*SIZE
-const endX = Math.floor((-stage.x()+stage.width()*2)/stage.scaleX()/SIZE)*SIZE
-const startY = Math.floor((-stage.y()-stage.height())/stage.scaleX()/SIZE)*SIZE
-const endY = Math.floor((-stage.y()+stage.height()*2)/stage.scaleX()/SIZE)*SIZE
-for (var x=startX;x<endX;x+=SIZE) {
-for (var y=startY;y<endY;y+=SIZE) {
-layer.add(new Konva.Rect({
-x,y,width:SIZE,height:SIZE,
-stroke:'#e6e6e6',
-strokeWidth:1
-}))}}}//checkShapes
-
-$.ajax({url:'static/'+id+'_map.png',
-success:function(){
-addmap(id+'_map.png')
-},error:function(){
-$.ajax({url:'static/'+id+'_map.jpg',
-success:function(){
-addmap(id+'_map.jpg')
-},error:function(){
-$.ajax({url:'static/'+id+'_map.jpeg',
-success:function(){
-addmap(id+'_map.jpeg')
-},error:function(){
-$('.w3-button').hide()
-$('#dropimgdiv').show()
-popup(data.name+' does not have map image, please insert image from dialog above.')
-}
-})}})}})
-
-$.fn.extend({
-toggleText: function(a, b){
-return this.text(this.text() == b ? a : b)
-}})
-
-$(document).on('click','#mapinfo>div',function(){
-if(!$(event.target).is('#mapinfo>div>div,#mapinfo>div>div>p')){
-$(this).children('div').toggle()
-$(this).children('a').toggleText(' ▲',' ▼')}
-if(enableedit){
-eachrightyhide()
-$('#notmapinfo').hide()
-$('#mapinfooption').show()
-$('#mapinfooption>input').val(data.name)
-if(data.visibility=='Public'){
-$('.twotoggles>div:eq(0)').attr('id','checked')
-$('.twotoggles>div').css('background-color','transparent')
-$('.twotoggles>div:eq(0)').css('background-color','#0080ff')}
-else if(data.visibility=='Private'){
-$('.twotoggles>div:eq(1)').attr('id','checked')
-$('.twotoggles>div').css('background-color','transparent')
-$('.twotoggles>div:eq(1)').css('background-color','#0080ff')
-}
-
-$('#optionbar').toggle("slide",{direction:'right'})
-
-}
-})
-
-$(document).on("later fix doubleclick", "p,h2", function(){
-if(enableedit){
-$(this).html('<input id="temp" rows="1" value="'+$(this).text()+'">')
-$("#temp").focus();
-$("#temp").focus(function() {
-}).blur(function() {
-$(this).parent().html($("input").val())
-update()
-})}})
-$(document).on("click", "#sortable>div>h2", function(){
-$('.waypointed').hide()
-if(enableedit){
-  $('#notmapinfo').show()
-$('#mapinfooption').hide()
-eachrightyhide()
-$('#notmapinfo>input').val($(this).html())
-$('#optionbar').toggle("slide",{direction:'right'})
-otpion=$(this).parent()
-text=$(this)}
-})
-
-$(document).on("click", "#sortable>div", function(){
-  if(!$(event.target).is('#sortable>div>div>aside')&&!enableedit){
-  $(this).children('div').toggle()
-$(this).children('a').toggleText(' ▲',' ▼')
+  var globalselect
+  var enableedit = false
+  var stage
+  var filename
+  var mobile = false
+  var layer
+  var map
+  var json
+  var user
+  var option
+  var text
+  var waypoints = []
+  var legends
+  var datax, datay, dataid
+  var tooltipLayer
+  var tooltip
+  var routes
+  var globaltemp
+  let data = {
+    id: '{{id}}',
+    name: '{{name}}'.replaceAll('&#39;', "'"),
+    email: '{{email}}',
+    author: '{{author}}',
+    json: ['{{json}}'.replaceAll('&#34;', '"').replaceAll("'s Map", 's Map').replaceAll('&#39;', "")],
+    sortable: '{{sortable}}',
+    visibility: '{{visibility}}',
+    date: '{{date}}',
   }
-})
-
-$(document).on("click", "#sortable>div>div>aside,#sortable>aside", function(){
-if(enableedit){
-$('#notmapinfo').show()
-$('#mapinfooption').hide()
-
-eachrightyhide()
-$('.waypointed').show()
-//when edit plays toggies
-if($(this).attr('desc')==false||typeof($(this).attr('desc'))=='undefined'||$(this).attr('desc')=='off'){
-toggled(0)}
-else if ($(this).attr('desc').startsWith('URL')){
-toggled(2)
-$('#descwebsite>input').val(decodeURIComponent(escape(window.atob($(this).attr('desc').substring(3)))))
-$('#iframepreview').html('<iframe src="'+decodeURIComponent(escape(window.atob($(this).attr('desc').substring(3))))+'"></ifrmae>')
-
-}
-else{
-$('#preview').html(new showdown.Converter().makeHtml(decodeURIComponent(escape(window.atob($(this).attr('desc'))))))
-$('textarea').val(decodeURIComponent(escape(window.atob($(this).attr('desc')))))
-toggled(1)}
-$('#notmapinfo>input').val($(this).find('p').html())
-$('#optionbar').toggle("slide",{direction:'right'})
-otpion=$(this)
-text=$(this)
-}else{
-if($(this).attr('desc')==false||typeof($(this).attr('desc'))=='undefined'||$(this).attr('desc')=='off'){
-console.log('off desc')}
-else if ($(this).attr('desc').startsWith('URL')){
-$('#descriptionbar>h2').html($(this).find('p').html())
-$('#desciption').html('<iframe src="'+decodeURIComponent(escape(window.atob($(this).attr('desc').substring(3))))+'"></ifrmae>')
-eachrightyhide()
-$('#descriptionbar').toggle("slide",{direction:'right'})
-}
-else{
-
-$('#descriptionbar>h2').html($(this).find('p').html())
-$('#desciption').html(new showdown.Converter().makeHtml(decodeURIComponent(escape(window.atob($(this).attr('desc'))))))
-eachrightyhide()
-$('#descriptionbar').toggle("slide",{direction:'right'})
-}
-stage.x(((-$(this).attr('datax'))*2*stage.scaleX()+stage.width())/2)
-stage.y(((-$(this).attr('datay'))*2*stage.scaleX()+stage.height())/2)
-tooltip.position({
-x: $(this).attr('datax'),
-y: $(this).attr('datay'),
-});
-tooltip.text($(this).find('p').html());
-tooltip.show();
-function timeFunction(){setTimeout(function(){
-tooltip.hide();
-},5000)}
-timeFunction()
-}
-})
-
-
-
-$('#descwebsite>input').on('input',function(){
-otpion.attr('desc','URL'+btoa(unescape(encodeURIComponent($(this).val())))) 
-update()
-$('#iframepreview').html('<iframe src="'+$(this).val()+'"></ifrmae>')
-})
-
-$('#descmarkdown>textarea').on('input',function(){
-otpion.attr('desc',btoa(unescape(encodeURIComponent($(this).val())))) 
-update()
-$('#preview').html(new showdown.Converter().makeHtml($(this).val()))
-})
-
-
-$('#mapdelete').click(function(){
-$('.w3-button').hide()
-$('#confirmdeletebackground,#confirmdeletewindow').show()
-$('.mapdeletename').html(data.name)
-$('#confirmdeletewindow>input').attr('placeholder',data.name)
-})
-$('#mapdeletecancel,#confirmdeletebackground').click(function(){
-$('.w3-button').show()
-$('#confirmdeletebackground,#confirmdeletewindow').hide()})
-$('#mapdeleteconfirm').click(function(){
-if($('#confirmdeletewindow>input').val()==data.name){
-  $.ajax({data:{id:data.id,name:data.name},type:'POST',url:'/$delete'}).done(function(notdata){
-    window.location.href='/'+data.id
-  })
+  if (data.visibility == 'Public') {
+    $('#my-signin2,#signin2,#signin,#private').hide()
+    $('#signout,#create,.w3-button').show()
   }
-else{$('#mapdeletemsg').show().delay(500).fadeOut()}
-})//later add mysql delete
-
-$('#optiondelete').click(function(){
-$('#optionbar').toggle("slide",{direction:'right'})
-json.count=json.count-1-otpion.find('aside').length
-otpion.remove()
-update()})
-$('#notmapinfo>input').on('input',function(){
-text.find('p').html($(this).val())
-update()
-})
-$('#mapinfooption>input').on('input',function(){
-$('#mapinfo').find('h2').html($(this).val())
-update()
-})
-$('#addcategory').click(function(){
-$('#sortable').append('<div id='+json.count+'><h2>Category '+json.count+'</h2><a> ▼</a><div></div></div>')
-json.count=json.count+1
-update()
-activesort()
-})//+category
-$('#addwaypoint').click(function(){
-var x=stage.x()/stage.scaleX()-(stage.width()/stage.scaleX()/2)
-var y=stage.y()/stage.scaleY()-(stage.height()/stage.scaleY()/2)
-y=-y
-x=-x
-$('#sortable').append('<aside id='+json.count+' datax="'+x+'" datay="'+y+'"><p>Waypoint '+json.count+'</p></aside>')
-Konva.Image.fromURL('/static/wp.png', function (wp) {
-wp.setAttrs({
-x: x,
-y: y,
-id:json.count,
-shadowColor: 'black',
-shadowBlur:15,
-shadowOffset:{x:0,y:-10},
-shadowOpacity: 0,
-});
-legends.add(wp)
-legends.batchDraw()
-wpevents(wp,$('#'+String(json.count-1)))
-
-})
-
-json.count=json.count+1
-update()
-activesort()
-})//+waypoint
-
-//toggles
-$('.toggles>div').click(function(){
-$('.toggles>div').css('background-color','transparent')
-$(this).css('background-color','#0080ff')
-$('div[id="checked"]').attr('id','')
-$(this).attr('id','checked')
-if($(this).html()=='Off'){
-$('.desc').hide()
-$('#descoff').show()
-}else if($(this).html()=='Markdown'){
-$('.desc').hide()
-$('#descmarkdown').show()
-}else if($(this).html()=='Website'){
-$('.desc').hide()
-$('#descwebsite').show()
-}
-})
-$('.toggles>div').hover(function(){
-$(this).css('background-color','#0080ff')
-})
-$('.toggles>div').mouseleave(function(){
-if($(this).attr('id')!='checked'){$(this).css('background-color','transparent')}
-})
-
-$('.twotoggles>div').click(function(){
-$('.twotoggles>div').css('background-color','transparent')
-$(this).css('background-color','#0080ff')
-$('div[id="checked"]').attr('id','')
-$(this).attr('id','checked')
-if($(this).html()=='Public'){
-  data.visibility='Public'
-  //edit mapinfo visibility
-  $('p:contains("Public"),p:contains("Private")').html('Public')
-}else if($(this).html()=='Private'){
-  data.visibility='Private'
-  $('p:contains("Public"),p:contains("Private")').html('Private')
-}
-update()
-})
-
-$('.twotoggles>div').hover(function(){
-$(this).css('background-color','#0080ff')
-})
-$('.twotoggles>div').mouseleave(function(){
-if($(this).attr('id')!='checked'){$(this).css('background-color','transparent')}
-})
-
-})//ready
-function toggled(num){
-$('.toggles>div:eq('+num+')').attr('id','checked')
-$('.toggles>div').css('background-color','transparent')
-$('.toggles>div:eq('+num+')').css('background-color','#0080ff')
-$('.desc').hide()
-if(num==0) $('#descoff').show()
-else if(num==1) $('#descmarkdown').show()
-else if(num==2) $('#descwebsite').show()
-
-}
-
-
-function dragOverHandler(ev){ev.preventDefault()}
-
-$('#upload').on('click', function () {
-var form_data = new FormData();
-form_data.append("files[]", document.getElementById('multiFiles').files[0]);
-$.ajax({
-url: '$upload'+data.id,
-cache: false,
-contentType: false,
-processData: false,
-data: form_data,
-type: 'post',
-}).done(function(data){
-filename=data.result
-addmap(data.result)
-}).fail(function(data){
-popup(data)
-})
-});//upload
-
-function addmap(filename){
-$('.w3-button').show()
-$('#dropimgdiv').hide()
-Konva.Image.fromURL('static/'+filename, function (mapimg) {
-mapimg.setAttrs({
-x: 0,
-y: 0,
-});
-map.add(mapimg);
-})
-stage.draw();
-if (data.json=='{}'){
-json={}
-json.count=0
-json.author=data.author
-json.waypoint={}
-update()
-}else{
-json=JSON.parse(data.json)
-}
-addbox($('#mapinfo'),data.name,['Author',json.author,'Creation Date',data.date,'Visibility',data.visibility,'Share Link','fandommap.github.io/?'+id])
-if(data.sortable!='{}'){$('#sortable').html($('<div/>').html(data.sortable).text())}
-$('#sortable').find('aside').each(function(item){
-var temp=$(this)
-Konva.Image.fromURL('/static/wp.png', function (wp) {
-wp.setAttrs({
-x: temp.attr('datax'),
-y: temp.attr('datay'),
-id:temp.attr('id'),
-shadowColor: 'black',
-shadowBlur:15,
-shadowOffset:{x:0,y:-10},
-shadowOpacity: 0,
-})
-legends.add(wp)
-wpevents(wp,temp)
-
-})
-
-})
-legends.batchDraw()
-
-}//addmap initjson
-function addbox(location,header,list){
-temp="<div id="+id+"><h2>"+header+"</h2><a> ▼</a><div>"
-for (var i=0;i<list.length;i++){temp=temp.concat('<p>'+list[i]+'</p>')}
-location.append(temp.concat("</div></div>"))
-}
-function update(){
-$('#sortable>div>div').css('min-height','0')
-$.ajax({data:{json:JSON.stringify(json),id:data.id,sortable:$('#sortable').html(),name:$('#mapinfo').find('h2').text(),visibility:data.visibility},type:'POST',url:'/$update'}).done(function(data){
-console.log('updated')})
-$('#sortable>div>div').css('min-height','10%')
-}
-function stagesetup(stage){
-stage.on('dragmove',()=>{document.body.style.cursor='move'});
-stage.on('dragend',()=>{document.body.style.cursor='default'});
-stage.on('wheel', (e) => {
-e.evt.preventDefault();
-var oldScale = stage.scaleX();
-var pointer = stage.getPointerPosition();
-var mousePointTo = {x: (pointer.x - stage.x()) / oldScale,y: (pointer.y - stage.y()) / oldScale,};
-var newScale =e.evt.deltaY > 0 ?  oldScale / 1.1: oldScale * 1.1;
-stage.scale({ x: newScale, y: newScale });
-var newPos = {x: pointer.x - mousePointTo.x * newScale,y: pointer.y - mousePointTo.y * newScale,};
-stage.position(newPos);
-stage.batchDraw();
-})
-
-function getDistance(p1, p2) {
-return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
-}
-
-function getCenter(p1, p2) {
-return{
-x:(p1.x + p2.x)/2,
-y:(p1.y + p2.y)/2,
-};
-}
-var lastCenter=null;
-var lastDist=0;
-stage.on('touchmove', function (e) {
-e.evt.preventDefault();
-var touch1 = e.evt.touches[0];
-var touch2 = e.evt.touches[1];
-if (touch1 && touch2) {//touch1 && touch2
-if (stage.isDragging()) {
-stage.stopDrag();
-}
-var p1={x:touch1.clientX,y:touch1.clientY}
-var p2={x:touch2.clientX,y:touch2.clientY}
-if (!lastCenter) {
-lastCenter = getCenter(p1, p2);
-return;
-}
-var newCenter = getCenter(p1, p2);
-var dist = getDistance(p1, p2);
-if (!lastDist) {
-lastDist = dist;
-}
-var pointTo = {
-x: (newCenter.x - stage.x()) / stage.scaleX(),
-y: (newCenter.y - stage.y()) / stage.scaleX(),
-};
-var scale = stage.scaleX() * (dist / lastDist);
-stage.scaleX(scale);
-stage.scaleY(scale);
-var dx=newCenter.x-lastCenter.x;
-var dy=newCenter.y-lastCenter.y;
-var newPos = {
-x: newCenter.x-pointTo.x*scale+dx,
-y: newCenter.y-pointTo.y*scale+dy,
-};
-stage.position(newPos);
-lastDist = dist;
-lastCenter = newCenter;
-}
-});
-
-stage.on('touchend',function(){
-lastDist=0;
-lastCenter=null;
-})
-}//stagesetup
-
-
-
-
-
-function signOut(){
-$('#my-signin2,#signin2,#signin').show()
-$('#signout,#create').hide()
-gapi.auth2.getAuthInstance().signOut()
-$('#profile').html('')
-}
-function onSignIn(googleUser){
-  $('#my-signin2,#signin2,#signin').hide()
-        $('#signout,#create').show()
-var profile=googleUser.getBasicProfile();
-console.log('Full Name: '+profile.getName());
-console.log('Email: '+profile.getEmail());
-user=profile.getName()
-$('#profile').html('<div>Name</div><div>'+profile.getName()+'</div><div>Email</div><div>'+profile.getEmail()+'</div>')
-if(data.author==user){
-$('#edit').show()
-$('#edit').click(function(){
-eachrightyhide()
-$('#edit').toggleText('✎ Map Author only: Edit Mode','✎ Exit Edit Mode')
-if(enableedit){
-$('.edittool').hide()
-$('#sortable,#sortable>div>div').sortable( "disable" )
-enableedit=false
-$('#sortable>div>div').css('min-height','0')
-}else{
-$('.edittool').show()
-$('#sortable>div>div').css('min-height','10%')
-$('#sortable>div>div').show()
-activesort()
-enableedit=true
-}})}}
-function activesort(){
-$("#sortable").sortable({revert:true,
-connectWith: "#sortable>div>div,#sortable",
-stop:function(event,ui){
-if($(ui.item[0]).find('h2').is('#sortable>div>div>div>h2')){
-$(this).sortable('cancel')
-}
-update()
-}})
-$("#sortable>div>div").sortable({
-connectWith: "#sortable>div>div,#sortable",
-stop:function(event,ui){
-update()
-}})}
-function home(){document.location.href="/";}
-function sidebarbtn(){$('#sidebar').toggle("slide")}
-function userbarbtn(){
-$('#userbar').toggle("slide",{direction:'right'})}
-function optionbarbtn(){
-
-$('#optionbar').toggle("slide",{direction:'right'})}
-function descriptionbarbtn(){
-
-$('#descriptionbar').toggle("slide",{direction:'right'})}
-
-function popupbtn(){$('#popupbox').slideToggle()}
-function popup(msg){
-if($('#popupbox').is(':visible')){$('#popupbox').slideToggle()}
-$('#popupmsg').html(msg)
-$('#popupbox').slideToggle().delay(10000).slideToggle()
-}//popup
-
-function eachrightyhide(){
-$('.righty').each(function(item){
-if($(this).is(':visible')) $(this).toggle("slide",{direction:'right'})})
-}
-
-
-function wpevents(wp,temp){
-  wp.on('mouseenter', function () {
-tooltip.position({
-x: wp.x(),
-y: wp.y(),
-});
-tooltip.text(temp.find('p').html());
-tooltip.show();
-wp.shadowOpacity(1)
-function timeFunction(){setTimeout(function(){
-tooltip.hide();
-
-wp.shadowOpacity(0)},5000)}
-timeFunction()
-});
-wp.on('click tap', function () {
-if(temp.attr('desc')==false||typeof(temp.attr('desc'))=='undefined'||temp.attr('desc')=='off'){
-eachrightyhide()
-}
-else if (temp.attr('desc').startsWith('URL')){
-eachrightyhide()
-$('#descriptionbar>h2').html(temp.find('p').html())
-$('description').html('<iframe src="'+decodeURIComponent(escape(window.atob(temp.attr('desc').substring(3))))+'"></ifrmae>')
-$('#descriptionbar').toggle("slide",{direction:'right'})
-}else{
-eachrightyhide()
-$('#descriptionbar>h2').html(temp.find('p').html())
-$('#desciption').html(new showdown.Converter().makeHtml(decodeURIComponent(escape(window.atob(temp.attr('desc'))))))
-$('#descriptionbar').toggle("slide",{direction:'right'})
-}//markdown else
-})
-
-$(document).on("click", "#sortable>div>div>div,#sortable>aside", function(){
-if(!enableedit&&$(this).attr('id')==temp.attr('id')){wp.shadowOpacity(1)}
-function timeFunction(){setTimeout(function(){wp.shadowOpacity(0)},5000)}
-timeFunction()
-})
-$(document).on("mouseenter",  "#sortable>div>div>aside,#sortable>aside", function(){
-if(!enableedit&&$(this).attr('id')==temp.attr('id')){
-tooltip.position({
-x: wp.x(),
-y: wp.y(),
-});
-tooltip.text(temp.find('p').html());
-tooltip.show();
-wp.shadowOpacity(1)
-}})
-
-$(document).on("mouseleave",  "#sortable>div>div>aside,#sortable>aside", function(){
-if(!enableedit&&$(this).attr('id')==temp.attr('id')){
-
-tooltip.hide();
-wp.shadowOpacity(0)
-}})
-
-
-
-wp.on('mouseout', function () {
-tooltip.hide();
-wp.shadowOpacity(0)
-
-});
-
-
-}//wpevents
-
-
-var googleUser = {};
-var startApp = function() {
-gapi.load('auth2', function(){
-    auth2 = gapi.auth2.init({
-    client_id: '507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com',
-    cookiepolicy: 'single_host_origin',
+  var id = data.id
+  $(document).ready(function () {
+    if (localStorage.theme == 'dark') {
+      $('html').addClass('dark')
+      $('select').val('dark')
+      $('select').trigger('change')
+    }
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { mobile = true }
+    Konva.hitOnDragEnabled = true;
+    stage = new Konva.Stage({
+      container: 'c',
+      width: window.innerWidth,
+      height: window.innerHeight,
+      draggable: true,
     });
-    attachSignin2(document.getElementById('signin2'));
-});
-};
-function attachSignin2(element) {
-auth2.attachClickHandler(element,{},function(googleUser){
-  onSignIn(googleUser)
-});
+    layer = new Konva.Layer();
+    map = new Konva.Layer();
+    legends = new Konva.Layer();
+    tooltipLayer = new Konva.Layer();
+    routes = new Konva.Layer();
+    tooltip = new Konva.Text({
+      text: '',
+      fontFamily: 'Calibri',
+      fontSize: 40,
+      padding: 5,
+      textFill: 'white',
+      fill: 'white',
+      alpha: 1,
+      visible: false,
+      offsetY: -80,
+      offsetX: 100,
+      align:'center',
+      shadowColor: 'black',
+      shadowBlur: 15,
+      shadowOpacity: 1,
+      stroke: 'black',
+      strokeWidth: 0.5,
+    });
+
+    tooltipLayer.add(tooltip);
+    if (!mobile) { stage.add(layer) }
+    stage.add(map);
+    stage.add(legends)
+    stage.add(tooltipLayer)
+    stage.add(routes)
+    var SIZE = 200;
+    checkShapes(SIZE);
+    layer.draw();
+    stage.on('click', function (e) {
+      if ($('#sidebar').is(':visible')) { $('#sidebar').toggle("slide") }
+      if ($('#userbar').is(':visible')) { $('#userbar').toggle("slide", { direction: 'right' }) }
+      if ($('#optionbar').is(':visible')) { $('#optionbar').toggle("slide", { direction: 'right' }) }
+    })
+
+
+    stage.on('wheel', (e) => {
+      SIZE = Math.round(1 / stage.scaleX()) * 200
+    })
+
+    stage.on('dragend touchend wheel', () => {
+      layer.destroyChildren();
+      checkShapes(SIZE);
+      layer.draw();
+    })
+    stagesetup(stage)
+    function checkShapes(SIZE) {
+      const startX = Math.floor((-stage.x() - stage.width()) / stage.scaleX() / SIZE) * SIZE
+      const endX = Math.floor((-stage.x() + stage.width() * 2) / stage.scaleX() / SIZE) * SIZE
+      const startY = Math.floor((-stage.y() - stage.height()) / stage.scaleX() / SIZE) * SIZE
+      const endY = Math.floor((-stage.y() + stage.height() * 2) / stage.scaleX() / SIZE) * SIZE
+      for (var x = startX; x < endX; x += SIZE) {
+        for (var y = startY; y < endY; y += SIZE) {
+          layer.add(new Konva.Rect({
+            x, y, width: SIZE, height: SIZE,
+            stroke: '#e6e6e6',
+            strokeWidth: 1
+          }))
+        }
+      }
+    }//checkShapes
+
+    $.ajax({
+      url: 'static/' + id + '_map.png',
+      success: function () {
+        addmap(id + '_map.png')
+      }, error: function () {
+        $.ajax({
+          url: 'static/' + id + '_map.jpg',
+          success: function () {
+            addmap(id + '_map.jpg')
+          }, error: function () {
+            $.ajax({
+              url: 'static/' + id + '_map.jpeg',
+              success: function () {
+                addmap(id + '_map.jpeg')
+              }, error: function () {
+                $('.w3-button').hide()
+                $('#home').show()
+                $('#dropimgdiv').show()
+                popup(data.name + ' does not have map image, please insert image from dialog above.')
+              }
+            })
+          }
+        })
+      }
+    })
+
+    $.fn.extend({
+      toggleText: function (a, b) {
+        return this.text(this.text() == b ? a : b)
+      }
+    })
+
+
+
+    $(document).on('click', '#mapinfo>div', function () {
+      if (!$(event.target).is('#mapinfo>div>div,#mapinfo>div>div>p')) {
+        $(this).children('div').toggle()
+        $(this).children('a').toggleText(' ▲', ' ▼')
+      }
+      if (enableedit) {
+        eachrightyhide()
+        $('#notmapinfo').hide()
+        $('#mapinfooption').show()
+        $('#mapinfooption>input').val(data.name)
+        if (data.visibility == 'Public') {
+          $('.twotoggles>div:eq(0)').attr('id', 'checked')
+          $('.twotoggles>div').css('background-color', 'transparent')
+          $('.twotoggles>div:eq(0)').css('background-color', '#0080ff')
+        }
+        else if (data.visibility == 'Private') {
+          $('.twotoggles>div:eq(1)').attr('id', 'checked')
+          $('.twotoggles>div').css('background-color', 'transparent')
+          $('.twotoggles>div:eq(1)').css('background-color', '#0080ff')
+        }
+
+        $('#optionbar').toggle("slide", { direction: 'right' })
+
+      }
+    })
+
+    $(document).on("later fix doubleclick", "p,h2", function () {
+      if (enableedit) {
+        $(this).html('<input id="temp" rows="1" value="' + $(this).text() + '">')
+        $("#temp").focus();
+        $("#temp").focus(function () {
+        }).blur(function () {
+          $(this).parent().html($("input").val())
+          update()
+        })
+      }
+    })
+    $(document).on("click", "#sortable>div>h2", function () {
+      $('.waypointed').hide()
+      if (enableedit) {
+        $('#notmapinfo').show()
+        $('#mapinfooption').hide()
+        eachrightyhide()
+        $('#optname').val($(this).html())
+        $('#optionbar').toggle("slide", { direction: 'right' })
+        option = $(this).parent()
+        text = $(this)
+      }
+    })
+    $(document).on("click", "#sortable>div", function () {
+      if (!$(event.target).is('#sortable>div>div>aside,#sortable>div>div>aside>img,#sortable>div>div>aside>p') && !enableedit) {
+        $(this).children('div').toggle()
+        $(this).children('a').toggleText(' ▲', ' ▼')
+      }
+    })
+
+    $(document).on("click", "nav", function () {
+      if (!$(event.target).is('nav>div>aside,nav>div>aside>img,nav>div>aside>p') && !enableedit) {
+        $(this).children('div').toggle()
+        $(this).children('a').toggleText(' ▲', ' ▼')
+      }
+    })
+    $(document).on("click", "nav", function (event) {
+      if (!$(event.target).is('.select2-selection')&&enableedit) {
+      $('.waypointed').hide()
+        $('#notmapinfo').show()
+        $('#mapinfooption').hide()
+        eachrightyhide()
+        $('#optname').val($(this).find('h2').html())
+        $('#optionbar').toggle("slide", { direction: 'right' })
+        option = $(this)
+        text = $(this).find('h2')
+      }
+    })
+
+$(document).on("mouseover", "nav", function () {
+if ($(this).c()){
+  connect=$(this).c()
+id=$(this).d()
+connect.forEach(function(e,i){
+  legends.findOne('#'+e).scale({x:1.5,y:1.5})
+if (connect[i+1]) {  routes.findOne('#'+id+'connect'+e).strokeWidth(50)}
+})  }
+})
+$(document).on("mouseleave", "nav", function () {
+if ($(this).c()){
+connect=$(this).c()
+id=$(this).d()
+connect.forEach(function(e,i){
+  legends.findOne('#'+e).scale({x:1,y:1})
+if(connect[i+1]){routes.findOne('#'+id+'connect'+e).strokeWidth(15)}
+})
 }
+})
+
+$(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
+      if (enableedit) {
+        $('#notmapinfo').show()
+        $('#mapinfooption').hide()
+        eachrightyhide()
+        $('#optx').val($(this).attr('dataX'))
+        $('#opty').val($(this).attr('dataY'))
+        $('.waypointed').show()
+        $('#descriptionbar').removeClass('fandom')
+        if ($(this).attr('desc') == false || typeof ($(this).attr('desc')) == 'undefined' || $(this).attr('desc') == 'off') {
+          toggled(0)
+        }
+        else if ($(this).attr('desc').startsWith('URL')) {
+          toggled(2)
+          $('#descwebsite>input').val(decodeURIComponent(escape(window.atob($(this).attr('desc').substring(3)))))
+          url = decodeURIComponent(escape(window.atob($(this).attr('desc').substring(3))))
+
+          if (url.includes("fandom.com")) {
+            $('#descriptionbar').addClass('fandom')
+            url += '?action=render'
+          }
+          $('#desciption').html('<iframe src="' + url + '"></ifrmae>')
+        }
+        else {
+          $('#preview').html(new showdown.Converter().makeHtml(decodeURIComponent(escape(window.atob($(this).attr('desc'))))))
+          $('textarea').val(decodeURIComponent(escape(window.atob($(this).attr('desc')))))
+          toggled(1)
+        }
+        $('#optname').val($(this).find('p').html())
+        $('#optionbar').toggle("slide", { direction: 'right' })
+        option = $(this)
+        text = $(this).find('p')
+      } else {
+        eachrightyhide()
+        $('#descriptionbar').removeClass('fandom')
+
+        if ($(this).attr('desc') == false || typeof ($(this).attr('desc')) == 'undefined' || $(this).attr('desc') == 'off') {
+          console.log('off desc')
+        }
+        else if ($(this).attr('desc').startsWith('URL')) {
+          $('#descriptionbar>h2').html($(this).find('p').html())
+          url = decodeURIComponent(escape(window.atob($(this).attr('desc').substring(3))))
+          if (url.includes("fandom.com")) {
+            $('#descriptionbar').addClass('fandom')
+            url += '?action=render'
+          }
+          $('#desciption').html('<iframe src="' + url + '"></ifrmae>')
+
+          eachrightyhide()
+          $('#descriptionbar').toggle("slide", { direction: 'right' })
+        }
+        else {
+
+          $('#descriptionbar>h2').html($(this).find('p').html())
+          $('#desciption').html(new showdown.Converter().makeHtml(decodeURIComponent(escape(window.atob($(this).attr('desc'))))))
+          eachrightyhide()
+          $('#descriptionbar').toggle("slide", { direction: 'right' })
+        }
+        stage.x(((-$(this).attr('datax')) * 2 * stage.scaleX() + stage.width()) / 2)
+        stage.y(((-$(this).attr('datay')) * 2 * stage.scaleX() + stage.height()) / 2)
+        tooltip.position({
+          x: $(this).attr('datax'),
+          y: $(this).attr('datay'),
+        });
+        tooltip.text($(this).find('p').html());
+        tooltip.show();
+        function timeFunction() {
+          setTimeout(function () {
+            tooltip.hide();
+          }, 5000)
+        }
+        timeFunction()
+      }
+    })
+
+
+
+    $('#descwebsite>input').on('input', function () {
+      option.attr('desc', 'URL' + btoa(unescape(encodeURIComponent($(this).val()))))
+      update()
+
+      url = $(this).val()
+      if (url.includes("fandom.com")) {
+        $('#descriptionbar').addClass('fandom')
+        url += '?action=render'
+      } $('#iframepreview').html('<iframe src="' + url + '"></ifrmae>')
+    })
+
+    $('#descmarkdown>textarea').on('input', function () {
+      option.attr('desc', btoa(unescape(encodeURIComponent($(this).val()))))
+      update()
+      $('#preview').html(new showdown.Converter().makeHtml($(this).val()))
+    })
+
+
+    $('#mapdelete').click(function () {
+      $('.w3-button').hide()
+      $('#home').show()
+
+      $('#confirmdeletebackground,#confirmdeletewindow').show()
+      $('.mapdeletename').html(data.name)
+      $('#confirmdeletewindow>input').attr('placeholder', data.name)
+    })
+    $('#mapdeletecancel,#confirmdeletebackground').click(function () {
+      $('.w3-button').show()
+      $('#confirmdeletebackground,#confirmdeletewindow').hide()
+    })
+    $('#mapdeleteconfirm').click(function () {
+      if ($('#confirmdeletewindow>input').val() == data.name) {
+        $.ajax({ data: { id: data.id, name: data.name }, type: 'POST', url: '/$delete' }).done(function (notdata) {
+          window.location.href = '/' + data.id
+        })
+      }
+      else { $('#mapdeletemsg').show().delay(500).fadeOut() }
+    })
+    $('#optiondelete').click(function () {
+      $('#optionbar').toggle("slide", { direction: 'right' })
+      if (!option.is('nav')) legends.findOne('#' + option.attr('id')).destroy()
+      $('.' + option.d()).remove()
+      option.remove()
+      updateroute(true)
+      update()
+    })
+    $('#optname').on('input', function () {
+      text.html($(this).val())
+      $('.' + option.d()).find('p').html($(this).val())
+      update()
+    })
+    $('#mapinfooption>input').on('input', function () {
+      $('#mapinfo').find('h2').html($(this).val())
+      update()
+    })
+    $('#search').keyup(function () {
+      if ($(this).val() == '') { $('#sortable').find('aside').show() }
+      list = $('#sortable').find('aside')
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].textContent.toUpperCase().indexOf($(this).val().toUpperCase()) > -1 && list[i].style.display == "") {
+          list[i].style.display = ""
+        } else { list[i].style.display = "none" }
+      }
+    })
+    $('#addcategory').click(function () {
+      $('#sortable').append('<div id=' + json.count + '><h3>🗀  </h3><h2>Category ' + json.count + '</h2><a> ▼</a><div></div></div>')
+      json.count = json.count + 1
+      update()
+      activesort()
+    })//+category
+    $('#addwaypoint').click(function () {
+      var x = stage.x() / stage.scaleX() - (stage.width() / stage.scaleX() / 2)
+      var y = stage.y() / stage.scaleY() - (stage.height() / stage.scaleY() / 2)
+      y = -y
+      x = -x
+      Konva.Image.fromURL('/static/wp.png', function (wp) {
+        wp.setAttrs({
+          x: x,
+          y: y,
+          id: json.count.toString(),
+          shadowColor: 'black',
+          shadowBlur: 15,
+          shadowOffset: { x: 0, y: -10 },
+          shadowOpacity: 0,
+          draggable: true,
+          offsetX:33,
+          offsetY:48,
+        });
+        legends.add(wp)
+        legends.batchDraw()
+        $('#sortable').append('<aside id=' + json.count + ' datax="' + x + '" datay="' + y + '"><img src=static/wp.png> <p>Waypoint ' + json.count + '</p></aside>')
+        wpevents(wp, $('#' + json.count.toString()))
+        json.count = json.count + 1
+        update()
+        activesort()
+      })
+    })//+waypoint
+    $('#addroute').click(function () {
+      $('#sortable').append('<nav id=' + json.count + '><h3>↬  </h3><h2>Route ' + json.count +
+        '</h2><a> ▼</a><br><div></div><select></select></nav>')
+      $('nav>select').next(".select2-container").show()
+      $('#' + json.count + '>select').show()
+      // selectevent($('#' + json.count + '>select'))
+      activesort()
+      json.count = json.count + 1
+      update()
+    })//+route
+    //toggles
+    $('.toggles>div').click(function () {
+      $('.toggles>div').css('background-color', 'transparent')
+      $(this).css('background-color', '#0080ff')
+      $('div[id="checked"]').attr('id', '')
+      $(this).attr('id', 'checked')
+      if ($(this).html() == 'Off') {
+        $('.desc').hide()
+        $('#descoff').show()
+      } else if ($(this).html() == 'Markdown') {
+        $('.desc').hide()
+        $('#descmarkdown').show()
+      } else if ($(this).html() == 'Website') {
+        $('.desc').hide()
+        $('#descwebsite').show()
+      }
+    })
+    $('.toggles>div').hover(function () {
+      $(this).css('background-color', '#0080ff')
+    })
+    $('.toggles>div').mouseleave(function () {
+      if ($(this).attr('id') != 'checked') { $(this).css('background-color', 'transparent') }
+    })
+
+    $('.twotoggles>div').click(function () {
+      $('.twotoggles>div').css('background-color', 'transparent')
+      $(this).css('background-color', '#0080ff')
+      $('div[id="checked"]').attr('id', '')
+      $(this).attr('id', 'checked')
+      if ($(this).html() == 'Public') {
+        data.visibility = 'Public'
+        $('p:contains("Public"),p:contains("Private")').html('Public')
+      } else if ($(this).html() == 'Private') {
+        data.visibility = 'Private'
+        $('p:contains("Public"),p:contains("Private")').html('Private')
+      }
+      update()
+    })
+
+    $('.twotoggles>div').hover(function () {
+      $(this).css('background-color', '#0080ff')
+    })
+    $('.twotoggles>div').mouseleave(function () {
+      if ($(this).attr('id') != 'checked') { $(this).css('background-color', 'transparent') }
+    })
+
+    function fitStageIntoParentContainer() {
+      stage.width(window.innerWidth)
+      stage.height(window.innerHeight)
+    }
+    fitStageIntoParentContainer();
+    window.addEventListener('resize', fitStageIntoParentContainer);
+    $("select").select2();
+
+  })//ready
+
+  function iframeready() {
+    $("#iframepreview>iframe,#desciption>iframe").on("load", function () {
+      console.log('iframeload')
+      let head = $(this).contents().find("head");
+      let css = '<style>html{color:white}</style>';
+      $(head).append(css);
+    });
+  }
+
+  function toggled(num) {
+    $('.toggles>div:eq(' + num + ')').attr('id', 'checked')
+    $('.toggles>div').css('background-color', 'transparent')
+    $('.toggles>div:eq(' + num + ')').css('background-color', '#0080ff')
+    $('.desc').hide()
+    if (num == 0) $('#descoff').show()
+    else if (num == 1) $('#descmarkdown').show()
+    else if (num == 2) $('#descwebsite').show()
+
+  }
+
+
+  function dragOverHandler(ev) { ev.preventDefault() }
+
+  $('#upload').on('click', function () {
+    var form_data = new FormData();
+    form_data.append("files[]", document.getElementById('multiFiles').files[0]);
+    $.ajax({
+      url: '$upload' + data.id,
+      cache: false,
+      contentType: false,
+      processData: false,
+      data: form_data,
+      type: 'post',
+    }).done(function (data) {
+      filename = data.result
+      addmap(data.result)
+    }).fail(function (data) {
+      popup(data)
+    })
+  });//upload
+
+  function addmap(filename) {
+    $('#dropimgdiv').hide()
+    Konva.Image.fromURL('static/' + filename, function (mapimg) {
+      mapimg.setAttrs({
+        x: 0,
+        y: 0,
+      });
+      map.add(mapimg);
+      if (mapimg.width() > window.innerWidth) {
+        stage.scaleX(window.innerWidth / mapimg.width())
+        stage.scaleY(window.innerWidth / mapimg.width())
+      }
+    })
+    stage.draw();
+    if (data.json == '{}') {
+      json = {}
+      json.count = 0
+      json.author = data.author
+      json.waypoint = {}
+      update()
+    } else {
+      json = JSON.parse(data.json)
+    }
+    addbox($('#mapinfo'), data.name, ['Author', json.author, 'Creation Date', data.date, 'Visibility', data.visibility, 'Share Link', 'fandommap.github.io/?' + id])
+    if (data.sortable != '{}') { $('#sortable').html($('<div/>').html(data.sortable).text()) }
+    $('#sortable').find('aside').each(function (item) {
+
+      var temp = $(this)
+      if (!temp.is('nav>div>aside')) {
+        Konva.Image.fromURL('/static/wp.png', function (wp) {
+          wp.setAttrs({
+            x: parseFloat(temp.attr('datax')),
+            y: parseFloat(temp.attr('datay')),
+            id: temp.attr('id'),
+            shadowColor: 'black',
+            shadowBlur: 15,
+            shadowOffset: { x: 0, y: -10 },
+            shadowOpacity: 0,
+            offsetX:33,
+            offsetY:48,
+          })
+          legends.add(wp)
+          wpevents(wp, temp)
+        })
+      }
+    }).promise().done(function () {
+      function loadSprite(src, callback) {
+        var sprite = new Image();
+        sprite.onload = callback;
+        sprite.src = src;
+      }
+      loadSprite('static/wp.png', function () {
+        updateroute()
+      });
+    })//done
+    legends.batchDraw()
+    $('#sortable').find('select').each(function () {
+      selectevent($(this))
+      $('nav>select').next(".select2-container").hide()
+    })
+    $('nav').each(function () {
+      temp = ''
+      $(this).find('aside').each(function () { temp += $(this).d() + ',' })
+      $(this).attr('connector', temp.slice(0, -1))
+    })
+  }//addmap initjson
+  function addbox(location, header, list) {
+    temp = "<div id=" + id + "><h2>" + header + "</h2><a> ▼</a><div>"
+    for (var i = 0; i < list.length; i++) { temp = temp.concat('<p>' + list[i] + '</p>') }
+    location.append(temp.concat("</div></div>"))
+  }
+  function update() {
+    $('#sortable').find('select').each(function () {
+      if ($(this).data('select2')) $(this).select2('destroy')
+    })
+    $('#sortable>div>div').css('min-height', '0')
+    $('nav>select').next(".select2-container").hide()
+    $.ajax({ data: { json: JSON.stringify(json), id: data.id, sortable: $('#sortable').html(), name: $('#mapinfo').find('h2').text(), visibility: data.visibility }, type: 'POST', url: '/$update' }).done(function (data) {
+      console.log('updated')
+    })
+    $('#sortable>div>div').css('min-height', '10%')
+    $('nav>select').next(".select2-container").show()
+    $('#sortable').find('select').each(function () {
+      selectevent($(this))
+    })
+
+  }
+  function stagesetup(stage) {
+    stage.on('dragmove', () => { document.body.style.cursor = 'move' });
+    stage.on('dragend', () => { document.body.style.cursor = 'default' });
+    stage.on('wheel', (e) => {
+      e.evt.preventDefault();
+      var oldScale = stage.scaleX();
+      var pointer = stage.getPointerPosition();
+      var mousePointTo = { x: (pointer.x - stage.x()) / oldScale, y: (pointer.y - stage.y()) / oldScale, };
+      var newScale = e.evt.deltaY > 0 ? oldScale / 1.1 : oldScale * 1.1;
+      stage.scale({ x: newScale, y: newScale });
+      var newPos = { x: pointer.x - mousePointTo.x * newScale, y: pointer.y - mousePointTo.y * newScale, };
+      stage.position(newPos);
+      stage.batchDraw();
+    })
+
+    function getDistance(p1, p2) {
+      return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+    }
+
+    function getCenter(p1, p2) {
+      return {
+        x: (p1.x + p2.x) / 2,
+        y: (p1.y + p2.y) / 2,
+      };
+    }
+    var lastCenter = null;
+    var lastDist = 0;
+    stage.on('touchmove', function (e) {
+      e.evt.preventDefault();
+      var touch1 = e.evt.touches[0];
+      var touch2 = e.evt.touches[1];
+      if (touch1 && touch2) {//touch1 && touch2
+        if (stage.isDragging()) {
+          stage.stopDrag();
+        }
+        var p1 = { x: touch1.clientX, y: touch1.clientY }
+        var p2 = { x: touch2.clientX, y: touch2.clientY }
+        if (!lastCenter) {
+          lastCenter = getCenter(p1, p2);
+          return;
+        }
+        var newCenter = getCenter(p1, p2);
+        var dist = getDistance(p1, p2);
+        if (!lastDist) {
+          lastDist = dist;
+        }
+        var pointTo = {
+          x: (newCenter.x - stage.x()) / stage.scaleX(),
+          y: (newCenter.y - stage.y()) / stage.scaleX(),
+        };
+        var scale = stage.scaleX() * (dist / lastDist);
+        stage.scaleX(scale);
+        stage.scaleY(scale);
+        var dx = newCenter.x - lastCenter.x;
+        var dy = newCenter.y - lastCenter.y;
+        var newPos = {
+          x: newCenter.x - pointTo.x * scale + dx,
+          y: newCenter.y - pointTo.y * scale + dy,
+        };
+        stage.position(newPos);
+        lastDist = dist;
+        lastCenter = newCenter;
+      }
+    });
+
+    stage.on('touchend', function () {
+      lastDist = 0;
+      lastCenter = null;
+    })
+  }//stagesetup
+  function signOut() {
+    $('#my-signin2,#signin2,#signin').show()
+    $('#signout,#create').hide()
+    gapi.auth2.getAuthInstance().signOut()
+    $('#profile').html('')
+  }
+  function onSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    console.log('Full Name: ' + profile.getName());
+    console.log('Email: ' + profile.getEmail());
+    user = profile.getName()
+    if ((data.email == profile.getEmail() && data.visibility == 'Private') || data.visibility == 'Public') {
+      $('.w3-button').show()
+      $('#my-signin2,#signin2,#signin,#private').hide()
+      $('#signout,#create').show()
+      $('#profile').html('<div>Name</div><div>' + profile.getName() + '</div><div>Email</div><div>' + profile.getEmail() + '</div>')
+      if (data.author == user) {
+        $('#edit').show()
+        $('#edit').click(function () {
+          eachrightyhide()
+          $('#edit').toggleText('✎ Map Author only: Edit Mode', '✎ Exit Edit Mode')
+          if (enableedit) {//exit edit mode
+            $('.edittool').hide()
+            $('#sortable,#sortable>div>div').sortable("disable")
+            enableedit = false
+            $('#sortable>div>div').css('min-height', '0')
+            $('#sortable').find('select').each(function () { $(this).next(".select2-container").hide() })
+            legends.find('Image').forEach(function (element) {
+              element.draggable(false)
+            })
+          } else {//enter edit mode
+            $('.edittool').show()
+            $('#sortable>div>div').css('min-height', '10%')
+            $('#sortable>div>div').show()
+            $('#sortable').find('select').each(function () { $(this).next(".select2-container").show() })
+            activesort()
+            enableedit = true
+            legends.find('Image').forEach(function (element) {
+              element.draggable(true)
+            })
+          }
+        })
+      }
+    }
+  }
+  function activesort() {
+    $("#sortable").sortable({
+      revert: true,
+      connectWith: "#sortable>div>div,#sortable",
+      stop: function (event, ui) {
+        if ($(ui.item[0]).find('h2').is('#sortable>div>div>div>h2')) {
+          $(this).sortable('cancel')
+        }
+        update()
+      }
+    })
+    $("#sortable>div>div").sortable({
+      connectWith: "#sortable>div>div,#sortable",
+      stop: function (event, ui) {
+        update()
+      }
+    })
+    $("nav>div").sortable({
+      stop: function (event, ui) {
+        updateroute(true)
+        update()
+      }
+    })
+  }
+  function home() { document.location.href = "/"; }
+  function sidebarbtn() { $('#sidebar').toggle("slide") }
+  function userbarbtn() {
+    $('#userbar').toggle("slide", { direction: 'right' })
+  }
+  function optionbarbtn() {
+
+    $('#optionbar').toggle("slide", { direction: 'right' })
+  }
+  function descriptionbarbtn() {
+
+    $('#descriptionbar').toggle("slide", { direction: 'right' })
+  }
+
+  function popupbtn() { $('#popupbox').slideToggle() }
+  function popup(msg) {
+    if ($('#popupbox').is(':visible')) { $('#popupbox').slideToggle() }
+    $('#popupmsg').html(msg)
+    $('#popupbox').slideToggle().delay(10000).slideToggle()
+  }//popup
+
+  function eachrightyhide() {
+    $('.righty').each(function (item) {
+      if ($(this).is(':visible')) $(this).toggle("slide", { direction: 'right' })
+    })
+  }
+  function wpevents(wp, temp) {
+    $('#optx').on('input', function () {
+      if (enableedit && option.attr('id') == temp.attr('id')) {
+        temp.attr('dataX', $(this).val())
+        wp.x($(this).val())
+        update()
+      }
+    })
+    $('#opty').on('input', function () {
+      if (enableedit && option.attr('id') == temp.attr('id')) {
+        temp.attr('dataY', $(this).val())
+        wp.x($(this).val())
+        update()
+      }
+    })
+    wp.on('dragmove', function () {
+      updateObjects()
+      $('#optx').val(parseFloat(wp.x()))
+      $('#opty').val(parseFloat(wp.y()))
+      stage.container().style.cursor = 'move'
+    })
+    wp.on('dragend', function () {
+      stage.container().style.cursor = 'default'
+      temp.attr('datax', parseFloat(wp.x()))
+      temp.attr('datay', parseFloat(wp.y()))
+      $('#optx').val(parseFloat(wp.x()))
+      $('#opty').val(parseFloat(wp.y()))
+      update()
+    })
+    wp.on('mouseenter', function () {
+
+      if (enableedit) stage.container().style.cursor = 'move'
+      tooltip.position({
+        x: wp.x(),
+        y: wp.y(),
+      });
+      wp.scale({x:1.5,y:1.5})
+      globaltemp = temp
+      tooltip.text(temp.find('p').html());
+      tooltip.show();
+      wp.shadowOpacity(1)
+      function timeFunction() {
+        setTimeout(function () {
+          tooltip.hide();
+          wp.scale({x:1,y:1})
+          wp.shadowOpacity(0)
+        }, 10000)
+      }
+      timeFunction()
+    });
+    wp.on('click tap', function () {
+      $('#descriptionbar').removeClass('fandom')
+      if (temp.attr('desc') == false || typeof (temp.attr('desc')) == 'undefined' || temp.attr('desc') == 'off') {
+        eachrightyhide()
+      }
+      else if (temp.attr('desc').startsWith('URL')) {
+        eachrightyhide()
+        $('#descriptionbar>h2').html(temp.find('p').html())
+        url = decodeURIComponent(escape(window.atob(temp.attr('desc').substring(3))))
+        if (url.includes("fandom.com")) {
+          $('#descriptionbar').addClass('fandom')
+          url += '?action=render'
+        }
+        $('#desciption').html('<iframe src="' + url + '"></ifrmae>')
+        $('#descriptionbar').toggle("slide", { direction: 'right' })
+      } else {
+        eachrightyhide()
+        $('#descriptionbar>h2').html(temp.find('p').html())
+        $('#desciption').html(new showdown.Converter().makeHtml(decodeURIComponent(escape(window.atob(temp.attr('desc'))))))
+        $('#descriptionbar').toggle("slide", { direction: 'right' })
+      }//markdown else
+    })
+
+
+    $(document).on("click", "#sortable>div>div>div,#sortable>aside", function () {
+      if (!enableedit && $(this).attr('id') == temp.attr('id')) { wp.shadowOpacity(1) }
+      function timeFunction() { setTimeout(function () { wp.shadowOpacity(0) }, 5000) }
+      timeFunction()
+    })
+    $(document).on("mouseenter", "#sortable>div>div>aside,#sortable>aside", function () {
+      if (!enableedit && $(this).attr('id') == temp.attr('id')) {
+        tooltip.position({
+          x: wp.x(),
+          y: wp.y(),
+        });
+        tooltip.text(temp.find('p').html());
+        tooltip.show();
+        wp.scale({x:1.5,y:1.5})
+        wp.shadowOpacity(1)
+      }
+
+    })
+    $(document).on("mouseleave", "#sortable>div>div>aside,#sortable>aside", function () {
+      if (!enableedit && $(this).attr('id') == temp.attr('id')) {
+        tooltip.hide();
+        wp.shadowOpacity(0)
+        wp.scale({x:1,y:1})
+      }
+    })
+    wp.on('mouseout', function () {
+      if (enableedit) stage.container().style.cursor = 'default';
+      tooltip.hide();
+      wp.shadowOpacity(0)
+      wp.scale({x:1,y:1})
+          });
+  }//wpevents
+  var googleUser = {};
+  gapi.load('auth2', function () {
+    auth2 = gapi.auth2.init({
+      client_id: '507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com',
+      cookiepolicy: 'single_host_origin',
+    });
+    attachSignin(document.getElementById('signin'));
+    attachSignin(document.getElementById('signin2'));
+  });
+  function attachSignin(element) {
+    auth2.attachClickHandler(element, {}, function (googleUser) {
+      onSignIn(googleUser)
+    });
+  }
+  $('select').on('change', function () {
+    if (this.value == 'dark') {
+      localStorage.theme = 'dark'
+      $('html').addClass('dark')
+    }
+    else {
+      localStorage.theme = 'white'
+      $('html').removeClass('dark')
+    }
+  });
+
+
+  $.fn.d = function () {
+    return this.attr('id').toString()
+  };
+  $.fn.n = function () {
+    return this.find('p').html()
+  };
+  $.fn.p = function () {
+    return this.find('p').html()
+  };
+  $.fn.c = function () {
+    if (this.attr('connector')) return this.attr('connector').split(',').map(x=>x.toString())
+    else false
+  };
+  function clear() {
+    $('#sortable').html('')
+    update()
+    function timeFunction() {
+      setTimeout(function () { location.reload(); }, 3000);
+    }
+    timeFunction()
+
+  }
+
+  function selectevent(select) {
+    select.off()
+    if (select.data('select2')) {
+      select.select2('destroy');
+    }
+    globalselect = select
+    select.select2({
+      // placeholder: {id:'-1',text:'.'},
+      //placeholder: 'Route Waypoints...',
+      initSelection: function (element, callback) { },
+      allowClear: true,
+      width: '80%'
+    })
+    select.append('<option value="false">Route Waypoint...</option>')
+    select.val(0).trigger('change')
+    select.trigger('change')
+    select.on('select2:opening', function () {
+      select.empty()
+      select.append('<option value="false">Route Waypoint...</option>')
+      $('#sortable').find('aside').each(function () {
+        if (!$(this).is('nav>div>aside')) select.append(new Option($(this).n(), $(this).d(), false, false))
+      })
+      select.val(0).trigger('change')
+    })
+    select.on('select2:select', function (e) {
+      temp = $('#' + e.params.data.id).clone()
+      temp.addClass(e.params.data.id)
+      select.parent().find('div').append(temp)
+      temp = ''
+      select.parent().find('aside').each(function () { temp += $(this).d() + ',' })
+      select.parent().attr('connector', temp.slice(0, -1))
+      updateroute()
+      update()
+    })
+  }
+  function getConnectorPoints(from, to) {
+    let angle = Math.atan2(from.y - to.y, to.x - from.x);
+    const radius = 50;
+    return [
+      from.x + -radius * Math.cos(angle + Math.PI),
+      from.y + radius * Math.sin(angle + Math.PI),
+      to.x + -(radius + 10) * Math.cos(angle),
+      to.y + (radius + 10) * Math.sin(angle),
+    ];
+  }
+  function updateObjects() {
+    $('nav').each(function () {
+      connectors = $(this).attr('connector').split(',')
+      id=$(this).d()
+      connectors.forEach((connect, index) => {
+        if (connectors[index + 1]) {
+          routes.findOne('#'+id+'connect' + connect.toString()).points(getConnectorPoints(
+            legends.findOne('#' + connect.toString()).position(),
+            legends.findOne('#' + connectors[index + 1].toString()).position()
+          ))
+        }
+      })
+    })
+  }
+  createlines()
+  function createlines() {
+    $('nav').each(function () {
+      connectors = $(this).attr('connector').split(',')
+      id=$(this).d()
+      connectors.forEach((connect, index) => {
+        if (connectors[index + 1]) {
+          var line = new Konva.Arrow({
+            strokeWidth: 15,
+            stroke: '#0080ff',
+            id: id+'connect' + connect,
+            fill: '#0080ff',
+          });
+          routes.add(line);
+        }
+      })
+    })
+  }
+  function updateroute(updatelist) {
+    if (updatelist) {
+      $('nav').each(function () {
+        temp = ''
+        $(this).find('aside').each(function () { temp += $(this).d() + ',' })
+        $(this).attr('connector', temp.slice(0, -1))
+      })
+    }
+    routes.destroyChildren()
+    createlines()
+    updateObjects();
+  }
 </script>

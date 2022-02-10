@@ -3,25 +3,25 @@ sudo service apache2 restart
 -->
 
 <link rel="shortcut icon" href="static/icon_blue.png">
-
 <head>
-    <title>Fandom Map</title>
-    <script src="https://apis.google.com/js/api:client.js"></script>
+<title>Fandom Map</title>
 
-    <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id"
-        content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+<script src="https://apis.google.com/js/api:client.js"></script>
+<meta name="google-signin-scope" content="profile email">
+<meta name="google-signin-client_id"
+content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com">
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" /> 
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 </head>
-
 <style>
     html,
     body {
@@ -85,7 +85,7 @@ overflow-y: auto;
     #sidebarclose{
 text-align: right;
     }
-    #sidebarbox>div,#signin2,
+    #sidebarbox>div,#signin2,#signout,
     #sidebarclose {
         z-index: 10;
         margin: 5%;
@@ -94,7 +94,7 @@ text-align: right;
         
     }
 
-    #sidebarbox>div:hover,
+    #sidebarbox>div:hover,#signout:hover,
     #sidebarclose:hover {
         background-color: #0080ff
     }
@@ -319,6 +319,10 @@ text-align: right;
     #userbarclose{
         text-align: right;
     }
+    .dark{
+        color: white;
+        background-color: black;
+    }
 </style>
 
 <button class="w3-button w3-xlarge sidebarbutton" onclick="sidebarbtn()">☰</button>
@@ -333,8 +337,15 @@ text-align: right;
     <div id='sidebarclose' onclick="userbarbtn()">Close X</div>
     <div id=signin2><img class=g src=static/goo.png>Google Sign In</div>
     <div id='signin0'class="g-signin2"data-onsuccess="onSignIn"data-theme="dark"></div>
-    <button id='signout' onclick="signOut()">Sign out</button>
+    <div id='signout' onclick="signOut()"><img class=g src=static/goo.png>Sign Out</div>
+
     <div id='profile'></div>
+    <br>
+Theme<br>
+    <select id=select theme="google" width="400" placeholder="Choose theme..." data-search="true">
+        <option value="white">White</option>
+        <option value="dark">Dark</option>
+        </select>
 </div>
 <!--userbar-->
 <div id="fullpage">
@@ -435,11 +446,27 @@ text-align: right;
         normalScrollElements: '.w3-sidebar,.sidebarbtn'
     });
     $(document).ready(function () {
+        if (localStorage.theme=='dark'){
+    $('html').addClass('dark')
+$('select').val('dark')
+$('select').trigger('change')
+        }
         let sidebarlist = ['Welcome', 'Redirect', 'About', 'Terms and Service', 'FAQ', 'Explore']
         for (let i = 0; i < sidebarlist.length; i++) {
             $('#sidebarbox').append('<div>' + sidebarlist[i] + '</div>')
         }
         $('#fadein').delay(300).fadeIn(800);
+        $("select").select2();
+        $('select').on('change', function() {
+  if(this.value=='dark') {
+    localStorage.theme='dark'  
+    $('html').addClass('dark')}
+    else{
+        localStorage.theme='white'  
+    $('html').removeClass('dark')
+    }
+});
+
     })//ready
     function signOut() {
         $('#my-signin2,#signin2,#signin').show()
@@ -533,7 +560,6 @@ $('#profile').html('<div>Name</div><div>'+profile.getName()+'</div><div>Email</d
 
     })
     var googleUser = {};
-var startApp = function() {
 gapi.load('auth2', function(){
     auth2 = gapi.auth2.init({
     client_id: '507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com',
@@ -542,7 +568,6 @@ gapi.load('auth2', function(){
     attachSignin(document.getElementById('createtd'));
     attachSignin2(document.getElementById('signin2'));
 });
-};
 function attachSignin(element) {
 auth2.attachClickHandler(element,{},function(googleUser){
     var profile = googleUser.getBasicProfile();
@@ -565,5 +590,8 @@ auth2.attachClickHandler(element,{},function(googleUser){
 
 });
 }
+
+
+
+
 </script>
-<script>startApp();</script>

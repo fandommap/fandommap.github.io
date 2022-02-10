@@ -27,6 +27,9 @@ def index():
 @app.route('/$temp')
 def temp():
     return render_template('temp.html')
+@app.route('/$tsp')
+def tsp():
+    return render_template('tsp.html')
 @app.route('/$fetch',methods=['POST'])
 def fetch():
     cursor.execute("SELECT * FROM maps WHERE id='"+id+"';")
@@ -49,8 +52,12 @@ def maps(id):
     try:
         return render_template('map.html',id=id,name=result[1],email=result[2],author=result[3],json=result[4],sortable=result[5],visibility=result[6],date=result[7])
     except:
-        return render_template('index.html',popup='Error: Map '+id+' does not exists')
-@app.route('/temp<id>')
+        cursor.execute('SELECT id,name,author,date FROM maps WHERE visibility="Public"')
+        temp=''
+        for row in cursor.fetchall():
+            temp+='列列'.join(row)+'行行'
+        return render_template('index.html',popup='Error: Map '+id+' does not exists',result=temp)
+@app.route('/$temp<id>')
 def mapstemp(id):
     cursor.execute("SELECT * FROM maps WHERE id='"+id+"';")
     result=cursor.fetchone()

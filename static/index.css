@@ -1,9 +1,19 @@
+
 html,body{
 font-family: Arial;
 padding: 0;
 margin: 0;
 height:100%;
 overflow-y:hidden;
+}
+h3{
+    display: block;
+    font-size: 2em;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
 }
 #sidebar,#userbar,#optionbar,.righty{
 overflow-y: scroll;
@@ -21,11 +31,8 @@ color: white;
 #userbar,#optionbar,.righty{
 right:0;
 background-image:linear-gradient(to left,black,rgba(0, 0, 0, 0.05 ));
-text-align: right;
-align-items: right;
-
-text-align: right;
-
+align-items: center;
+text-align: center;
 }
 ::-webkit-scrollbar {
 width: 10px;
@@ -39,7 +46,7 @@ background: #888;
 ::-webkit-scrollbar-thumb:hover {
 background: #555; 
 }
-#sidebarbox>a>div,#sidebarclose,#userbarclose,#edit,.edittool,
+#sidebarbox>a>div,#sidebarclose,#userbarclose,#edit,.edittool,#signout,
 #optiondelete,#optionbarclose,.rightyclose,#mapdelete{
 margin-bottom: 10%;
 
@@ -49,8 +56,9 @@ cursor: pointer;
 padding: 3%;
 }
 #sidebarbox>a:link{text-decoration: none}
-#sidebarbox>a>div:hover,#edit:hover,.edittool:hover,#optionbarclose:hover,#mapdelete:hover
-,#userbarclose:hover,#sidebarclose:hover,#optiondelete:hover,.rightyclose:hover{
+#sidebarbox>a>div:hover,#edit:hover,.edittool:hover,
+#optionbarclose:hover,#mapdelete:hover,#signout:hover,
+#userbarclose:hover,#sidebarclose:hover,#optiondelete:hover,.rightyclose:hover{
 background-color: #0080ff}
 .sidebarbutton,.userbutton{
 
@@ -81,10 +89,6 @@ margin-left:auto;
 margin-right:auto;
 }
 .userbutton,#signin{right:0}
-#userbar>div>div{
-margin: 5%;
-padding: 5%;
-}
 #signout{display:none}
 #popupbox{
 background-color: black;
@@ -135,10 +139,10 @@ display: none;
 #c{
 z-index: 0;
 }
-#mapinfo>div>h2,#mapinfo>div>a,#sortable>div>a{
+#mapinfo>div>h2,#mapinfo>div>a,#sortable>div>a,#sortable>nav>a{
 display: inline;
 }
-#mapinfo>div>a,#sortable>div>a{
+#mapinfo>div>a,#sortable>div>a,#sortable>nav>a{
 padding-top: 5%;
 float: right;
 font-size: 150%;
@@ -186,14 +190,15 @@ display: none;
 .edittool{
 display: none;
 }
-#sortable>div>h2{
+#sortable>div>h2,nav>h2,#sortable>div>h3,nav>h3{
 width: 90%;
 overflow-x: hidden;
 line-height: normal;
 display:inline-block;
 margin: 0;
+display: inline;
 }
-#sortable>div,#sortable>aside {
+#sortable>div,#sortable>aside ,#sortable>nav{
 padding-top: 3%;
 padding-bottom: 3%;
 border-radius: 5px;
@@ -209,9 +214,7 @@ border:2px #0080ff;
 border-style: solid;
 margin-bottom: 5%;
 }
-#sortable>div > h2 {
-display: inline;
-}
+
 input,textarea{
 width: 100%;
 outline:0;
@@ -237,9 +240,7 @@ padding: 10px 15px 10px;
 #sidebarclose{
 margin-left: 25%;
 }
-#userbarclose,#optionbarclose,.rightyclose{
-margin-right: 25%;
-}
+
 .toggles,.twotoggles{
 margin-top: 5%;
 margin-bottom: 5%;
@@ -344,8 +345,9 @@ border-radius: 5px;
 text-align: center;
 
 }
-#mapdeletecancel:hover,#mapdeleteconfirm:hover{
+#mapdeletecancel:hover,#mapdeleteconfirm:hover,#signin2:hover{
 background-color: #0080ff;
+cursor: pointer;
 }
 .mapdeletename{
     font-style: italic;
@@ -363,3 +365,76 @@ height: 12px;
 width: 30%;
 color: black;
 }
+.g{
+    height: 100%;
+    height:40;
+}
+#private{
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    align-items: center;
+    padding:10% 0;
+
+}
+#signin0{
+    display: none;
+}
+#userbarclose,#optionbarclose,.rightyclose{
+    margin-right: 25%;
+    }
+#signin2{
+        z-index: 10;
+        margin: 5%;
+        cursor: pointer;
+        padding: 5%;
+    }
+#signin{
+    cursor: pointer;
+    margin-top: 0;
+}
+.w3-button{
+    display: none;
+}
+#home{
+    display: block;
+}
+#search{
+    width: 90%;
+    margin-bottom: 3%;
+margin-left: 3%;
+}
+.fandom{
+    color:black;
+background-color: white;
+background-image: none;
+overflow-y: hidden;
+}
+.dark{
+background-color: black;
+}
+aside>img{
+    display: inline-block;
+    height: 30;
+}
+aside>p{
+    display: inline-block;
+
+}
+#sortable>div>aside,#sortable>nav>aside{
+    margin: 5%;
+}
+nav>select{
+    display: none;
+    width: 80%;
+}
+.select2-results__option {
+    padding: 5px;
+    user-select: none;
+    -webkit-user-select: none;
+    margin: 0px;
+}
+.select2-container .select2-search--inline {
+    float: left;
+    margin: 0;
+    }
