@@ -36,15 +36,15 @@ def fetch():
     return jsonify({'fetch':cursor.fetchall() })
 @app.route('/$create',methods=['POST'])
 def create():
-    cursor.execute("SELECT COUNT(*) FROM maps;")
-    try:
-        Counter=cursor.fetchone()[0]+1
-    except:
-        Counter=1
+    cursor.execute("SELECT * FROM counter;")
+    counter=cursor.fetchone()[0]
+    print('counter',counter)
+    counter=counter+1
+    cursor.execute('UPDATE counter SET count='+str(counter))
     cursor.execute("""INSERT INTO maps (id,name,email,author,poi,sortable,visibility,date) VALUES (%s,%s,%s,%s,%s,%s,%s,%s);"""
-    ,(str(Counter),request.form['name']+"'s Map",request.form['email'],request.form['name'],'{}','','Public',str(datetime.now().strftime('%d/%m/%Y'))))
+    ,(str(counter),request.form['name']+"'s Map",request.form['email'],request.form['name'],'{}','','Public',str(datetime.now().strftime('%d/%m/%Y'))))
     db.commit()
-    return jsonify({'result':Counter})
+    return jsonify({'result':counter})
 @app.route('/<id>')
 def maps(id):
     cursor.execute("SELECT * FROM maps WHERE id='"+id+"';")

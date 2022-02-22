@@ -1,27 +1,44 @@
 <head>
-    <title>Fandom Map</title>
-    <script src="https://apis.google.com/js/api:client.js"></script>
-    <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id"
-      content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-    <script src="https://unpkg.com/konva@8.3.2/konva.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='index.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-  
-  </head>
-  <div id="c" style="position: fixed"></div>
-  <script>
-    var  count=0
+  <title>Fandom Map</title>
+  <script src="https://apis.google.com/js/api:client.js"></script>
+  <meta name="google-signin-scope" content="profile email">
+  <meta name="google-signin-client_id"
+    content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com">
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+  <!--
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js"></script>
+
+  -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <script src="https://unpkg.com/konva@7/konva.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+</head>
+<style>
+  a {
+    float: left;
+    display: flex;
+    color: #0080ff;
+  }
+</style>
+
+<div id="c" style="position: fixed"></div>
+  <a id=n>Number of waypoints </a><br>
+  <a id=t>Iterated </a>
+<script>
+  var count = 0
+  var iteration = 500
+  var solution = false
+  Konva.autoDrawEnabled = false;//important
   Konva.hitOnDragEnabled = true;
   stage = new Konva.Stage({
     container: 'c',
@@ -29,81 +46,81 @@
     height: window.innerHeight,
   });
   layer = new Konva.Layer();
-  
-  stage.add(layer) 
-    stage.on('click', function () {
-          var pos = stage.getPointerPosition();
-          var shape = new Konva.Circle({
-            x: pos.x,
-            y: pos.y,
-            fill: 'blue',
-            radius: 20,
-            id:count.toString()
-          });
-  
-  
-        layer.add(shape)
-        count+=1
-  fakeml()
-  
-  })
-  function fakeml(){
-    smollest=false
-    coord=[]
-    stage.find('Circle').forEach(function(e){
-    coord.push([e.id().toString(),e.x(),e.y()])
-  })
-  routes=perm(coord)
-  console.log(routes.length)
-  routes.map(x => {
-      temp = 0
-      connect=''
-      x.forEach(function (e, i) {
-        connect+=e[0]+'>'
-        if (x[i + 1]) temp += getDistance2(e, x[i + 1])
-      })
-      if(!smollest||temp==Math.min(smollest[1],temp)) smollest=[connect,temp]
-    })
-  stage.find('Arrow').forEach(function(e){e.destroy()})
-  shortest=smollest[0].split('>')
-  shortest.forEach(function(e,i){
-    if(shortest[i+1]) {
-      var line = new Konva.Arrow({
-              strokeWidth: 5,
-              stroke: 'black',
-              fill: 'black',
-            });
-            layer.add(line);
-            line.points(getConnectorPoints(
-              layer.findOne('#' +e.toString()).position(),
-              layer.findOne('#' + shortest[i + 1].toString()).position()
-            ))
-          }
-  })
-  layer.batchDraw()
-  }
-  function perm(xs) {
-          let ret = [];
-          for (let i = 0; i < xs.length; i = i + 1) {
-              let rest = perm(xs.slice(0, i).concat(xs.slice(i + 1)));
-              if (!rest.length) ret.push([xs[i]])
-              else for (let j = 0; j < rest.length; j = j + 1)ret.push([xs[i]].concat(rest[j]))
-          }
-          return ret;
+  iteratelayer= new Konva.Layer();
+  stage.add(iteratelayer)
 
+  stage.add(layer)
+  stage.on('click', function () {
+    var pos = stage.getPointerPosition();
+    var shape = new Konva.Circle({
+      x: pos.x,
+      y: pos.y,
+      fill: '#0080ff',
+      radius: 20,
+      id: count.toString()
+    });
+    layer.add(shape)
+    shape.draw()
+    simulation([pos.x, pos.y, count.toString()])
+    count += 1
+    $('#n').html('Number of waypoints ' + cities.length)
+  })
+  function simulation(newwp) {
+    stage.find('Line').forEach(function (e) { e.destroy() })
+    if (!solution) {
+      cities = []
+      stage.find('Circle').forEach(function (e) {cities.push([e.x(), e.y(), e.id().toString()])})
+      console.log('newset')
+    } else cities = solution.concat([newwp])
+    if (cities.length == 1) return 'Only 1'
+    for (var tour = [], x = 0; tour.length < cities.length; x++)tour.push(x)
+    target=parseInt(iteration * cities.length ** 1.1)
+$('#t').html('Iterated '+target)
+    logspace(5, 0, parseInt(iteration * cities.length ** 1.1)).forEach(function (temperature) {
+      [i, j] = Array.from({ length: cities.length }, (v, k) => k).sort(function () { return .5 - Math.random() }).slice(0, 2).sort(function (a, b) { return a - b })
+      newTour = tour.slice(0, i).concat(tour.slice(j, j + 1), tour.slice(i + 1, j), tour.slice(i, i + 1), tour.slice(j + 1, cities.length))
+      olddistance = [j, j - 1, i, i - 1].map(k => Math.sqrt([0, 1].map(d => (cities[tour[Number(((k + 1) - (Math.floor((k + 1) / cities.length) * cities.length)).toPrecision(8))]][d] - cities[tour[Number((k - (Math.floor(k / cities.length) * cities.length)).toPrecision(8))]][d]) ** 2).reduce((sum, a) => sum + a, 0)))
+      newdistance = [j, j - 1, i, i - 1].map(k => Math.sqrt([0, 1].map(d => (cities[newTour[Number(((k + 1) - (Math.floor((k + 1) / cities.length) * cities.length)).toPrecision(8))]][d] - cities[newTour[Number((k - (Math.floor(k / cities.length) * cities.length)).toPrecision(8))]][d]) ** 2).reduce((sum, a) => sum + a, 0)))
+      temp = olddistance.reduce((sum, a) => sum + a, 0) - newdistance.reduce((sum, a) => sum + a, 0)
+      if (Math.exp(temp / temperature) > Math.random()) tour = newTour
+    })
+    solution = [...Array(cities.length).keys()].map(i => cities[tour[i % cities.length]])
+    for(var m=0,gaps=[];m<cities.length;m++){
+      if (m!=cities.length-1){
+       gaps.push(distance(m,m+1))
       }
-      function getDistance2(a, b) {
-      return Math.sqrt((b[2] - a[2]) ** 2 + (b[1] - a[1]) ** 2);
     }
-  function dist(a,b){return Math.sqrt((b[1]-a[1])**2+(b[0]-a[0])**2)}
-   function getConnectorPoints(from, to) {
-      let angle = Math.atan2(from.y - to.y, to.x - from.x);
-      const radius = 20;
-      return [
-        from.x + -radius * Math.cos(angle + Math.PI),
-        from.y + radius * Math.sin(angle + Math.PI),
-        to.x + -(radius + 10) * Math.cos(angle),
-        to.y + (radius + 10) * Math.sin(angle),
-      ];
+    biggestgap=gaps.indexOf(Math.max(...gaps))
+solution=solution.slice(biggestgap+1,solution.length).concat(solution.slice(0,biggestgap+1))
+    //final solution
+    solution.forEach(function (coord, index) {
+    if (solution[index + 1]){
+      var line = new Konva.Line({
+        strokeWidth: 5,
+        stroke: '#0080ff',
+      });
+      layer.add(line);
+      line.moveToBottom()
+    line.points([solution[index][0],solution[index][1],solution[index + 1][0],solution[index + 1][1]])}
+    })
+    layer.batchDraw()
+  }//simulation
+  function logspace(a, b, len) {
+    end = len - 1;
+    d = (b - a) / end;
+    arr = new Array(len);
+    tmp = a;
+    arr[0] = Math.pow(10, tmp);
+    for (var i = 1; i < end; i++) {
+      tmp += d;
+      arr[i] = Math.pow(10, tmp);
     }
-  </script>
+    arr[end] = Math.pow(10, b);
+    return arr
+  }
+  function distance(p, q) {
+    return Math.sqrt([0, 1].map(d => (solution[p][d] - solution[q][d]) ** 2).reduce((sum, a) => sum + a, 0))
+  }
+
+
+</script>

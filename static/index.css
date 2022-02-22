@@ -7,27 +7,26 @@ height:100%;
 overflow-y:hidden;
 }
 h3{
-    display: block;
-    font-size: 2em;
-    margin-top: 0;
-    margin-bottom: 0;
-    margin-left: 0;
-    margin-right: 0;
-    font-weight: bold;
+display: block;
+font-size: 2em;
+margin-top: 0;
+margin-bottom: 0;
+margin-left: 0;
+margin-right: 0;
+font-weight: bold;
 }
 #sidebar,#userbar,#optionbar,.righty{
 overflow-y: scroll;
 overflow-x: hidden;
 float: left;
-height: 100%;
 position: fixed;
-z-index: 5;
+z-index: 4;
 width: 25%;
 background-image:linear-gradient(to right,black,rgba(0, 0, 0, 0.05));
 color: white;
+top:3vw;
+bottom: 0;
 }
-
-
 #userbar,#optionbar,.righty{
 right:0;
 background-image:linear-gradient(to left,black,rgba(0, 0, 0, 0.05 ));
@@ -48,12 +47,12 @@ background: #555;
 }
 #sidebarbox>a>div,#sidebarclose,#userbarclose,#edit,.edittool,#signout,
 #optiondelete,#optionbarclose,.rightyclose,#mapdelete{
-margin-bottom: 10%;
-
 z-index: 10;
 margin: 3%;
 cursor: pointer;
 padding: 3%;
+margin-bottom: 1%;
+
 }
 #sidebarbox>a:link{text-decoration: none}
 #sidebarbox>a>div:hover,#edit:hover,.edittool:hover,
@@ -61,7 +60,6 @@ padding: 3%;
 #userbarclose:hover,#sidebarclose:hover,#optiondelete:hover,.rightyclose:hover{
 background-color: #0080ff}
 .sidebarbutton,.userbutton{
-
 position:fixed;
 height: 60px;
 width:60px;
@@ -127,7 +125,7 @@ color: white;
 #dropimgdiv{
 width: 100%;
 height: 100%;
-z-index: 2;
+z-index: 5;
 align-items: center;
 margin-left:auto;
 margin-right:auto;
@@ -146,7 +144,6 @@ display: inline;
 padding-top: 5%;
 float: right;
 font-size: 150%;
-
 }
 #mapinfo>div>h2{
 width: 90%;
@@ -223,24 +220,6 @@ border-color: #0080ff;
 background-color: rgba(0,0,0,0.1);
 color: white;
 }
-#home{
-bottom: 0;
-right: 0;
-position:absolute;
-height: 60px;
-width:60px;
-border-radius: 5px;
-display:block;
-background: #0080ff;
-z-index:9;
-text-align:center;
-color: white;
-padding: 10px 15px 10px;
-}
-#sidebarclose{
-margin-left: 25%;
-}
-
 .toggles,.twotoggles{
 margin-top: 5%;
 margin-bottom: 5%;
@@ -263,7 +242,7 @@ text-align:center;
 }
 
 #sidebarclose,#userbarclose,#optionbarclose,.rightyclose{
-margin-bottom: 10%;
+margin-bottom: 3%;
 }
 .desc{
 display: none;
@@ -350,13 +329,13 @@ background-color: #0080ff;
 cursor: pointer;
 }
 .mapdeletename{
-    font-style: italic;
-    z-index:100;
-    color:red;
+font-style: italic;
+z-index:100;
+color:red;
 }
 #confirmdeletewindow>input{
-    margin: 3%;
-    padding: 3%;
+margin: 3%;
+padding: 3%;
 z-index:100;
 width: 80%;
 height: 12px;
@@ -366,46 +345,38 @@ width: 30%;
 color: black;
 }
 .g{
-    height: 100%;
-    height:40;
+height: 100%;
+height:40;
 }
 #private{
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    align-items: center;
-    padding:10% 0;
+width: 100%;
+height: 100%;
+text-align: center;
+align-items: center;
+padding:10% 0;
 
 }
 #signin0{
-    display: none;
+display: none;
 }
-#userbarclose,#optionbarclose,.rightyclose{
-    margin-right: 25%;
-    }
+
 #signin2{
-        z-index: 10;
-        margin: 5%;
-        cursor: pointer;
-        padding: 5%;
-    }
+z-index: 10;
+margin: 5%;
+cursor: pointer;
+padding: 5%;
+}
 #signin{
-    cursor: pointer;
-    margin-top: 0;
-}
-.w3-button{
-    display: none;
-}
-#home{
-    display: block;
+cursor: pointer;
+margin-top: 0;
 }
 #search{
-    width: 90%;
-    margin-bottom: 3%;
+width: 90%;
+margin-bottom: 3%;
 margin-left: 3%;
 }
 .fandom{
-    color:black;
+color:black;
 background-color: white;
 background-image: none;
 overflow-y: hidden;
@@ -413,28 +384,182 @@ overflow-y: hidden;
 .dark{
 background-color: black;
 }
+.dark #header,.dark #header button{
+    background-color:  #242424
+}
 aside>img{
-    display: inline-block;
-    height: 30;
+display: inline-block;
+height: 30;
 }
 aside>p{
-    display: inline-block;
+display: inline-block;
 
 }
 #sortable>div>aside,#sortable>nav>aside{
-    margin: 5%;
+margin: 5%;
 }
 nav>select{
-    display: none;
-    width: 80%;
+display: none;
+width: 80%;
 }
 .select2-results__option {
-    padding: 5px;
-    user-select: none;
-    -webkit-user-select: none;
-    margin: 0px;
+padding: 5px;
+user-select: none;
+-webkit-user-select: none;
+margin: 0px;
 }
 .select2-container .select2-search--inline {
-    float: left;
-    margin: 0;
-    }
+float: left;
+margin: 0;
+}
+#optroute aside>img{
+display: inline-block;
+height: 30;
+}
+#optroute aside>p{
+display: inline-block;
+}
+#optroute aside{
+color: white;
+padding-top: 3%;
+padding-bottom: 3%;
+border-radius: 5px;
+border:2px #0080ff;
+border-style:solid ;
+background-color:rgb(0, 128, 255,0.5);
+margin-left: 5%;
+cursor: pointer;
+padding-left: 2%;
+line-height: 0;
+border-radius: 5px;
+border:2px #0080ff;
+border-style: solid;
+margin-bottom: 5%;
+}
+#optroute tr>td:nth-child(2){
+width: 5%;
+font-size: x-large;
+}
+#optroute aside>h2{
+
+width: 90%;
+overflow-x: hidden;
+line-height: normal;
+display:inline-block;
+margin: 0;
+display: inline;
+}
+#header {
+    z-index:5 ;
+height: fit-content;
+text-align: center;
+background: #0080FF;
+color: white;
+font-size: 30px;
+display: block;
+overflow-y: hidden;
+font-size: large;
+vertical-align: middle;
+align-items: center;
+text-align: center;
+margin: 0;
+padding: 0;
+border: none;
+border-style: none;
+border-collapse:collapse;
+white-space: nowrap;
+position: absolute;
+}
+#header p{
+    font-size:x-large;
+    display: inline-block;
+}
+#header input,#header img,#header button{
+display: inline-block;
+}
+#header td:not(:nth-child(3)){
+vertical-align: middle;
+white-space: nowrap;
+width: fit-content;
+height: 3vw;
+padding-left: 30px;
+padding-right: 30px;
+padding-top: 0;
+}
+#header tbody{
+width: 100%;
+}
+#header tr{
+vertical-align: middle;
+white-space: nowrap;
+height: 3vw;
+width: 100%;
+}
+#header img{
+height:50%;
+}
+#headersearch{
+width: 100%;
+}
+#header button{
+background-color: #0080FF; /* Green */
+border: none;
+color: white;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: xx-large;
+padding: 15px;
+}
+
+#header td:hover:not(:nth-child(3)),#header button:hover{
+background-color: #888888;
+color: black;
+}
+
+#header input{
+width: 87%;
+color: white;
+padding: 15px;
+}
+
+#header input::placeholder{
+color: white;
+}
+#header a{
+overflow-x: hidden;
+}
+
+
+#solverbar table aside{
+    padding-top: 3%;
+padding-bottom: 3%;
+border-radius: 5px;
+border:2px #0080ff;
+border-style:solid ;
+background-color:rgb(0, 128, 255,0.5);
+margin-left: 5%;
+padding-left: 2%;
+line-height: 0;
+border-radius: 5px;
+border:2px #0080ff;
+border-style: solid;
+color: white;
+font-size: xx-large;
+}
+#solverbar table{
+    width: 100%;
+}
+#solverbar tr td:nth-child(2){
+    font-size: xx-large;
+}
+#solverbar tr td:nth-child(2):hover{
+   background-color: red;
+   cursor: pointer;
+}
+#solverbar>h3{
+    color: darkblue;
+}
+#sidebar aside:hover{
+background-color: #888888;
+}

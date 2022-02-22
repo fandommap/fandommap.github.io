@@ -1,8 +1,7 @@
 <!--
 sudo service apache2 restart
 -->
-<link rel="shortcut icon" href="static/icon_wht.png">
-
+<link rel="shortcut icon" href="static/icon_blue.png">
 <head>
   <title>Fandom Map</title>
   <script src="https://apis.google.com/js/api:client.js"></script>
@@ -11,6 +10,7 @@ sudo service apache2 restart
     content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com">
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
+
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
@@ -19,10 +19,10 @@ sudo service apache2 restart
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script src="https://unpkg.com/konva@8.3.2/konva.min.js"></script>
   <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='index.css') }}">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-
 </head>
 <div id=confirmdeletebackground></div>
 <div id=confirmdeletewindow>
@@ -39,13 +39,19 @@ sudo service apache2 restart
   <img src="/static/icon_blue.png"><br>
   This map is privated. If you are the owner of the map, please...
   <button class='important' id='signin'><img class=g src=static/goo.png>SIGN IN</button>
-
 </section>
-<button class="w3-button w3-xlarge sidebarbutton" onclick="sidebarbtn()">☰</button>
-<button class="w3-button w3-xlarge userbutton" onclick="userbarbtn()"><img src="static/user.png" height="50%"></button>
+<table id=header>
+<tr>
+<td id=sidebarbtn title='Waypoints in this Map'>☰ Waypoints</td>
+<td id=home title='Return To Home Page'>Fandom Map <img src=static/icon_wht.png> <a id=headername>Fandom's Map</a></td>
+<td id=headersearch><input placeholder="Search Waypoints..." list=headerlist onChange="searching()">
+<datalist id=headerlist><option value='Error'></option></datalist></input><button> X </button></td>
+<td id=solverbarbtn title='Find Shortest Distance Through Waypoints'>Route Solver <p>  ⩻</p></td>
+<td id=userbarbtn title='Account Sign In & Settings'>User Bar <img src="static/user.png"></td>
+</tr>
+</table>
 <div id='popupbox'><a id=popupmsg>Message</a><button onclick='popupbtn()'>X</button></div>
-<Button class="w3-button w3-xlarge" onclick='home()' id='home' href=http://fandommap.github.io><img
-    src=static/icon_wht.png height="100%"></button>
+
 <div class="sidebar" style="display:none" id="sidebar">
   <div id='sidebarclose' onclick="sidebarbtn()">X Close</div>
   <div id='mapinfo'></div>
@@ -63,7 +69,6 @@ sudo service apache2 restart
   <div id='signin0' class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
   <div id='signout' onclick="signOut()"><img class=g src=static/goo.png>Sign Out</div>
   <div id='profile'></div>
-
   <br>
   Theme<br>
   <select id=select theme="google" width="400" placeholder="Choose theme..." data-search="true">
@@ -75,25 +80,27 @@ sudo service apache2 restart
 <!--userbar-->
 <div style="display:none" id="optionbar" class=righty>
   <div id='optionbarclose' onclick="optionbarbtn()">Close X</div>
-
-
+  <h3>Options</h3>
   <div id=mapinfooption>
     <a>Rename</a>
-    <input></input>
+    <input id=mapname></input>
     <div id='mapdelete'>Delete 🗑</div>
     <div class='twotoggles'>
       Visibility <br>
       <div>Public</div>
       <div>Private</div>
     </div>
+    Map Image Scale
+    <input id=scale type=number placeholder='Default 1.00'></input>
   </div>
   <!--mapinfooption-->
-
-
+ 
   <div id=notmapinfo>
     <a>Rename</a>
     <input id=optname></input>
     <div id='optiondelete'>Delete 🗑</div>
+    <table id=optroute>
+    </table>
     <div class=waypointed>
       Waypoint Coordinate X
       <input id=optx></input>
@@ -141,7 +148,17 @@ sudo service apache2 restart
 </div>
 <!--descriptionbar-->
 
+<div style="display: none;" id=solverbar class=righty>
+  <div id='solverbarclose' class=rightyclose onclick="solverbarbtn()">Close X</div>
 
+<h3>Route Solver</h3>
+Number of waypoints <a id=solvercount>0</a>
+<select></select>
+<table >
+
+  
+</table>
+</div><!--solverbar-->
 
 <div id='dropimgdiv'>
   <img src="/static/icon_blue.png"><br>
@@ -170,6 +187,9 @@ sudo service apache2 restart
   var tooltip
   var routes
   var globaltemp
+  var SIZE
+  var iteration = 1000//simulation
+  var solution = false//simulation
   let data = {
     id: '{{id}}',
     name: '{{name}}'.replaceAll('&#39;', "'"),
@@ -204,6 +224,7 @@ sudo service apache2 restart
     legends = new Konva.Layer();
     tooltipLayer = new Konva.Layer();
     routes = new Konva.Layer();
+    solves = new Konva.Layer();
     tooltip = new Konva.Text({
       text: '',
       fontFamily: 'Calibri',
@@ -215,7 +236,7 @@ sudo service apache2 restart
       visible: false,
       offsetY: -80,
       offsetX: 100,
-      align:'center',
+      align: 'center',
       shadowColor: 'black',
       shadowBlur: 15,
       shadowOpacity: 1,
@@ -226,16 +247,17 @@ sudo service apache2 restart
     tooltipLayer.add(tooltip);
     if (!mobile) { stage.add(layer) }
     stage.add(map);
+    stage.add(routes)
+
+    stage.add(solves)
     stage.add(legends)
     stage.add(tooltipLayer)
-    stage.add(routes)
     var SIZE = 200;
     checkShapes(SIZE);
     layer.draw();
     stage.on('click', function (e) {
       if ($('#sidebar').is(':visible')) { $('#sidebar').toggle("slide") }
-      if ($('#userbar').is(':visible')) { $('#userbar').toggle("slide", { direction: 'right' }) }
-      if ($('#optionbar').is(':visible')) { $('#optionbar').toggle("slide", { direction: 'right' }) }
+eachrightyhide()
     })
 
 
@@ -249,66 +271,66 @@ sudo service apache2 restart
       layer.draw();
     })
     stagesetup(stage)
-    function checkShapes(SIZE) {
-      const startX = Math.floor((-stage.x() - stage.width()) / stage.scaleX() / SIZE) * SIZE
-      const endX = Math.floor((-stage.x() + stage.width() * 2) / stage.scaleX() / SIZE) * SIZE
-      const startY = Math.floor((-stage.y() - stage.height()) / stage.scaleX() / SIZE) * SIZE
-      const endY = Math.floor((-stage.y() + stage.height() * 2) / stage.scaleX() / SIZE) * SIZE
-      for (var x = startX; x < endX; x += SIZE) {
-        for (var y = startY; y < endY; y += SIZE) {
-          layer.add(new Konva.Rect({
-            x, y, width: SIZE, height: SIZE,
-            stroke: '#e6e6e6',
-            strokeWidth: 1
-          }))
-        }
-      }
-    }//checkShapes
 
-    $.ajax({
-      url: 'static/' + id + '_map.png',
-      success: function () {
-        addmap(id + '_map.png')
-      }, error: function () {
+    addbox($('#mapinfo'), data.name, ['Author', data.author, 'Creation Date', data.date, 'Visibility', data.visibility, 'Share Link', 'fandommap.github.io/?' + id])
+    if (data.sortable != '{}') { $('#sortable').html($('<div/>').html(data.sortable).text()) }
+    if ($('#sortable').find('map').length) {
+      $('#sortable').find('map').each(function (element) {
+        globaltemp = $(this).attr('filename')
+        mapelement = $(this)
         $.ajax({
-          url: 'static/' + id + '_map.jpg',
-          success: function () {
-            addmap(id + '_map.jpg')
-          }, error: function () {
-            $.ajax({
-              url: 'static/' + id + '_map.jpeg',
-              success: function () {
-                addmap(id + '_map.jpeg')
-              }, error: function () {
-                $('.w3-button').hide()
-                $('#home').show()
-                $('#dropimgdiv').show()
-                popup(data.name + ' does not have map image, please insert image from dialog above.')
-              }
-            })
-          }
+          url: 'static/' + globaltemp,
+          success: function () { addmap(globaltemp, mapelement) }
         })
-      }
-    })
+      })
+    } else {
+      $('.w3-button').hide()
+      $('#home').show()
+      $('#dropimgdiv').show()
+      popup(data.name + ' does not have map image, please insert image from dialog above.')
+    }
 
     $.fn.extend({
       toggleText: function (a, b) {
         return this.text(this.text() == b ? a : b)
       }
     })
+$('#sidebarbtn').click(function(){sidebarbtn()})
+$('#solverbarbtn').click(function(){
+eachrightyhide()  
+  ($('#solverbar').toggle("slide",{direction:'right'}))})
+$('#userbarbtn').click(function(){
+eachrightyhide()  
+  userbarbtn()})
+$('#home').click(function(){home()})
+$('#header button').click(function(){$('#header input').val('')})
+$('#headername').html(data.name)
 
+$( "#header input" ).on( "focus", function( event, ui ) {
+$('#headerlist').html('')
+$('#sortable>aside').each(function(element){
+  $('#headerlist').append('<option>'+$(this).find('p').html()+'</option>')
+})
+} )
+$(document).on('click', '#mapinfo>div p', function () {
+if($(event.target).is(':contains(Share Link)')||$(event.target).is(':contains(fandommap.)')) {
+copy()
+  popup('Copied http://fandommap.github.io/?'+data.id)
+}
+})
 
 
     $(document).on('click', '#mapinfo>div', function () {
       if (!$(event.target).is('#mapinfo>div>div,#mapinfo>div>div>p')) {
-        $(this).children('div').toggle()
-        $(this).children('a').toggleText(' ▲', ' ▼')
-      }
+    $(this).children('div').toggle()
+        $(this).children('a').toggleText(' ▲', ' ▼')}
+
       if (enableedit) {
         eachrightyhide()
         $('#notmapinfo').hide()
         $('#mapinfooption').show()
-        $('#mapinfooption>input').val(data.name)
+        $('#mapname').val(data.name)
+        $('#scale').val($('#sortable').find('map').attr('scale'))
         if (data.visibility == 'Public') {
           $('.twotoggles>div:eq(0)').attr('id', 'checked')
           $('.twotoggles>div').css('background-color', 'transparent')
@@ -319,7 +341,6 @@ sudo service apache2 restart
           $('.twotoggles>div').css('background-color', 'transparent')
           $('.twotoggles>div:eq(1)').css('background-color', '#0080ff')
         }
-
         $('#optionbar').toggle("slide", { direction: 'right' })
 
       }
@@ -336,6 +357,9 @@ sudo service apache2 restart
         })
       }
     })
+
+
+
     $(document).on("click", "#sortable>div>h2", function () {
       $('.waypointed').hide()
       if (enableedit) {
@@ -354,47 +378,74 @@ sudo service apache2 restart
         $(this).children('a').toggleText(' ▲', ' ▼')
       }
     })
-
     $(document).on("click", "nav", function () {
       if (!$(event.target).is('nav>div>aside,nav>div>aside>img,nav>div>aside>p') && !enableedit) {
         $(this).children('div').toggle()
         $(this).children('a').toggleText(' ▲', ' ▼')
-      }
-    })
-    $(document).on("click", "nav", function (event) {
-      if (!$(event.target).is('.select2-selection')&&enableedit) {
-      $('.waypointed').hide()
+      }})
+    $(document).on("click", "nav>h2", function (event) {
+      if (!$(event.target).is('.select2-selection') && enableedit) {
+        eachrightyhide()
+        $('.waypointed').hide()
         $('#notmapinfo').show()
         $('#mapinfooption').hide()
-        eachrightyhide()
-        $('#optname').val($(this).find('h2').html())
+        $(this).parent().find('aside').each(function(){
+          $('#optroute').append('<tr><td>'+$(this).clone().prop('outerHTML')+'</td><td>🗑️</td></tr>')
+        })
+
+        $('#optname').val($(this).html())
         $('#optionbar').toggle("slide", { direction: 'right' })
-        option = $(this)
-        text = $(this).find('h2')
+        option = $(this).parent()
+        text = $(this)
+      }
+    })
+$(document).on("click",'#optroute tr>td:nth-child(2)',function(){
+  target=$(this).parent().find('aside').d()
+ $('#optroute .'+target).parent().parent().remove()
+  $('.'+target).remove()
+  update()
+  updateroute(true)
+})
+$(document).on("mouseenter",'#optroute tr>td:nth-child(2)',function(){
+$(this).css('background-color','red')
+})
+$(document).on("mouseleave",'#optroute tr>td:nth-child(2)',function(){
+$(this).css('background-color','')
+})
+$(document).on("mouseenter",'#sortable aside',function(){
+  if(enableedit)  $(this).find('p').prepend('<gear>⚙️</gear>')
+})
+
+
+
+$(document).on("mouseenter",'#sortable nav,#sortable>div',function(){
+  if(enableedit)  $(this).find('h2').prepend('<gear>⚙️</gear>')
+})
+$(document).on("mouseleave",'#sortable aside,#sortable nav,#sortable>div',function(){
+$(this).find('gear').remove()
+})
+    $(document).on("mouseover", "nav", function () {
+      if ($(this).c()) {
+        connect = $(this).c()
+        id = $(this).d()
+        connect.forEach(function (e, i) {
+          legends.findOne('#' + e).scale({ x: 1.5, y: 1.5 })
+          if (connect[i + 1]) { routes.findOne('#' + id + 'connect' + e).strokeWidth(50) }
+        })
+      }
+    })
+    $(document).on("mouseleave", "nav", function () {
+      if ($(this).c()) {
+        connect = $(this).c()
+        id = $(this).d()
+        connect.forEach(function (e, i) {
+          legends.findOne('#' + e).scale({ x: 1, y: 1 })
+          if (connect[i + 1]) { routes.findOne('#' + id + 'connect' + e).strokeWidth(15) }
+        })
       }
     })
 
-$(document).on("mouseover", "nav", function () {
-if ($(this).c()){
-  connect=$(this).c()
-id=$(this).d()
-connect.forEach(function(e,i){
-  legends.findOne('#'+e).scale({x:1.5,y:1.5})
-if (connect[i+1]) {  routes.findOne('#'+id+'connect'+e).strokeWidth(50)}
-})  }
-})
-$(document).on("mouseleave", "nav", function () {
-if ($(this).c()){
-connect=$(this).c()
-id=$(this).d()
-connect.forEach(function(e,i){
-  legends.findOne('#'+e).scale({x:1,y:1})
-if(connect[i+1]){routes.findOne('#'+id+'connect'+e).strokeWidth(15)}
-})
-}
-})
-
-$(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
+    $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
       if (enableedit) {
         $('#notmapinfo').show()
         $('#mapinfooption').hide()
@@ -431,7 +482,6 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
         $('#descriptionbar').removeClass('fandom')
 
         if ($(this).attr('desc') == false || typeof ($(this).attr('desc')) == 'undefined' || $(this).attr('desc') == 'off') {
-          console.log('off desc')
         }
         else if ($(this).attr('desc').startsWith('URL')) {
           $('#descriptionbar>h2').html($(this).find('p').html())
@@ -522,8 +572,17 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
       $('.' + option.d()).find('p').html($(this).val())
       update()
     })
-    $('#mapinfooption>input').on('input', function () {
+    $('#mapname').on('input', function () {
       $('#mapinfo').find('h2').html($(this).val())
+      $('#headername').html($(this).val())
+      update()
+    })
+    $('#scale').on('input', function () {
+      if(!$(this).val()) scale=1
+      else scale=$(this).val()
+      $('#sortable').find('map').attr('scale',scale)
+      map.findOne('Image').scaleX(scale)
+      map.findOne('Image').scaleY(scale)
       update()
     })
     $('#search').keyup(function () {
@@ -556,8 +615,8 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
           shadowOffset: { x: 0, y: -10 },
           shadowOpacity: 0,
           draggable: true,
-          offsetX:33,
-          offsetY:48,
+          offsetX: 33,
+          offsetY: 48,
         });
         legends.add(wp)
         legends.batchDraw()
@@ -632,11 +691,43 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
     window.addEventListener('resize', fitStageIntoParentContainer);
     $("select").select2();
 
+
+    $('#solverbar select').select2({
+      placeholder: 'Insert Waypoints...',
+      initSelection: function (element, callback) { },
+      allowClear: true,
+      width: '80%'
+    })
+    $('#solverbar select').on('select2:opening', function () {
+      select=$(this)
+      select.empty()
+      select.append(new Option('Insert Waypoints...',-1, false, false))
+      $('#sortable').find('aside').each(function () {
+        if (!$(this).is('nav>div>aside')) select.append(new Option($(this).n(), $(this).d(), false, false))
+      })
+      select.trigger('change')
+    })
+    $('#solverbar select').on('select2:select', function (e) {
+select=$(this)
+      temp = $('#sortable #' + e.params.data.id+':not(.'+e.params.data.id+')').clone()
+      temp.addClass(e.params.data.id)
+      $('#solverbar table').append('<tr><td class="'+e.params.data.id+'"></td><td>🗑️</td></tr>')
+      $('#solverbar tr:last-child').find('td:first-child').html(temp)
+      select.empty()
+      $('#solvercount').html($('#solverbar tr').length)
+      simulation([temp.attr('datax'), temp.attr('datay'), e.params.data.id])
+    })
+$(document).on("click", "#solverbar tr td:nth-child(2)", function () {
+  $('#solvercount').html($('#solverbar tr').length)
+  $(this).parent().remove()
+  solution=false
+  simulation()
+})
+
   })//ready
 
   function iframeready() {
     $("#iframepreview>iframe,#desciption>iframe").on("load", function () {
-      console.log('iframeload')
       let head = $(this).contents().find("head");
       let css = '<style>html{color:white}</style>';
       $(head).append(css);
@@ -651,12 +742,8 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
     if (num == 0) $('#descoff').show()
     else if (num == 1) $('#descmarkdown').show()
     else if (num == 2) $('#descwebsite').show()
-
   }
-
-
   function dragOverHandler(ev) { ev.preventDefault() }
-
   $('#upload').on('click', function () {
     var form_data = new FormData();
     form_data.append("files[]", document.getElementById('multiFiles').files[0]);
@@ -668,24 +755,31 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
       data: form_data,
       type: 'post',
     }).done(function (data) {
-      filename = data.result
+      $('#sortable').append('<map filename="' + data.result + '" scale="1"></map>')
+      update()
       addmap(data.result)
     }).fail(function (data) {
       popup(data)
     })
   });//upload
 
-  function addmap(filename) {
+  function addmap(filename, mapelement) {
     $('#dropimgdiv').hide()
+    if (mapelement) {
+      scale = parseInt(mapelement.attr('scale'))
+    } else scale = 1
     Konva.Image.fromURL('static/' + filename, function (mapimg) {
       mapimg.setAttrs({
         x: 0,
         y: 0,
+        scaleX: scale,
+        scaleY: scale,
       });
       map.add(mapimg);
       if (mapimg.width() > window.innerWidth) {
         stage.scaleX(window.innerWidth / mapimg.width())
         stage.scaleY(window.innerWidth / mapimg.width())
+        checkShapes(SIZE);
       }
     })
     stage.draw();
@@ -698,8 +792,7 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
     } else {
       json = JSON.parse(data.json)
     }
-    addbox($('#mapinfo'), data.name, ['Author', json.author, 'Creation Date', data.date, 'Visibility', data.visibility, 'Share Link', 'fandommap.github.io/?' + id])
-    if (data.sortable != '{}') { $('#sortable').html($('<div/>').html(data.sortable).text()) }
+
     $('#sortable').find('aside').each(function (item) {
 
       var temp = $(this)
@@ -713,8 +806,8 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
             shadowBlur: 15,
             shadowOffset: { x: 0, y: -10 },
             shadowOpacity: 0,
-            offsetX:33,
-            offsetY:48,
+            offsetX: 33,
+            offsetY: 48,
           })
           legends.add(wp)
           wpevents(wp, temp)
@@ -840,8 +933,8 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
   }
   function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
-    console.log('Full Name: ' + profile.getName());
-    console.log('Email: ' + profile.getEmail());
+    tempname=profile.getName()
+    tempemail= profile.getEmail()
     user = profile.getName()
     if ((data.email == profile.getEmail() && data.visibility == 'Private') || data.visibility == 'Public') {
       $('.w3-button').show()
@@ -915,6 +1008,7 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
     $('#descriptionbar').toggle("slide", { direction: 'right' })
   }
 
+
   function popupbtn() { $('#popupbox').slideToggle() }
   function popup(msg) {
     if ($('#popupbox').is(':visible')) { $('#popupbox').slideToggle() }
@@ -963,7 +1057,7 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
         x: wp.x(),
         y: wp.y(),
       });
-      wp.scale({x:1.5,y:1.5})
+      wp.scale({ x: 1.5, y: 1.5 })
       globaltemp = temp
       tooltip.text(temp.find('p').html());
       tooltip.show();
@@ -971,7 +1065,7 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
       function timeFunction() {
         setTimeout(function () {
           tooltip.hide();
-          wp.scale({x:1,y:1})
+          wp.scale({ x: 1, y: 1 })
           wp.shadowOpacity(0)
         }, 10000)
       }
@@ -1014,7 +1108,7 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
         });
         tooltip.text(temp.find('p').html());
         tooltip.show();
-        wp.scale({x:1.5,y:1.5})
+        wp.scale({ x: 1.5, y: 1.5 })
         wp.shadowOpacity(1)
       }
 
@@ -1023,15 +1117,15 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
       if (!enableedit && $(this).attr('id') == temp.attr('id')) {
         tooltip.hide();
         wp.shadowOpacity(0)
-        wp.scale({x:1,y:1})
+        wp.scale({ x: 1, y: 1 })
       }
     })
     wp.on('mouseout', function () {
       if (enableedit) stage.container().style.cursor = 'default';
       tooltip.hide();
       wp.shadowOpacity(0)
-      wp.scale({x:1,y:1})
-          });
+      wp.scale({ x: 1, y: 1 })
+    });
   }//wpevents
   var googleUser = {};
   gapi.load('auth2', function () {
@@ -1047,7 +1141,7 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
       onSignIn(googleUser)
     });
   }
-  $('select').on('change', function () {
+  $('#userbar select').on('change', function () {
     if (this.value == 'dark') {
       localStorage.theme = 'dark'
       $('html').addClass('dark')
@@ -1069,7 +1163,7 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
     return this.find('p').html()
   };
   $.fn.c = function () {
-    if (this.attr('connector')) return this.attr('connector').split(',').map(x=>x.toString())
+    if (this.attr('connector')) return this.attr('connector').split(',').map(x => x.toString())
     else false
   };
   function clear() {
@@ -1090,7 +1184,7 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
     globalselect = select
     select.select2({
       // placeholder: {id:'-1',text:'.'},
-      //placeholder: 'Route Waypoints...',
+      placeholder: 'Route Waypoints...',
       initSelection: function (element, callback) { },
       allowClear: true,
       width: '80%'
@@ -1104,7 +1198,7 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
       $('#sortable').find('aside').each(function () {
         if (!$(this).is('nav>div>aside')) select.append(new Option($(this).n(), $(this).d(), false, false))
       })
-      select.val(0).trigger('change')
+      select.trigger('change')
     })
     select.on('select2:select', function (e) {
       temp = $('#' + e.params.data.id).clone()
@@ -1113,6 +1207,7 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
       temp = ''
       select.parent().find('aside').each(function () { temp += $(this).d() + ',' })
       select.parent().attr('connector', temp.slice(0, -1))
+      select.empty()
       updateroute()
       update()
     })
@@ -1130,10 +1225,10 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
   function updateObjects() {
     $('nav').each(function () {
       connectors = $(this).attr('connector').split(',')
-      id=$(this).d()
+      id = $(this).d()
       connectors.forEach((connect, index) => {
         if (connectors[index + 1]) {
-          routes.findOne('#'+id+'connect' + connect.toString()).points(getConnectorPoints(
+          routes.findOne('#' + id + 'connect' + connect.toString()).points(getConnectorPoints(
             legends.findOne('#' + connect.toString()).position(),
             legends.findOne('#' + connectors[index + 1].toString()).position()
           ))
@@ -1145,13 +1240,13 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
   function createlines() {
     $('nav').each(function () {
       connectors = $(this).attr('connector').split(',')
-      id=$(this).d()
+      id = $(this).d()
       connectors.forEach((connect, index) => {
         if (connectors[index + 1]) {
           var line = new Konva.Arrow({
             strokeWidth: 15,
             stroke: '#0080ff',
-            id: id+'connect' + connect,
+            id: id + 'connect' + connect,
             fill: '#0080ff',
           });
           routes.add(line);
@@ -1171,4 +1266,102 @@ $(document).on("click", "#sortable>div>div>aside,#sortable>aside", function () {
     createlines()
     updateObjects();
   }
+  function checkShapes(SIZE) {
+    const startX = Math.floor((-stage.x() - stage.width()) / stage.scaleX() / SIZE) * SIZE
+    const endX = Math.floor((-stage.x() + stage.width() * 2) / stage.scaleX() / SIZE) * SIZE
+    const startY = Math.floor((-stage.y() - stage.height()) / stage.scaleX() / SIZE) * SIZE
+    const endY = Math.floor((-stage.y() + stage.height() * 2) / stage.scaleX() / SIZE) * SIZE
+    for (var x = startX; x < endX; x += SIZE) {
+      for (var y = startY; y < endY; y += SIZE) {
+        layer.add(new Konva.Rect({
+          x, y, width: SIZE, height: SIZE,
+          stroke: '#e6e6e6',
+          strokeWidth: 1
+        }))
+      }
+    }
+  }//checkShapes
+  function searching(){
+target=$('#sortable').find('aside p:contains('+$('#header input').val()+'):not(nav aside)').first().parent()
+  stage.x(((-target.attr('datax')) * 2 * stage.scaleX() + stage.width()) / 2)
+        stage.y(((-target.attr('datay')) * 2 * stage.scaleX() + stage.height()) / 2)
+        tooltip.position({
+          x: target.attr('datax'),
+          y: target.attr('datay'),
+        });
+        tooltip.text(target.find('p').html());
+        tooltip.show();
+        function timeFunction() {
+          setTimeout(function () {
+            tooltip.hide();
+          }, 5000)
+        }
+        timeFunction()}
+  
+        function simulation(newwp) {
+    solves.find('Line').forEach(function (e) { e.destroy() })
+    if (!solution) {
+      cities = []
+      $('#solverbar aside').each(function(){cities.push([$(this).attr('datax'), $(this).attr('datay'),$(this).d()])})
+    } else cities = solution.concat([newwp])
+    if (cities.length == 1) return console.log('Only 1')
+    for (var tour = [], x = 0; tour.length < cities.length; x++)tour.push(x)
+    console.log(parseInt(iteration * cities.length ** 1.1))
+    logspace(5, 0, parseInt(iteration * cities.length ** 1.1)).forEach(function (temperature) {
+      [i, j] = Array.from({ length: cities.length }, (v, k) => k).sort(function () { return .5 - Math.random() }).slice(0, 2).sort(function (a, b) { return a - b })
+      newTour = tour.slice(0, i).concat(tour.slice(j, j + 1), tour.slice(i + 1, j), tour.slice(i, i + 1), tour.slice(j + 1, cities.length))
+      olddistance = [j, j - 1, i, i - 1].map(k => Math.sqrt([0, 1].map(d => (cities[tour[Number(((k + 1) - (Math.floor((k + 1) / cities.length) * cities.length)).toPrecision(8))]][d] - cities[tour[Number((k - (Math.floor(k / cities.length) * cities.length)).toPrecision(8))]][d]) ** 2).reduce((sum, a) => sum + a, 0)))
+      newdistance = [j, j - 1, i, i - 1].map(k => Math.sqrt([0, 1].map(d => (cities[newTour[Number(((k + 1) - (Math.floor((k + 1) / cities.length) * cities.length)).toPrecision(8))]][d] - cities[newTour[Number((k - (Math.floor(k / cities.length) * cities.length)).toPrecision(8))]][d]) ** 2).reduce((sum, a) => sum + a, 0)))
+      temp = olddistance.reduce((sum, a) => sum + a, 0) - newdistance.reduce((sum, a) => sum + a, 0)
+      if (Math.exp(temp / temperature) > Math.random()) tour = newTour
+    })
+    solution = [...Array(cities.length).keys()].map(i => cities[tour[i % cities.length]])
+    for(var m=0,gaps=[];m<cities.length;m++){
+      if (m!=cities.length-1){
+       gaps.push(distance(m,m+1))
+      }
+    }
+    biggestgap=gaps.indexOf(Math.max(...gaps))
+solution=solution.slice(biggestgap+1,solution.length).concat(solution.slice(0,biggestgap+1))
+    //final solution
+    solves.find('Line').forEach(function (e) { e.destroy() })
+    solution.forEach(function (coord, index) {
+      if (solution[index + 1]){
+      var line = new Konva.Line({
+        strokeWidth: 5,
+        stroke: 'darkblue',
+      });
+      solves.add(line);
+      line.moveToTop()
+      line.points([solution[index][0],solution[index][1],solution[index + 1][0],solution[index + 1][1]])}
+      $('#solverbar td.'+solution[index][2]).parent().attr('order',index)
+    })
+    layer.batchDraw()
+    $('#solverbar tr').sort((a,b) => $(a).attr("order") - $(b).attr("order")) .appendTo("#solverbar table");
+  }//simulation
+  function logspace(a, b, len) {
+    end = len - 1;
+    d = (b - a) / end;
+    arr = new Array(len);
+    tmp = a;
+    arr[0] = Math.pow(10, tmp);
+    for (var i = 1; i < end; i++) {
+      tmp += d;
+      arr[i] = Math.pow(10, tmp);
+    }
+    arr[end] = Math.pow(10, b);
+    return arr
+  }
+  function distance(p, q) {
+    return Math.sqrt([0, 1].map(d => (solution[p][d] - solution[q][d]) ** 2).reduce((sum, a) => sum + a, 0))
+  }
+
+
+  function copy() {
+  var $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val('http://fandommap.github.io/?'+data.id).select();
+  document.execCommand("copy");
+  $temp.remove();
+}
 </script>
