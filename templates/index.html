@@ -1,26 +1,28 @@
 <!--
 sudo service apache2 restart
 -->
-
 <link rel="shortcut icon" href="static/icon_blue.png">
-<head>
-<title>Fandom Map</title>
 
-<script src="https://apis.google.com/js/api:client.js"></script>
-<meta name="google-signin-scope" content="profile email">
-<meta name="google-signin-client_id"
-content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com">
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
-<script src="https://unpkg.com/konva@8/konva.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" /> 
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<head>
+    <meta name="google-site-verification" content="JqXPrnsRjldSfZOT1TUudDwELwjbPuhNWDorDWwj81s" />
+    <title>Fandom Map</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script src="https://apis.google.com/js/api:client.js"></script>
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id"
+        content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+    <script src="https://unpkg.com/konva@8/konva.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 </head>
 <style>
     html,
@@ -46,7 +48,6 @@ content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.co
         padding: 5%;
         padding-left: 20%;
         padding-right: 20%;
-
     }
 
     .sidebarbtn {
@@ -69,32 +70,36 @@ content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.co
 
     #userbar {
         overflow-y: scroll;
-overflow-x: hidden;
-float: left;
-height: 100%;
-position: fixed;
-z-index: 5;
-width: 25%;
-color: white;
-right:0;
-background-image:linear-gradient(to left,black,rgba(0, 0, 0, 0.05 ));
-align-items: center;
-text-align: center;
-overflow-y: auto;
+        overflow-x: hidden;
+        float: left;
+        height: 100%;
+        position: fixed;
+        z-index: 5;
+        width: 25%;
+        color: white;
+        right: 0;
+        background-image: linear-gradient(to left, black, rgba(0, 0, 0, 0.05));
+        align-items: center;
+        text-align: center;
+        overflow-y: auto;
     }
-    #sidebarclose{
-text-align: right;
+
+    #sidebarclose {
+        text-align: right;
     }
-    #sidebarbox>div,#signin2,#signout,
+
+    #sidebarbox>div,
+    #signin2,
+    #signout,
     #sidebarclose {
         z-index: 10;
         margin: 5%;
         cursor: pointer;
         padding: 5%;
-        
     }
 
-    #sidebarbox>div:hover,#signout:hover,
+    #sidebarbox>div:hover,
+    #signout:hover,
     #sidebarclose:hover {
         background-color: #0080ff
     }
@@ -102,8 +107,8 @@ text-align: right;
     .sidebarbutton,
     .userbutton {
         position: fixed;
-        height: 60px;
-        width: 60px;
+        height: 8vh;
+        width: 8vh;
         border-radius: 5px;
         display: block;
         background: #0080ff;
@@ -133,16 +138,26 @@ text-align: right;
     #signin {
         right: 0
     }
+
     #fadein {
         position: absolute;
-        top: 20%;
+        top: 0;
         display: block;
         left: 0;
         right: 0;
         margin-left: auto;
         margin-right: auto;
         display: none;
-        color: white
+        color: white;
+        height: 100%
+    }
+
+    #fadein h1 {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        margin-top: 0;
+        padding-bottom: 0;
+        line-height: normal;
     }
 
     #signout {
@@ -151,6 +166,7 @@ text-align: right;
 
     #bk {
         height: 100%;
+        width: 100%;
         background-image: url("/static/slideshow.gif");
         backdrop-filter: blur(5px);
         background-repeat: no-repeat;
@@ -239,12 +255,14 @@ text-align: right;
     #exploreresult>div>img {
         width: 100%;
     }
-    .g{
+
+    .g {
         height: 100%;
-        height:40;
+        height: 40;
     }
+
     .section:nth-child(odd) {
-        background-color: #96D4D4;
+        background-color: #cce6ff;
     }
 
     td {
@@ -256,7 +274,6 @@ text-align: right;
         padding: 3%;
         cursor: pointer;
         text-align: center;
-
     }
 
     #FAQ>p {
@@ -266,12 +283,10 @@ text-align: right;
         margin: 0;
         padding: 0;
         margin-top: 3%;
-
     }
 
     #Welcome {
         padding: 0;
-
     }
 
     #exploreresult>div>p,
@@ -281,7 +296,6 @@ text-align: right;
         padding: 0;
         padding-left: 2%;
         padding-right: 2%;
-
     }
 
     #exploreresult>div>a {
@@ -295,53 +309,143 @@ text-align: right;
     table {
         width: 100%;
     }
-    #explore{
+
+    #explore {
         padding-left: 5%;
         padding-right: 5%;
     }
-    td:hover,#exploreresult>div:hover,#signin2:hover{
-        background-color: #3399ff;
+
+    td:hover,
+    #exploreresult>div:hover,
+    #signin2:hover {
         cursor: pointer;
     }
 
-    #signin{
+    #signin {
         width: 100%;
     }
-    #create{
+
+    #create {
         display: none;
     }
-    #sidebarclose{
+
+    #sidebarclose {
         text-align: left;
     }
-    #signin0{
+
+    #signin0 {
         display: none;
     }
-    #userbarclose{
+
+    #userbarclose {
         text-align: right;
     }
-    .dark,.dark #FAQ p{
+
+    .dark,
+    .dark #FAQ p {
         color: white;
         background-color: #333333;
     }
-    .dark .section:nth-child(odd){
-background-color: #1E1E1E;
+
+    .dark .section:nth-child(odd) {
+        background-color: #1E1E1E;
     }
-    #tsp{
-        position:sticky;
+
+    #tsp {
+        position: sticky;
         width: 100%;
-        height: 80%;
+        height: 50%;
         box-shadow: 0 0 10px grey;
         border-radius: 10px;
-        
     }
-    #footer a{
+
+    #footer a {
         margin: 5%;
     }
-    #footer a:hover{
+
+    #footer a:hover {
         text-decoration: underline;
     }
-</style>
 
+    .welcomeredirect {
+        height: 100%;
+        color: white;
+        bottom: 0px;
+        position: absolute;
+        border-radius: 10px;
+    }
+
+    .welcomeredirect td {
+        border-radius: 10px;
+    }
+
+    #signin {
+        width: fit-content;
+    }
+
+    #theme,
+    #profile {
+        padding-top: 3%;
+        padding-bottom: 3%;
+        border-radius: 5px;
+        border: 2px #0080ff;
+        border-style: solid;
+        background-color: rgb(0, 128, 255, 0.5);
+        margin-left: 5%;
+        cursor: pointer;
+        padding-left: 2%;
+        border-radius: 5px;
+        border: 2px #0080ff;
+        border-style: solid;
+        margin-bottom: 5%;
+    }
+
+    #userbarclose {
+        z-index: 10;
+        margin: 3%;
+        cursor: pointer;
+        padding: 3%;
+        margin-bottom: 1%;
+    }
+
+    #userbarclose:hover {
+        background-color: #0080ff
+    }
+
+    #redirectrow td {
+        padding-bottom: 0;
+    }
+
+    span {
+        color: #0080ff;
+    }
+
+    iframe {
+        border: none;
+    }
+
+    #logo {
+        padding-top: 25%;
+
+    }
+
+    video,
+    #About iframe {
+        box-shadow: 0 0 10px grey;
+        border-radius: 15px;
+    }
+
+.section {
+    -webkit-transition: opacity .5s ease-in;
+       -moz-transition: opacity .5s ease-in;
+         -o-transition: opacity .5s ease-in;
+        -ms-transition: opacity .5s ease-in;
+            transition: opacity .5s ease-in;
+}
+
+.inv{opacity: 0;}
+
+</style>
 <button class="w3-button w3-xlarge sidebarbutton" onclick="sidebarbtn()">☰</button>
 <button class="w3-button w3-xlarge userbutton" onclick="userbarbtn()"><img src="static/user.png" height="50%"></button>
 <div id='popupbox'><a id=popupmsg>Message</a><button onclick='popupbtn()'>X</button></div>
@@ -350,19 +454,18 @@ background-color: #1E1E1E;
     <div id='sidebarbox'></div>
 </div>
 <!--sidebar-->
-<div style="display:none" id="userbar">
-    <div id='sidebarclose' onclick="userbarbtn()">Close X</div>
+<div style="display:none" id="userbar" class='righty'>
+    <div id='userbarclose' onclick="userbarbtn()">Close X</div>
     <div id=signin2><img class=g src=static/goo.png>Google Sign In</div>
-    <div id='signin0'class="g-signin2"data-onsuccess="onSignIn"data-theme="dark"></div>
+    <div id='signin0' class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
     <div id='signout' onclick="signOut()"><img class=g src=static/goo.png>Sign Out</div>
-
-    <div id='profile'></div>
-    <br>
-Theme<br>
-    <select id=select theme="google" width="400" placeholder="Choose theme..." data-search="true">
-        <option value="white">White</option>
-        <option value="dark">Dark</option>
+    <div id='profile'>You had not signed in</div>
+    <div id=theme> Theme<br>
+        <select id=select theme="google" width="400" placeholder="Choose theme..." data-search="true">
+            <option value="white">White</option>
+            <option value="dark">Dark</option>
         </select>
+    </div>
 </div>
 <!--userbar-->
 <div id="fullpage">
@@ -370,113 +473,98 @@ Theme<br>
         <h2 style="display:none">Welcome</h2>
         <div id='bk'></div>
         <div id='fadein'>
-            <img src="/static/icon_wht.png">
-            <h1>Fandom Map</h1>
-            Public Interactive Map for Fandom Wikipedia
+            <table class=welcomeredirect>
+                <tbody>
+                    <tr>
+                        <td id='logo' colspan="2">
+                            <img src="/static/icon_wht.png">
+                            <h1>Fandom Map</h1> Public Interactive Map for Fandom Wikipedia
+                        </td>
+                    </tr>
+                    <tr id=redirectrow>
+                        <td id='createtd'>
+                            <h3>Sign in by Google Account to create your own map</h3>
+                            <button class='important' id='signin'><img class=g src=static/goo.png>SIGN IN</button>
+                            <button class='important' id='create'>CREATE</button>
+                        </td>
+                        <td id=exploretd>
+                            <h3>Explore Public Maps</h3>
+                            <button class='important' id='explorebtn'>EXPLORE</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <!--fadein-->
-
     </div>
     <!--welcome-->
 </div>
 <!--fullpage-->
-
-<div id="Redirect" class="section fp-auto-height" data-anchor='$Redirect'>
-    <table>
-        <td id='createtd'>
-            <h3>Sign in by Google Account to create your own map</h3>
-            <button class='important' id='signin'><img class=g src=static/goo.png>SIGN IN</button>
-
-            <button class='important' id='create'>CREATE</button>
-        </td>
-        <td id=exploretd>
-            <h3>Explore Public Maps</h3>
-            <button class='important' id='explorebtn'>EXPLORE</button>
-        </td>
-        <h2 style="display:none">Redirect</h2>
-
-    </table>
-</div>
 <div id="About" class="section">
     <img class=icon src=static/wp.png>
-    <h2>About</h2><br>
-    Fandom Map is an open sourced website made for a univsersity final year project, using Amazon AWS cloud to host
-    community based serving website.
-    Please contact me on discord Zachary#6611 or fill <a href=https://forms.gle/jJarQ8e6vK9y839f7>this questionnaire</a>
-    for any issues and needs. Thank you
-    <br><a href=https://forms.gle/jJarQ8e6vK9y839f7><img class=g src=static/goo.png> Google Form Support Ticket / Bug Report / Suggestion Form</a>
+    <h2>About</h2><br> <span>Fandom Map</span> is a website made for a univsersity final year project, using Amazon AWS
+    cloud to host community based serving website, featuring create your own <span>creative interactive map</span> and
+    to share with others. Please contact me on discord Zachary#6611 or fill <a
+        href=https://forms.gle/jJarQ8e6vK9y839f7>this questionnaire</a> for any issues and needs. Thank you <br><a
+        href=https://forms.gle/jJarQ8e6vK9y839f7><img class=g src=static/goo.png> Google Form Support Ticket / Bug
+        Report / Suggestion Form</a>
     <br><a href=http://github.com/fandommap/fandommap.github.io><img src=static/git.png> Github Repository</a>
-    <br><img class=g src=static/goo.png> Gmail law.zachary@gamil.com
-    <br><img src=static/dis.png> Discord Zachary#6611
+    <br><img class=g src=static/goo.png> Gmail law.zachary@gamil.com <br><img src=static/dis.png> Discord
+    Zachary#6611<br>
+    <iframe width=600vh height=339vh src=https://www.youtube.com/embed/2HHeHU5rBjM>
+    </iframe>
 </div>
 <!--about-->
 <div id=Features class=Section>
     <img class=icon src=static/wp.png>
     <h2>Features</h2><br>
-<b>Customization ↬</b><br>
-Inserting your very own image of maps, provided with waypoints and route creation tools.
-Can create infinitie amount of enjoyment to spread your creation to anyone!
-
-<br><br><b>Description 🛈</b><br>
-Attach your formatted text as markdowns to waypoints as descriptions!
-Support any website page and fandom wiki pages as descriptions too.
-
-<br><br><b>Route Solver ⩻</b><br>
-Traveling Salesman Problem TSP is given a list of cities and the distances between each pair of cities,
-what is the shortest possible route that visits each city exactly once and returns to the origin city?
-<br><br>
-We are using Simulated Annealing, a probabilistic technique for approximating the global optimum of given functions.
-By compare a route and randomly swapped new route and replace to a shorter distance route.
-We can roughly find a solution to go through amount of waypoints.
-
-<br><br><b>Click below to create waypoints!</b>
-    <iframe src='$tsp' id=tsp>
-    </iframe>
-</div><!--features-->
-
-
+    <b>Customization ↬</b><br> Inserting your very own image of maps, provided with <span>waypoints</span> and route
+    creation tools. Can create infinitie amount of enjoyment to spread your creation to anyone! <br><br><b>Description
+        🛈</b><br> Attach your formatted text as <span>markdowns</span> to waypoints as descriptions! Support any
+    website page and fandom wiki pages as descriptions too. <br><br><b>Route Solver ⩻</b><br> <span>Traveling Salesman
+        Problem TSP</span> is given a list of cities and the distances between each pair of cities, what is the shortest
+    possible route that visits each city exactly once and returns to the origin city? <br><br> We are using
+    <span>Simulated Annealing</span>, a probabilistic technique for approximating the global optimum of given functions.
+    By compare a route and randomly swapped new route and replace to a shorter distance route. We can roughly find a
+    solution to go through amount of waypoints. <br><br><b>Click below to create waypoints!</b>
+    <iframe src='$tsp' id=tsp></iframe>
+</div>
+<!--features-->
 <div id=T&S class=Section>
     <img class=icon src=static/wp.png>
     <h2>Terms and Service</h2>
-    <br>
-    We are committed to providing a friendly, safe and welcome environment for all fandom communities,
-    regardless of gender identity and expression. The below terms established what you can expect from our website
-    services.
-    And what we expect from you:
-    <br>
-    • Using website resources resonably.
-    <br>
-    • Collaborate with other community fandom members, gracefully accept criticism against your map.
-    <br>
-    • Being respectful of others viewpoints and experience to not creating offensive materials.
+    <br> We are committed to providing a <span>friendly, safe and welcome environment</span> for all fandom communities,
+    regardless of <span>gender identity</span> and expression. The below terms established what you can expect from our
+    website services. And what we expect from you: <br> • Using website resources resonably. <br> • Collaborate with
+    other community fandom members, gracefully accept criticism against your map. <br> • Being <span>respectful</span>
+    of others viewpoints and experience to not creating offensive materials.
 </div>
 <!--COC-->
 <div id="FAQ" class="section">
     <img class=icon src=static/wp.png>
     <h2>FAQ Frequently Asked Questions</h2><br>
-    <p>What is Fandom Map and how does it work?</p>
-    Fandom user are free to create their maps. By adding map image and add waypoints on the map, using the map link to
-    share it your other favourite communties out there!
-    <p>Why should I use Fandom Map?</p>
-    Fandom Map isn't just a place to share map images online, but also share the information on a 2-dimension scale!
-    <p>Is Fandom Map Under Fandom wiki platform?</p>
-    No, fandom is a common word to decribe a fanbase of a fictional series.
-    <p>Who is Fandom Map for?</p>
-    You! And for the fandom communties love their fictional serires and willing to produce top-notch map.
-    <p>Is Fandom Map free?</p>
-    All the reasources are free, unlimited access to public avaliable maps with unlimited map creation power!
-    <p>I have issues, bugs or other questions!</p>
-    Please contact on discord Zachary#6611 or by filling <a
-    href=https://forms.gle/jJarQ8e6vK9y839f7>this questionnaire</a>.
+    <p>What is <span>Fandom Map</span> and how does it work?</p> <span>Fandom users </span>are free to create their
+    maps. By adding map image and add waypoints on the map, using the map link to share it your other favourite
+    communties out there! <p>Why should I use <span>Fandom Map</span>?</p> Fandom Map isn't just a place to share map
+    images online, but also share the information on a 2-dimension scale! <p>Is Fandom Map Under <span>Fandom
+            Wiki</span> platform?</p> No, fandom is a common word to decribe a fanbase of a fictional series. <p>Who is
+        <span>Fandom Map</span> for?</p> You! And for the fandom communties love their fictional serires and willing to
+    produce top-notch map. <p>Is Fandom Map free?</p> All the reasources are free, unlimited access to
+    <span>public</span> avaliable maps with unlimited map creation power! <p>I have issues, bugs or other questions!</p>
+    Please contact on discord Zachary#6611 or by filling <a href=https://forms.gle/jJarQ8e6vK9y839f7>this
+        questionnaire</a>.<br>
+    <video width="640vh" height="360vh" autoplay loop muted>
+        <source src="static/bk3.mp4" type="video/mp4" /> Your browser does not support the video tag.
+    </video>
 </div>
 <!--faq-->
-
 <div id="Explore" class="section  fp-auto-height" data-anchor='$Explore'>
     <img class=icon src=static/wp.png>
     <h2>Explore</h2><br>
     <input placeholder='Search Map Names...'></input>
     <div id=exploreresult></div>
-</div><!--explore-->
+</div>
+<!--explore-->
 <div id="footer" class="section">
     <b>End of Page...</b><br><br>
     <a id=f1>About</a>
@@ -484,10 +572,7 @@ We can roughly find a solution to go through amount of waypoints.
     <a id=f3>Contact Us</a><br>
     <img src="/static/icon_blue.png" style="width: 5%;"> © 2022 Fandom Map
 </div>
-
-
 <script>
-    if ('{{popup}}') { popup('{{popup}}') }
     var name, email
     new fullpage('#fullpage', {
         sectionsColor: ['white', 'white', 'white', 'white', 'white'],
@@ -497,26 +582,60 @@ We can roughly find a solution to go through amount of waypoints.
         normalScrollElements: '.w3-sidebar,.sidebarbtn'
     });
     $(document).ready(function () {
-        if (localStorage.theme=='dark'){
-    $('html').addClass('dark')
-$('select').val('dark')
-$('select').trigger('change')
+
+        var verticalwindow = false, mobile = false
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { mobile = true }
+        verticalwindow = false
+        if ($('#fadein').height() / $('#fadein').width() > 1) verticalwindow = true
+        if (verticalwindow) {
+            $('#sidebar,.righty').css('width', '50%')
+            $('#exploreresult div').css('width', '86%')
         }
-        let sidebarlist = ['Welcome', 'Redirect', 'About', 'Features','Terms and Service', 'FAQ', 'Explore']
+        let sidebarlist = ['Welcome', 'About', 'Features', 'Terms and Service', 'FAQ', 'Explore']
         for (let i = 0; i < sidebarlist.length; i++) {
             $('#sidebarbox').append('<div>' + sidebarlist[i] + '</div>')
         }
         $('#fadein').delay(300).fadeIn(800);
         $("select").select2();
-        $('select').on('change', function() {
-  if(this.value=='dark') {
-    localStorage.theme='dark'  
-    $('html').addClass('dark')}
-    else{
-        localStorage.theme='white'  
-    $('html').removeClass('dark')
-    }
+        $('select').on('change', function () {
+            if (this.value == 'dark') {
+                localStorage.theme = 'dark'
+                $('html').addClass('dark')
+                $('#tsp').contents().find('a').css('color', 'white')
+            }
+            else {
+                $('#tsp').contents().find('a').css('color', 'black')
+                localStorage.theme = 'white'
+                $('html').removeClass('dark')
+            }
+        });
+        if (mobile) {
+            $(document).ready(function(){
+       $('h2,*').each(function(){
+       var k =  parseInt($(this).css('font-size')); 
+       var redSize = ((k*140)/100) ; //here, you can give the percentage( now it is reduced to 90%)
+           $(this).css('font-size',redSize);  
+
+       });
 });
+
+            $('#sidebar div>div').css({
+                'margin': '5%',
+                'padding': '5%',
+                'background-color': '#0080FF'
+                
+            })
+
+        }
+
+        if (localStorage.theme == 'dark') {
+            $('html').addClass('dark')
+            $('select').val('dark')
+            $('select').trigger('change')
+            $('#tsp').ready(function () {
+                $('#tsp').on('load', function () {$('#tsp').contents().find('a').css('color', 'white')})
+            })
+        }
 
     })//ready
     function signOut() {
@@ -525,25 +644,25 @@ $('select').trigger('change')
         gapi.auth2.getAuthInstance().signOut()
         $('#profile').html('')
     }
-    function onSignIn(googleUser){
+    function onSignIn(googleUser) {
         $('#my-signin2,#signin2,#signin').hide()
         $('#signout,#create').show()
-var profile=googleUser.getBasicProfile();
-console.log('Full Name: '+profile.getName());
-console.log('Email: '+profile.getEmail());
-email=profile.getEmail()
-name=profile.getName()
-
-$('#profile').html('<div>Name</div><div>'+profile.getName()+'</div><div>Email</div><div>'+profile.getEmail()+'</div>')
-}
-    function sidebarbtn() { $('#sidebar').toggle("slide") }
-    function userbarbtn() { $('#userbar').toggle("slide") }
+        var profile = googleUser.getBasicProfile();
+        console.log('Full Name: ' + profile.getName());
+        console.log('Email: ' + profile.getEmail());
+        email = profile.getEmail()
+        name = profile.getName()
+        $('#profile').html('<img src='+profile.getImageUrl() +'></img><div>Name</div><div>' + profile.getName() + '</div><div>Email</div><div>' + profile.getEmail() + '</div>')
+        if ('{{popup}}') popup('{{popup}}')
+        else popup('Welcome ' + profile.getName())
+    }
+    function sidebarbtn() { $('#sidebar').toggle("slide", { direction: 'left' }) }
+    function userbarbtn() { $('#userbar').toggle("slide", { direction: 'right' }) }
     function popupbtn() { $('#popupbox').slideToggle() }
-
     function popup(msg) {
         if ($('#popupbox').is(':visible')) { $('#popupbox').slideToggle() }
         $('#popupmsg').html(msg)
-        $('#popupbox').slideToggle().delay(10000).slideToggle()
+        $('#popupbox').slideToggle().delay(1000 * 5).slideToggle()
     }//popup
     $('#createtd').click(function () {
         $.ajax({ data: { email: email, name: name }, type: 'POST', url: '/$create' })
@@ -581,7 +700,7 @@ $('#profile').html('<div>Name</div><div>'+profile.getName()+'</div><div>Email</d
             }
         })
     })
-    heading = ['Name', 'Author', 'Creation Date']
+    heading = ['Name', 'Author', 'Creation Date 🗓','Views 👁']
     function adddiv(element, filename) {
         id = element.shift()
         desc = ''
@@ -590,6 +709,7 @@ $('#profile').html('<div>Name</div><div>'+profile.getName()+'</div><div>Email</d
         })
         if (filename) { $('#exploreresult').append('<div id=' + id + '><img src=static/' + filename + '>' + desc + '<p><p></div>') }
         else $('#exploreresult').append('<div id=' + id + '>' + desc + '</div>')
+        if (verticalwindow) $('#' + id).css('width', '86%')
     }
     $(document).on("click", "#exploreresult>div", function () {
         window.location.href = '/' + $(this).attr('id')
@@ -606,49 +726,119 @@ $('#profile').html('<div>Name</div><div>'+profile.getName()+'</div><div>Email</d
     $(document).on("click", "#sidebarbox>div", function () {
         $('html,body').animate({ scrollTop: $("h2:contains(" + $(this).text() + ')').offset().top }, 800);
     })
-    $('#exploretd').click(function () {
+    $('#exploretd,#explorebtn').click(function () {
         $('html,body').animate({ scrollTop: $("h2:contains(Explore)").offset().top }, 800);
 
     })
     var googleUser = {};
-gapi.load('auth2', function(){
-    auth2 = gapi.auth2.init({
-    client_id: '507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com',
-    cookiepolicy: 'single_host_origin',
+    gapi.load('auth2', function () {
+        auth2 = gapi.auth2.init({
+            client_id: '507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com',
+            cookiepolicy: 'single_host_origin',
+        });
+        attachSignin(document.getElementById('createtd'));
+        attachSignin2(document.getElementById('signin2'));
+
+
     });
-    attachSignin(document.getElementById('createtd'));
-    attachSignin2(document.getElementById('signin2'));
-});
-function attachSignin(element) {
-auth2.attachClickHandler(element,{},function(googleUser){
-    var profile = googleUser.getBasicProfile();
-        email = profile.getEmail()
-        name = profile.getName()
-        $.ajax({ data: { email: email, name: name }, type: 'POST', url: '/$create' })
-            .done(function (data) { window.location.href = '/' + String(data.result) })
+    function attachSignin(element) {
+        auth2.attachClickHandler(element, {}, function (googleUser) {
+            var profile = googleUser.getBasicProfile();
+            email = profile.getEmail()
+            name = profile.getName()
+            console.log('create'+email+name)
+            $.ajax({ data: { email: email, name: name }, type: 'POST', url: '/$create' })
+                .done(function (data) { window.location.href = '/' + String(data.result) })
 
-});
+        });
+    }
+    function attachSignin2(element) {
+        auth2.attachClickHandler(element, {}, function (googleUser) {
+            $('#my-signin2,#signin2,#signin').hide()
+            $('#signout,#create').show()
+            var profile = googleUser.getBasicProfile();
+            email = profile.getEmail()
+            name = profile.getName()
+            $('#profile').html('<div>Name</div><div>' + profile.getName() + '</div><div>Email</div><div>' + profile.getEmail() + '</div>')
+
+
+        });
+    }
+
+    $('#f1').click(function () {
+        $('html,body').animate({ scrollTop: $("h2:contains(About)").offset().top }, 800);
+    }
+    )
+    $('#f2').click(function () {
+        $('html,body').animate({ scrollTop: $("h2:contains(Terms and Service)").offset().top }, 800);
+    }
+    )
+    $('#f3').click(function () {
+        $('html,body').animate({scrollTop:$("h2:contains(About)").offset().top},800)})
+    $('#Welcome:not(.welcomeredirect)').click(function (e) {
+        if (!$(e.target).is('.welcomeredirect td,button,h3')) $('html,body').animate({ scrollTop: $("h2:contains(About)").offset().top }, 800);
+    }
+    )
+    $.fn.isInViewport = function () {
+        var elementTop = $(this).offset().top;
+        var elementBottom = elementTop + $(this).outerHeight();
+        var viewportTop = $(window).scrollTop();
+        var viewportBottom = viewportTop + $(window).height();
+        return elementBottom > viewportTop && elementTop < viewportBottom;
+    };
+    $('#createtd,#exploretd,#exploreresult>div,#signin2').hover(function () {
+        $(this).css('background-color', '#0080ff')
+        $(this).find('button').css('background-color', 'white')
+        $(this).find('button').css('color', '#0080ff')
+    }, function () {
+        $(this).find('button').css('background-color', '#0080ff')
+        $(this).css('background-color', 'rgba(0,0,0,0)')
+        $(this).find('button').css('color', 'white')
+
+
+    }
+    )
+
+
+    function fitStageIntoParentContainer() {
+        if ($('#fadein').height() / $('#fadein').width() > 1) verticalwindow = true
+        else verticalwindow = false
+        if (verticalwindow) {
+            $('.section:not(#Welcome)').css('padding-left', '0')
+            $('.section:not(#Welcome)').css('padding-right', '0')
+            $('#exploreresult div').css('width', '86%')
+            $('#sidebar,.righty').css('width', '50%')
+        }
+        else {
+            $('.section:not(#Welcome)').css('padding-left', '20%')
+            $('.section:not(#Welcome)').css('padding-right', '20%')
+            $('#exploreresult div').css('width', '43%')
+            $('#sidebar,.righty').css('width', '25%')
+        }
+    }
+    fitStageIntoParentContainer();
+    window.addEventListener('resize', fitStageIntoParentContainer);
+
+var scrollWait = 300;
+function isInv(el) {
+    var wt = $(window).scrollTop(),et=$(el).offset().top
+    return (( $('#fadein').height() + wt) <= et || wt >= (et + $(el).height()))
 }
-function attachSignin2(element) {
-auth2.attachClickHandler(element,{},function(googleUser){
-    $('#my-signin2,#signin2,#signin').hide()
-        $('#signout,#create').show()
-        var profile = googleUser.getBasicProfile();
-        email = profile.getEmail()
-        name = profile.getName()
-        $('#profile').html('<div>Name</div><div>' + profile.getName() + '</div><div>Email</div><div>' + profile.getEmail() + '</div>')
-    
+function check(e){e.each(function(){$(this)[(isInv(this)?'add':'remove')+'Class']('inv')})}
 
-});
-}
-
-$('#f1').click( function(){
-    $('html,body').animate({ scrollTop: $("h2:contains(About)").offset().top }, 800);}
-)
-$('#f2').click(function(){
-    $('html,body').animate({ scrollTop: $("h2:contains(Terms and Service)").offset().top }, 800);}
-)
-$('#f3').click( function(){
-    $('html,body').animate({ scrollTop: $("h2:contains(About)").offset().top }, 800);}
-)
+$.fn.visible = function () {
+    var e=this,scrollTimer = null;
+    check(e);
+    $(window).bind("scroll resize", function(){
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(function(){check(e);},scrollWait);
+    });
+    return this;
+};
+$('.section').visible();
+$(window).click(function(e){
+    if($(e.target).is('.section')){
+if ($('#sidebar').is(':visible'))$('#sidebar').toggle("slide",{direction:'left'})
+if ($('#userbar').is(':visible'))$('#userbar').toggle("slide",{direction:'right'})}
+})
 </script>

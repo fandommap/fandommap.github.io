@@ -1,0 +1,32 @@
+eachrightyhide()
+$('#notmapinfo').show()
+$('#mapinfooption,#optroute').hide()
+$('#optx').val(aside.attr('dataX'))
+$('#opty').val(aside.attr('dataY'))
+$('.waypointed').show()
+$('#descriptionbar').removeClass('fandom')
+if (aside.attr('desc') == false || typeof (aside.attr('desc')) == 'undefined' || aside.attr('desc') == 'off') {
+  toggled(0)
+  $('#descwebsite>input').val('')
+  $('#desciption').html('')
+}
+else if (aside.attr('desc').startsWith('URL')) {
+  toggled(2)
+  $('#descwebsite>input').val(decodeURIComponent(escape(window.atob(aside.attr('desc').substring(3)))))
+  url = decodeURIComponent(escape(window.atob(aside.attr('desc').substring(3))))
+
+  if (url.includes("fandom.com")) {
+    $('#descriptionbar').addClass('fandom')
+    url += '?action=render'
+  }
+  $('#desciption').html('<iframe src="' + url + '"></ifrmae>')
+}
+else {
+  $('#preview').html(new showdown.Converter().makeHtml(decodeURIComponent(escape(window.atob(aside.attr('desc'))))))
+  $('textarea').val(decodeURIComponent(escape(window.atob(aside.attr('desc')))))
+  toggled(1)
+}
+$('#optname').val(aside.find('p').html())
+$('#optionbar').toggle("slide", { direction: 'right' })
+option = aside
+text = aside.find('p')
