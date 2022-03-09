@@ -2,3 +2,8 @@ error.log
 password.txt
 temp.py
 templates/temp.html
+phpmyadmin/**
+phpmyadmin/*
+phpmyadmin
+phpmyadmin/
+static/**_map.png
