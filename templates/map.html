@@ -443,31 +443,25 @@ Change Category Image
 
     $(document).on("mouseenter", '#sortable>div h2', function () {
       $(this).parent().css('background-color', '#888888')
-
     })
     $(document).on("mouseleave", '#sortable>div h2', function () {
       $(this).parent().css('background-color', '')
-
     })
-
-
     $(document).on("mouseenter",'nav aside',function(e){legends.findOne('#'+$(this).d()).scale({x:1.5,y:1.5})})
     $(document).on("mouseleave",'nav aside',function(e){legends.findOne('#'+$(this).d()).scale({x:1,y:1})})
-
-
     $(document).on("mouseenter", '#sortable>div', function (e) {
    if(!$(event.target).is('aside')){
      $(this).find('aside').each(function(){legends.findOne('#'+$(this).d()).scale({ x: 1.5, y: 1.5 })})
    }
     })
-
-
     $(document).on("mouseleave", '#sortable>div', function (e) {
    if(!$(event.target).is('aside')){
      $(this).find('aside').each(function(){legends.findOne('#'+$(this).d()).scale({ x: 1, y: 1 })})
    }
     })
-
+    $(document).on("mouseleave", '#sortable>div>div>aside', function (e) {
+     $(this).parent().parent().find('aside').each(function(){legends.findOne('#'+$(this).d()).scale({x:1,y:1})})
+    })
     $(document).on("mouseenter", '#mapinfo h2', function () {
       $(this).parent().css('background-color', '#888888')
     })
@@ -1689,5 +1683,22 @@ loadSprite('static/'+filename, function () {
 });
 })//done
 legends.batchDraw()
+}
+
+function forceupdate(){
+  $('#sortable').find('select').each(function () {
+                  if ($(this).data('select2')) $(this).select2('destroy')
+                })
+                $('#sortable>div>div').css('padding-bottom', '0')
+                $('nav>select').next(".select2-container").hide()
+                $.ajax({ data: { json: JSON.stringify(json), id: data.id, sortable: $('#sortable').html(), name: $('#mapinfo').find('h2').text(), visibility: data.visibility }, type: 'POST', url: '/$update' }).done(function (data) {
+                  console.log('updated')
+                })
+                $('#sortable>div>div').css('padding-bottom', '20%')
+                $('nav>select').next(".select2-container").show()
+                $('#sortable').find('select').each(function () {
+                  selectevent($(this))
+                })
+                checkupdate = false
 }
 </script>
