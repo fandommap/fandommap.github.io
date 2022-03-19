@@ -20,7 +20,7 @@ def allowed_file(filename):
 app = Flask(__name__)
 @app.route('/')
 def index():
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
     cursor.execute('SELECT id,name,author,date FROM maps WHERE visibility="Public"')
     temp=''
     for row in cursor.fetchall():
@@ -38,13 +38,14 @@ def tsp():
     return render_template('tsp.html')
 @app.route('/$fetch',methods=['POST'])
 def fetch():
-    cursor = db.cursor()
-
+    cursor = db.cursor(buffered=True)
     cursor.execute("SELECT * FROM maps WHERE id='"+id+"';")
-    return jsonify({'fetch':cursor.fetchall() })
+    temp=cursor.fetchall() 
+    cursor.close()
+    return jsonify({'fetch':temp})
 @app.route('/$create',methods=['POST'])
 def create():
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
     cursor.execute("SELECT * FROM counter;")
     counter=cursor.fetchone()[0]
     counter=counter+1
@@ -52,15 +53,16 @@ def create():
     cursor.execute("""INSERT INTO maps (id,name,email,author,poi,sortable,visibility,date) VALUES (%s,%s,%s,%s,%s,%s,%s,%s);"""
     ,(str(counter),request.form['name']+"'s Map",request.form['email'],request.form['name'],'{}','','Public',str(datetime.now().strftime('%d/%m/%Y'))))
     db.commit()
+    cursor.close()
     return jsonify({'result':counter})
 @app.route('/<id>')
 def maps(id):
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
     cursor.execute("SELECT * FROM maps WHERE id='"+id+"';")
     result=cursor.fetchone()
     cursor.close()
     if result is None:
-        cursor = db.cursor()
+        cursor = db.cursor(buffered=True)
         cursor.execute('SELECT id,name,author,date FROM maps WHERE visibility="Public"')
         temp=''
         for row in cursor.fetchall():
@@ -68,7 +70,7 @@ def maps(id):
         cursor.close()
         return render_template('index.html',popup='Error: Map '+id+' does not exists',result=temp)
     else:
-        cursor = db.cursor()
+        cursor = db.cursor(buffered=True)
         cursor.execute('SELECT view FROM views WHERE id="'+id+'";')
         result2=cursor.fetchone()
         if result2 is None:
@@ -80,7 +82,7 @@ def maps(id):
         return render_template('map.html',id=id,name=result[1],email=result[2],author=result[3],json=result[4],sortable=result[5],visibility=result[6],date=result[7])
 @app.route('/$temp<id>')
 def mapstemp(id):
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
     cursor.execute("SELECT * FROM maps WHERE id='"+id+"';")
     result=cursor.fetchone()
     cursor.close()
@@ -100,14 +102,14 @@ def upload_file(id):
 		return jsonify({'result':'File type is not allowed'})
 @app.route('/$update',methods=['POST'])
 def update():
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
     cursor.execute("UPDATE maps SET poi=%s, sortable=%s, visibility=%s, name=%s WHERE id=%s;",(request.form['json'],request.form['sortable'],request.form['visibility'],request.form['name'],request.form['id']))
     db.commit()
     cursor.close()
     return jsonify({'result':'Map update successfully'})
 @app.route('/$delete',methods=['POST'])
 def delete():
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
     cursor.execute("DELETE FROM maps WHERE id=%s;",(request.form['id'],))
     db.commit()
     cursor.close()
