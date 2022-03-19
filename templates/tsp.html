@@ -23,13 +23,15 @@
 </style>
 <div id="c" style="position: fixed"></div>
 <a id=n>Number of waypoints </a><br>
-<a id=t>Iterated </a>
+<a id=t>Iterated </a><br>
+<a id=s>Time 0ms</a>
+
 <div><canvas id=chart></canvas></div>
 
 <script>
   var count = 0
   var histories
-  var iteration = 150
+  var iteration = 30
   var solution = false
   Konva.autoDrawEnabled = false;//important
   Konva.hitOnDragEnabled = true;
@@ -78,6 +80,14 @@
     })}
   })
   function simulation(newwp) {
+      time=0
+    stopwatch=setInterval(updateDisplay, 1); 
+function updateDisplay(){
+     $('#s').html('Time '+parseInt(time, 10)+'ms')
+     time++
+}
+
+    
     stage.find('Line').forEach(function (e) { e.destroy() })
     if (!solution) {
       cities = []
@@ -95,20 +105,40 @@
     histories = []
     for (var tour = [], x = 0; tour.length < cities.length; x++)tour.push(x)
     target = parseInt(iteration * cities.length ** 1.1)
-    $('#t').html('Iterated ' + target)
-    logspace(5, 0, parseInt(iteration * cities.length ** 1.1)).forEach(function (temperature,temperatureindex) {
-      [i, j] = Array.from({ length: cities.length }, (v, k) => k).sort(function () { return .5 - Math.random() }).slice(0, 2).sort(function (a, b) { return a - b })
+    $('#t').html('Iterated 0 / ' + target)
+    loglist=logspace(5, 0, parseInt(iteration * cities.length ** 1.1))
+    var temperatureindex=0,i,j,newTour,olddistance,newdistance,temp,temperature,tour
+    layer.find('Line').forEach(function(e){e.destroy()})
+    layer.draw()
+function loop(){
+  setTimeout(function() {  
+    temperature=loglist[temperatureindex];
+    [i, j] = Array.from({ length: cities.length }, (v, k) => k).sort(function () { return .5 - Math.random() }).slice(0, 2).sort(function (a, b) { return a - b })
       newTour = tour.slice(0, i).concat(tour.slice(j, j + 1), tour.slice(i + 1, j), tour.slice(i, i + 1), tour.slice(j + 1, cities.length))
       olddistance = [j, j - 1, i, i - 1].map(k => Math.sqrt([0, 1].map(d => (cities[tour[Number(((k + 1) - (Math.floor((k + 1) / cities.length) * cities.length)).toPrecision(8))]][d] - cities[tour[Number((k - (Math.floor(k / cities.length) * cities.length)).toPrecision(8))]][d]) ** 2).reduce((sum, a) => sum + a, 0)))
       newdistance = [j, j - 1, i, i - 1].map(k => Math.sqrt([0, 1].map(d => (cities[newTour[Number(((k + 1) - (Math.floor((k + 1) / cities.length) * cities.length)).toPrecision(8))]][d] - cities[newTour[Number((k - (Math.floor(k / cities.length) * cities.length)).toPrecision(8))]][d]) ** 2).reduce((sum, a) => sum + a, 0)))
       temp = olddistance.reduce((sum, a) => sum + a, 0) - newdistance.reduce((sum, a) => sum + a, 0)
       if (Math.exp(temp / temperature) > Math.random()) {
         tour = newTour
+
+    drawiter([...Array(cities.length).keys()].map(i => cities[tour[i % cities.length]]))
+    chart.update();
+
         histories.push([parseInt(temperatureindex), [...Array(cities.length).keys()].map(i => cities[newTour[i % cities.length]])])
         addData('Iteration ' + parseInt(temperatureindex), newdistance.reduce((sum, a) => sum + a, 0))
       }
-    })
-    solution = [...Array(cities.length).keys()].map(i => cities[tour[i % cities.length]])
+      temperatureindex=temperatureindex+1
+    $('#t').html('Iterated ' + temperatureindex + ' / '+ loglist.length)
+      if (temperatureindex<loglist.length) loop()
+      else afterloop()
+    }, 0)
+
+    }
+    loop()
+function afterloop(){
+    preview.find('Line').forEach(function(e){e.destroy()})
+    preview.draw()
+      solution = [...Array(cities.length).keys()].map(i => cities[tour[i % cities.length]])
     for (var m = 0, gaps = []; m < cities.length; m++) {
       if (m != cities.length - 1) {
         gaps.push(distance(m, m + 1))
@@ -120,6 +150,9 @@
     solution = solution.slice(biggestgap + 1, solution.length).concat(solution.slice(0, biggestgap + 1))
     //final solution
     drawroute(solution)
+  clearInterval(stopwatch);
+
+  }
 
   }//simulation
   function logspace(a, b, len) {
@@ -184,7 +217,6 @@
               line.points([solution[index][0], solution[index][1], solution[index + 1][0], solution[index + 1][1]])
             }
           })
-
           preview.batchDraw()
 
         } else {
@@ -206,7 +238,7 @@
   function addData(label, data) {
     chart.data.datasets.push({ label: label, data: [data] })
   }
-  function drawroute(solution) {
+  function drawroute(solution,grey=false) {
     solution.forEach(function (coord, index) {
       if (solution[index + 1]) {
         var line = new Konva.Line({
@@ -221,6 +253,25 @@
       }
     })
     layer.batchDraw()
+  }
+  function drawiter(solution) {
+    preview.find('Line').forEach(function(e){e.destroy()})
+    solution.forEach(function (coord, index) {
+      if (solution[index + 1]) {
+        var line = new Konva.Line({
+                strokeWidth: 10,
+                stroke: '#E7E7E7',
+                opacity:0.7,
+              })
+
+       preview.add(line);
+              line.moveToBottom()
+        line.points([solution[index][0], solution[index][1], solution[index + 1][0], solution[index + 1][1]])
+
+      }
+    })
+    preview.draw()
+
   }
   $( document ).ready(function() {
     var temp={}
