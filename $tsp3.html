@@ -36,7 +36,7 @@
   </style>
   <div id="c" style="position: fixed"></div>
   
-  <a>Ver3 Formula <input id=i value=1000 type="number"></input> * # Cities ^ <input id=j value=1.1 type="number"></input> </a><br>
+  <a>Ver3.1 Formula <input id=i value=1000 type="number"></input> * # Cities ^ <input id=j value=1.1 type="number"></input> </a><br>
 
   <a id=n>Number of waypoints </a><br>
   <a id=t>Iterated </a><br>
@@ -105,6 +105,7 @@ startTime=performance.now();
   return 'Only 1'}
   $('#t').html('Iterated '+parseInt( $('#i').val()* cities.length ** $('#j').val()))
   for (var tour = [], x = 0; tour.length < cities.length; x++)tour.push(x)
+  console.log('tour: '+tour)
   logspace(5, 0, parseInt( $('#i').val()* cities.length ** $('#j').val())).forEach(function (temperature) {
   [i, j] = Array.from({ length: cities.length }, (v, k) => k).sort(function () { return .5 - Math.random() }).slice(0, 2).sort(function (a, b) { return a - b });
   newTour = tour.slice(0, i).concat(tour.slice(j, j + 1), tour.slice(i + 1, j), tour.slice(i, i + 1), tour.slice(j + 1, cities.length))
