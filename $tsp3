@@ -1,0 +1,309 @@
+<head>
+  <title>Fandom Map</title>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://unpkg.com/konva@7/konva.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+</head>
+<style>
+  a {
+    float: left;
+    display: flex;
+  }
+
+  #chart {
+    height: 300px;
+    bottom: 0;
+    position: fixed;
+  }
+  div{
+    height: 30%;
+  }
+</style>
+<div id="c" style="position: fixed"></div>
+<a id=n>Number of waypoints </a><br>
+<a id=t>Iterated </a><br>
+<a id=s>Time 0ms</a>
+
+<div><canvas id=chart></canvas></div>
+
+<script>
+  var count = 0
+  var histories
+  var iteration = 30
+  var solution = false
+  Konva.autoDrawEnabled = false;//important
+  Konva.hitOnDragEnabled = true;
+  stage = new Konva.Stage({
+    container: 'c',
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+  layer = new Konva.Layer();
+  iteratelayer = new Konva.Layer();
+  preview = new Konva.Layer();
+  stage.add(preview)
+
+  stage.add(iteratelayer)
+  stage.add(layer)
+
+  stage.on('click tap', function (e) {
+    if ( !e.target.id()) {
+    var pos = stage.getPointerPosition();
+    var shape = new Konva.Circle({
+      x: pos.x,
+      y: pos.y,
+      fill: '#0080ff',
+      radius: 15,
+      id: count.toString()
+    });
+    layer.add(shape)
+    shape.draw()
+
+    simulation([pos.x, pos.y, count.toString()])
+    count += 1
+    $('#n').html('Number of waypoints ' + cities.length)
+    shape.on('mouseover',function(){
+      stage.container().style.cursor = 'pointer';
+    })
+    shape.on('mouseleave', function () {
+        stage.container().style.cursor = 'default';
+      });
+    shape.on('click tap',function(){
+      shape.destroy()
+      solution=false
+    simulation()
+    count -= 1
+    $('#n').html('Number of waypoints ' + cities.length)
+    stage.container().style.cursor = 'default';
+    })}
+  })
+  function simulation(newwp) {
+      time=0
+    stopwatch=setInterval(updateDisplay, 1); 
+function updateDisplay(){
+     $('#s').html('Time '+parseInt(time, 10)+'ms')
+     time++
+}
+
+    
+    stage.find('Line').forEach(function (e) { e.destroy() })
+    if (!solution) {
+      cities = []
+      stage.find('Circle').forEach(function (e) { cities.push([e.x(), e.y(), e.id().toString()]) })
+    } else cities = solution.concat([newwp])
+    chart.data.datasets = [{}]
+    chart.update();
+
+    if (cities.length <= 1){ 
+    $('#t').html('Iterated None')
+    stage.batchDraw()
+      return 'Only 1'}
+    preview.find('Line').forEach(function (e) { e.destroy() })
+    preview.batchDraw()
+    histories = []
+    for (var tour = [], x = 0; tour.length < cities.length; x++)tour.push(x)
+    target = parseInt(iteration * cities.length ** 1.1)
+    $('#t').html('Iterated 0 / ' + target)
+    loglist=logspace(5, 0, parseInt(iteration * cities.length ** 1.1))
+    var temperatureindex=0,i,j,newTour,olddistance,newdistance,temp,temperature,tour
+    layer.find('Line').forEach(function(e){e.destroy()})
+    layer.draw()
+function loop(){
+  setTimeout(function() {  
+    temperature=loglist[temperatureindex];
+    [i, j] = Array.from({ length: cities.length }, (v, k) => k).sort(function () { return .5 - Math.random() }).slice(0, 2).sort(function (a, b) { return a - b })
+      newTour = tour.slice(0, i).concat(tour.slice(j, j + 1), tour.slice(i + 1, j), tour.slice(i, i + 1), tour.slice(j + 1, cities.length))
+      olddistance = [j, j - 1, i, i - 1].map(k => Math.sqrt([0, 1].map(d => (cities[tour[Number(((k + 1) - (Math.floor((k + 1) / cities.length) * cities.length)).toPrecision(8))]][d] - cities[tour[Number((k - (Math.floor(k / cities.length) * cities.length)).toPrecision(8))]][d]) ** 2).reduce((sum, a) => sum + a, 0)))
+      newdistance = [j, j - 1, i, i - 1].map(k => Math.sqrt([0, 1].map(d => (cities[newTour[Number(((k + 1) - (Math.floor((k + 1) / cities.length) * cities.length)).toPrecision(8))]][d] - cities[newTour[Number((k - (Math.floor(k / cities.length) * cities.length)).toPrecision(8))]][d]) ** 2).reduce((sum, a) => sum + a, 0)))
+      temp = olddistance.reduce((sum, a) => sum + a, 0) - newdistance.reduce((sum, a) => sum + a, 0)
+      if (Math.exp(temp / temperature) > Math.random()) {
+        tour = newTour
+
+    drawiter([...Array(cities.length).keys()].map(i => cities[tour[i % cities.length]]))
+    chart.update();
+
+        histories.push([parseInt(temperatureindex), [...Array(cities.length).keys()].map(i => cities[newTour[i % cities.length]])])
+        addData('Iteration ' + parseInt(temperatureindex), newdistance.reduce((sum, a) => sum + a, 0))
+      }
+      temperatureindex=temperatureindex+1
+    $('#t').html('Iterated ' + temperatureindex + ' / '+ loglist.length)
+      if (temperatureindex<loglist.length) loop()
+      else afterloop()
+    }, 0)
+
+    }
+    loop()
+function afterloop(){
+    preview.find('Line').forEach(function(e){e.destroy()})
+    preview.draw()
+      solution = [...Array(cities.length).keys()].map(i => cities[tour[i % cities.length]])
+    for (var m = 0, gaps = []; m < cities.length; m++) {
+      if (m != cities.length - 1) {
+        gaps.push(distance(m, m + 1))
+      }
+    }
+    chart.update();
+
+    biggestgap = gaps.indexOf(Math.max(...gaps))
+    solution = solution.slice(biggestgap + 1, solution.length).concat(solution.slice(0, biggestgap + 1))
+    //final solution
+    drawroute(solution)
+  clearInterval(stopwatch);
+
+  }
+
+  }//simulation
+  function logspace(a, b, len) {
+    end = len - 1;
+    d = (b - a) / end;
+    arr = new Array(len);
+    tmp = a;
+    arr[0] = Math.pow(10, tmp);
+    for (var i = 1; i < end; i++) {
+      tmp += d;
+      arr[i] = Math.pow(10, tmp);
+    }
+    arr[end] = Math.pow(10, b);
+    return arr
+  }
+  function distance(p, q) { return Math.sqrt([0, 1].map(d => (solution[p][d] - solution[q][d]) ** 2).reduce((sum, a) => sum + a, 0)) }
+  var chart = new Chart($("#chart"), {
+    plugins: [{
+      beforeUpdate: function (chart) {
+        var dataArray = [];
+        $.each(chart.data.datasets, function () { dataArray.push(this.data) })
+        let dataIndexes = dataArray.map((d, i) => i);
+        dataIndexes.sort((a, b) => { return dataArray[a] - dataArray[b] });
+        var tempDatasets = [];
+        $.each(dataIndexes, function () { tempDatasets.push(chart.data.datasets[this]); });
+        chart.data.datasets = tempDatasets;
+      }
+    }],
+    type: 'bar',
+    data: { labels: [''], datasets:[{}]},
+    options: {
+      maintainAspectRatio: false,
+      multiTooltipTemplate: "<%=datasetLabel%>",
+      layout: {
+            padding: {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0
+        }
+        },
+      plugins: { 
+        title: {display: true,text: "Number of Iterations against Route Total Distance "},
+        legend: { display: false } 
+      },
+      onHover: function (e, item) {
+        if (item.length) {
+
+          label = chart.data.datasets[item[0].datasetIndex].label
+          solution = histories[histories.findIndex(hist => hist[0] === parseInt(label.replace('Iteration ', '')))][1]
+          preview.find('Line').forEach(function (e) { e.destroy() })
+          solution.forEach(function (coord, index) {
+            if (solution[index + 1]) {
+
+              var line = new Konva.Line({
+                strokeWidth: 10,
+                stroke: '#E7E7E7',
+                opacity:0.7,
+              })
+              preview.add(line);
+              line.moveToBottom()
+              line.points([solution[index][0], solution[index][1], solution[index + 1][0], solution[index + 1][1]])
+            }
+          })
+          preview.batchDraw()
+
+        } else {
+          preview.find('Line').forEach(function (e) { e.destroy() })
+          preview.batchDraw()
+
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            return context;
+          }
+        }
+      }
+    }
+  });
+
+  function addData(label, data) {
+    chart.data.datasets.push({ label: label, data: [data] })
+  }
+  function drawroute(solution,grey=false) {
+    solution.forEach(function (coord, index) {
+      if (solution[index + 1]) {
+        var line = new Konva.Line({
+          strokeWidth: 5,
+          stroke: '#0080ff',
+        })
+
+        layer.add(line);
+        line.moveToBottom()
+        line.points([solution[index][0], solution[index][1], solution[index + 1][0], solution[index + 1][1]])
+
+      }
+    })
+    layer.batchDraw()
+  }
+  function drawiter(solution) {
+    preview.find('Line').forEach(function(e){e.destroy()})
+    solution.forEach(function (coord, index) {
+      if (solution[index + 1]) {
+        var line = new Konva.Line({
+                strokeWidth: 10,
+                stroke: '#E7E7E7',
+                opacity:0.7,
+              })
+
+       preview.add(line);
+              line.moveToBottom()
+        line.points([solution[index][0], solution[index][1], solution[index + 1][0], solution[index + 1][1]])
+
+      }
+    })
+    preview.draw()
+
+  }
+  $( document ).ready(function() {
+    var temp={}
+for(var x=0;x<3;x++){
+     temp[x] = new Konva.Circle({
+      x: Math.floor(Math.random()*stage.width()),
+      y: Math.floor(Math.random()*stage.height())/2,
+      fill: '#0080ff',
+      radius: 15,
+      id: x.toString()
+    });
+    layer.add( temp[x])
+    temp[x].draw()
+
+    temp[x].on('mouseover',function(){
+      stage.container().style.cursor = 'pointer';
+    })
+    temp[x].on('mouseleave', function () {
+        stage.container().style.cursor = 'default';
+      });
+      temp[x].on('click tap',function(e){
+     e.target.destroy()
+      solution=false
+    simulation()
+
+    count -= 1
+    $('#n').html('Number of waypoints ' + cities.length)
+    stage.container().style.cursor = 'default';
+    })}
+    simulation()
+    $('#n').html('Number of waypoints ' + cities.length)
+
+  
+  })
+</script>
