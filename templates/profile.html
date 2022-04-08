@@ -1,0 +1,562 @@
+<!--
+sudo service apache2 restart
+-->
+<link rel="shortcut icon" href="static/icon_blue.png">
+
+<head>
+<meta name="thumbnail" content="static/icon_blue.png" />
+<PageMap>
+<DataObject type="thumbnail">
+<Attribute name="src" value="static/icon_blue.png" />
+<Attribute name="width" value="100" />
+<Attribute name="height" value="100" />
+</DataObject>
+</PageMap>
+<meta charset='UTF-8'>
+<meta name='keywords'
+content='fandom,map,wiki,wikipedia,customizable,public,fandom wikipedia, fandom map,fandommap,fandomap'>
+<meta name='description' content='Fandom Map, Public Customizable Interactive Map for Fandom Wikipedia'>
+<meta name='subject' content='Fandom Map'>
+<meta name='copyright' content='Zachary Law'>
+<meta name='language' content='ES'>
+<meta name='robots' content='index,follow'>
+<meta name='revised' content='March 18th, 2022, 5:15 pm'>
+<meta name='abstract' content=''>
+<meta name='topic' content=''>
+<meta name='summary' content='Fandom Map, Public Customizable Interactive Map for Fandom Wikipedia'>
+<meta name='Classification' content='Business'>
+<meta name='author' content='name, law.zachary@gmail.com'>
+<meta name='designer' content='Zachary Law'>
+<meta name='reply-to' content=' law.zachary@gmail.com'>
+<meta name='owner' content=''>
+<meta name='url' content='http://fandommap.com'>
+<meta name='identifier-URL' content='http://fandommap.com'>
+<meta name='directory' content='submission'>
+<meta name='pagename' content='Fandom Map, Public Customizable Interactive Map for Fandom Wikipedia'>
+<meta name='category' content='Website'>
+<meta name='coverage' content='Worldwide'>
+<meta name='distribution' content='Global'>
+<meta name='rating' content='General'>
+<meta name='revisit-after' content='7 days'>
+<meta name='subtitle' content='Fandom Map, Public Customizable Interactive Map for Fandom Wikipedia'>
+<meta name='target' content='all'>
+<meta name='HandheldFriendly' content='True'>
+<meta name='date' content='Mar. 18, 2022'>
+<meta name='search_date' content='2022-03-18'>
+<meta name='DC.title' content='Fandom Map'>
+<meta name='ResourceLoaderDynamicStyles' content=''>
+<meta name='medium' content='Website'>
+<meta name='syndication-source' content=''>
+<meta name='original-source' content=''>
+<meta name='verify-v1' content=''>
+<meta name='y_key' content=''>
+<meta name='pageKey' content='home'>
+<meta itemprop='name' content='jQTouch'>
+<meta http-equiv='Expires' content='0'>
+<meta http-equiv='imagetoolbar' content='no'>
+<meta http-equiv='x-dns-prefetch-control' content='off'>
+<meta property="og:title" content="Fandom Map">
+<meta property="og:type" content="Website">
+<meta property="og:description" content="Public Customizable Interactive Map for Fandom Wikipedia">
+<meta property="og:url" content="http://fandommap.com" />
+<meta property="og:image" content="static/icon_blue.png" />
+<meta name="twitter:title" content="Fandom Map">
+<meta name="twitter:description" content="Public Customizable Interactive Map for Fandom Wikipedia">
+<meta name="twitter:image" content="static/icon_blue.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="google-site-verification" content="JqXPrnsRjldSfZOT1TUudDwELwjbPuhNWDorDWwj81s" />
+<title>Fandom Map</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+<script src="https://apis.google.com/js/api:client.js"></script>
+<meta name="google-signin-scope" content="profile email">
+<meta name="google-signin-client_id"
+content="507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com">
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+<script src="https://unpkg.com/konva@8/konva.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+</head>
+<style>
+      html,
+  body {
+    font-family: Arial;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+
+  }
+
+.g{width: 5%;}
+#popupbox {
+background-color: black;
+margin-left: auto;
+margin-right: auto;
+width: fit-content;
+bottom: 0px;
+z-index: 9;
+left: 0;
+right: 0;
+position: fixed;
+height: 60px;
+border-radius: 5px;
+background: #0080ff;
+text-align: center;
+color: white;
+padding: 20px;
+max-width: 100%;
+display: none;
+min-width: 50%;
+}
+#popupbox>button {
+float: right;
+background-color: #ffffff00;
+border: none;
+cursor: pointer;
+color: white;
+font-weight: bold;
+}
+#popupbox>button:hover{
+background-color: grey;
+color:white;
+}
+
+td,
+  th {
+    width: 45%;
+    font-weight: bold;
+    font-size: 30px;
+    height: 30%;
+    width: 50%;
+    text-align: center;
+  }
+nav {
+    position: fixed;
+    height: 8vh;
+    width: 8vh;
+    display: block;
+    background: #0080ff;
+    z-index: 9;
+    text-align: center;
+    color: white;
+    width: 100%;
+    vertical-align:middle;
+    padding: 0;
+    text-decoration:none;
+    border-bottom-right-radius:30px;
+    border-bottom-left-radius:30px;
+    margin: 0;
+white-space: nowrap;
+
+  }
+
+  nav img {
+    height: 3vh;
+    vertical-align: middle;
+  }
+
+  nav td:hover,
+  nav th:hover {
+    background-color: white;
+    cursor: pointer;
+    color: #0080ff;
+    border-bottom-style: solid;
+    border-bottom-color: #0080ff;
+    border-bottom-width: 3px;
+    margin: 0;
+padding: 0;
+border-radius: 50px;
+transform: translateY(5px);
+
+  }
+
+  nav td,
+  nav th {
+    width: 0;
+    height: 100%;
+    vertical-align: middle;
+    margin: 0;
+padding: 0;
+white-space: nowrap;
+min-width: 4vw;
+transition: transform 250ms;
+
+  }
+
+  nav table {
+    color: white;
+    padding: 0;
+    height: 100%;
+    vertical-align: middle;
+    line-height: 7.5vh;
+margin: 0;
+width: 100%;
+padding: 0;
+  }
+  nav div {
+    vertical-align: middle;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+padding: 0;
+border-radius: 10px;
+  }
+  nav a{text-decoration:none;}
+  #side{
+      margin-top: 13vh;
+      min-width: 15vw;
+      width: fit-content;
+      display: block;
+  }
+  #main{
+      width: 80%;
+    font-size:medium;
+      text-align: left;
+      background-color: lightgray;
+  }
+  #content tr,#content td,#content{
+      height: 100%;
+  }
+  #content{
+      width: 100%;
+  }
+  #side img{
+width: 20%;
+margin-right: 5%;
+  }
+  #side{
+      align-items: left;
+      text-align: left;
+  }
+  aside,#side>div{
+    min-width: 90%;
+      width: fit-content;
+    white-space: nowrap;
+      margin: 3%;
+      padding: 3%;
+      font-weight: normal;
+      border-radius: 10px;
+  }
+  aside:hover{
+    background-color: lightgrey;
+      font-weight: bold;
+      cursor: pointer;
+  }
+  #select{
+      background-color: lightgrey;
+      font-weight: bold;
+  }
+  article{
+      background-color: white;
+      border-radius: 10px;
+      min-height: 80%;
+      height: fit-content;
+      width: 80%;
+      align-items: center;
+      margin-right: auto;
+      margin-left: auto;
+      padding: 5%;
+      margin-top: 10%;
+      display: none;
+margin-bottom: 5%;
+font-size:medium;
+
+  }
+
+  .red{
+      background-color: red;
+      border-radius: 5px;
+      border-style: none;
+      border: none;
+      color: white;
+      padding: 1%;
+      margin: 1%;
+      font-weight: bold;
+  }
+  
+  section{
+      margin: 5%;
+      vertical-align: middle;
+
+  }
+  label{
+      display: block;
+      font-weight: bold;
+margin: 1%;
+  }
+  input{
+    width: 80%;
+    outline: 0;
+    border-width: 0 0 2px;
+    border-color: #0080ff;
+    background-color: rgba(0, 0, 0, 0.1);
+    line-height: 20px;
+    border-radius: 10px;
+    padding: 2%;
+  }
+  h1{
+      align-self: center;
+      text-align: center;
+  }
+
+  
+  .one{
+      display: block;
+  }
+  [type=radio],[type=checkbox]{
+      width: fit-content;
+      width: 1vw;
+      height: 1vw;
+      position: relative;
+
+  }
+  .i label{
+      display: inline-block;
+  }
+  #footer{
+    width: 100%;
+    display: block;
+    min-height: 20%;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    margin: auto;
+    padding-top: 2%;
+  }
+  #footer a {
+    margin: 5%;
+  }
+
+  #footer a:hover {
+    text-decoration: underline;
+  }
+article td,article th{
+font-size:medium;
+
+}
+article table img{
+    width: 100%;
+}
+#signout{
+  display: none;
+}
+</style>
+<nav> 
+    <table>
+      <tr>
+        <th class=sidebarbutton onclick="sidebarbtn()">☰</th>
+        <th id=f><a href='/'><div><img src=static/icon_wht.png>Fandom Map</div></a></th>
+        <td><a href=/#About><div>About</div></a></td>
+        <td><a href=/#Features><div>Features</div></a></td>
+        <td><a href=/#T&S><div>Terms & Service</div></a></td>
+        <td><a href=/#FAQ><div>FAQ</div></a></td>
+        <td><a href=/#Explore><div>Explore</div></a></td>
+        <th class=userbutton onclick="userbarbtn()"><img src=static/user.png height=50%></th>
+      </tr>
+    </table>
+  </nav>
+<div id='popupbox'><a id=popupmsg>Message</a><button onclick='popupbtn()'>X</button></div>
+<div style=display:none class=g-signin2 data-onsuccess=onSignIn></div>
+<table id=content>
+    <tr>
+        <td id=side>
+            <div id=signin><img class=g src=static/goo.png>Google Sign In</div>
+            <div id='signout' onclick="signOut()"><img class=g src=static/goo.png>Sign Out</div>
+            <aside class=1 id=select><img src=static/buser.png>Profile</aside>
+            <aside class=2><img src=static/map.png>Your Maps</aside>
+            <aside class=3><img src=static/bucket.png>Appearance</aside>
+            <aside class=4><img src=static/email.png>Email</aside>
+            <aside class=5><img src=static/baby.png>Accessibility</aside>
+            <aside class=6><img src=static/bell.png>Notification</aside>
+            <aside class=7><img src=static/lock.png>Security</aside>
+        </td>
+        <td id=main>
+            <article id=1 class=one>
+            <h1>Welcome Back <a class=name></a></h1> 
+            <section><label>Profile Display Nickname</label><input></section>
+            <section><label>Change Email</label><input></section>
+            <section><label>User Profile Picture</label><img src=static/buser.png></section>
+            <section><label>Bio</label><input></section>
+            <section><label>Profile URL</label><input></section>
+            <section><label>Location</label><input></section>
+            <button class=red>DELETE ACCOUNT</button>
+            </article>
+            <article id=2>
+                <table><thead><tr><th>Map</th><th>Id</th><th>Name</th><th>Creation Date</th><th>Views</th>
+                    <th># Waypoint</th><th># Categories</th><th># Routes</th></tr></thead><tbody></tbody></table>
+                </article>
+
+            <article id=3>
+                <section class=i><input type=radio name=theme value=white checked><label>White Theme</label>
+                <input type=radio name=theme value=dark><label>Dark Theme</label>
+                </section>
+                <section><label>Text Font</label><select><option value="" disabled selected>Select your option</option></select></section>
+                <section class=i><input type=checkbox><label>Forced Mobile Mode</label></section>
+                <section class=i><input type=checkbox><label>Forced Portrait Mode</label></section>
+                <section class=i><input type=checkbox><label>Remove Map Background Grid</label></section>
+            </article>
+            <article id=4>
+                <section><label>Change Email</label><input></section>
+                <section><label>Add Secondary Email</label><input></section>
+                <section><label>Switch Primary Email</label><select><option value="" disabled selected>Select your option</option></select></section>
+                <section><label>Backup Email</label><select><option value="" disabled selected>Select your option</option></select></section>
+                <section><label>Notification Email</label><select><option value="" disabled selected>Select your option</option></select></section>
+                <section class=i><input type=checkbox><label>Subscribe to Fandom Map News</label></section>
+                <section class=i><input type=checkbox><label>Subscribe to notification relating to your map</label></section>
+            </article>
+            <article id=5>
+                <section class=i><input type=checkbox><label>Editing Map Auto Save</label></section>
+                <section class=i><input type=checkbox><label>Route Solver Force Correct (May soft-lock)</label></section>
+            </article>
+            <article id=6>
+                <section class=i><input type=checkbox><label>Popups Enable</label></section>
+                <section class=i><input type=checkbox><label>Maps Alert</label></section>
+                <section class=i><input type=checkbox><label>Report Alert</label></section>
+                <section class=i><input type=checkbox><label>Account Login Notificiation</label></section>
+
+            </article>
+            <article id=7>
+                <section class=i><input type=checkbox><label>Enable 2FA</label></section>
+                <section class=i><input type=checkbox><label>Account Login Notificiation</label></section>
+                
+            </article>
+
+        </td>
+    </tr>
+</table>
+<div id="footer">
+    <b>End of Page...</b><br><br>
+    <a href=/#About>About</a>
+    <a href=/#T&S>Terms</a>
+    <a href=/#About>Contact Us</a><br>
+    <a href='/'><img src="/static/icon_blue.png" style="width: 4%;"> © 2022 Fandom Map</a>
+  </div>
+  <div id=sortable style=display:none></div>
+<script> 
+var email,name
+
+
+function userbarbtn() { $('#userbar').toggle("slide", { direction: 'right' }) }
+function sidebarbtn() { $('#sidebar').toggle("slide", { direction: 'left' }) }
+$('aside').click(function(){
+$('#select').attr('id','')
+$(this).attr('id','select')
+$('article').hide()
+$('#'+$(this).attr('class')).show()  
+})
+function popupbtn() { 
+$('#popupbox').slideToggle() }
+if ('{{popup}}') popup('{{popup}}')
+function signOut() {
+$('#my-signin2,#signin2,#signin').show()
+$('#signout,#create').hide()
+gapi.auth2.getAuthInstance().signOut()
+$('#profile').html('')
+popup('Goodbye')
+}
+function onSignIn(googleUser) {
+$('#my-signin2,#signin2,#signin').hide()
+$('#signout,#create').show()
+var profile = googleUser.getBasicProfile();
+console.log('Full Name: ' + profile.getName());
+console.log('Email: ' + profile.getEmail());
+email = profile.getEmail()
+name = profile.getName()
+$('#profile').html('<img src=' + profile.getImageUrl() + '></img><div>Name</div><div>' + profile.getName() + '</div><div>Email</div><div>' + profile.getEmail() + '</div>')
+$('#1').find('Img').attr('src',profile.getImageUrl())
+console.log( profile.getName())
+popup('Welcome ' + profile.getName())
+$('.name').html(name)
+
+result = decodeHtml('{{result}}').split("行行")
+result.forEach(function (element, index) {
+result[index]=element.split("列列")
+})
+result.pop()
+result = [...new Set(result)];
+result.forEach(function(map){//id,name,author,date,sortable,visibility 
+    if (map[2]==name){
+    if (map[4] != '{}') $('#sortable').html(map[4]) 
+    $('#2 table').append('<tr><td><img src=static/'+$('#sortable').find('map').attr('filename')+'></td><td>'+
+        map[0]+'</td><td>'+map[1]+'</td><td>'+map[3]+'</td><td>'+map[6]+'</td><td>'+$('#sortable aside').length
+            +'</td><td>'+ $('#sortable>div').length +'</td><td>'+ $('#sortable nav').length+'</td></tr>')
+        }
+})
+
+$('#2 table').DataTable(); 
+
+}
+function popup(msg) {
+if ($('#popupbox').is(':visible')) { $('#popupbox').slideToggle() }
+$('#popupmsg').html(msg)
+$('#popupbox').slideToggle()
+setTimeout(function(){if($("#popupmsg").is(":visible")) $('#popupbox').slideToggle()},1000*5);
+}//popup
+function decodeHtml(html) {
+var txt = document.createElement("textarea");
+txt.innerHTML = html;
+return txt.value;
+}
+
+var googleUser = {};
+gapi.load('auth2', function () {
+auth2 = gapi.auth2.init({
+client_id: '507651740228-f5clg8q3qlf66se0e40m5p2hthr4djtb.apps.googleusercontent.com',
+cookiepolicy: 'single_host_origin',
+});
+auth2.attachClickHandler(document.getElementById('signin'),{},function(googleUser){onSignIn(googleUser)})
+});
+var verticalwindow = false, mobile = false
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { mobile = true }
+    verticalwindow = false
+    if ($(window).height() / $(window).width() > 1) verticalwindow = true
+    if (verticalwindow) {
+      $('nav td').hide()
+      $('.sidebarbutton').show()
+      $('#sidebar,.righty').css('width', '50%')
+      $('#exploreresult div').css('width', '86%')
+    }
+    function fitStageIntoParentContainer() {
+    if ($('#fadein').height() / $('#fadein').width() > 1) verticalwindow = true
+    else verticalwindow = false
+    if (verticalwindow) {
+      $('nav td').hide()
+      $('.sidebarbutton').show()
+      $('.section:not(#Welcome)').css('padding-left', '10%')
+      $('.section:not(#Welcome)').css('padding-right', '10%')
+      $('#exploreresult div').css('width', '86%')
+      $('#sidebar,.righty').css('width', '50%')
+    }
+    else {
+        $('nav td').show()
+      $('.sidebarbutton').hide()
+      $('.section:not(#Welcome)').css('padding-left','25%')
+      $('.section:not(#Welcome)').css('padding-right','25%')
+      $('#exploreresult div').css('width', '43%')
+      $('#sidebar,.righty').css('width', '25%')
+    }
+  }
+  fitStageIntoParentContainer();
+  window.addEventListener('resize', fitStageIntoParentContainer);
+  var verticalwindow = false, mobile = false
+  $(document).ready(function(){
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { mobile = true }
+    verticalwindow = false
+    if ($(window).height() / $(window).width() > 1) verticalwindow = true
+    if (verticalwindow) {
+      $('nav td').hide()
+      $('.sidebarbutton').show()
+      $('#sidebar,.righty').css('width', '50%')
+      $('#exploreresult div').css('width', '86%')
+    }
+  })
+ 
+</script>
