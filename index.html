@@ -90,6 +90,7 @@ sudo service apache2 restart
     padding: 0;
     margin: 0;
     height: 100%;
+    font-size: 20px;
   }
 
   h1 {
@@ -291,37 +292,35 @@ sudo service apache2 restart
   }
 
   #exploreresult>div {
-    border-radius: 5px;
-    border: 2px #0080ff;
-    border-style: solid;
-    background-color: rgb(0, 128, 255, 0.5);
+    border-radius: 10px;
+    background-color: #0080ff;
     cursor: pointer;
     width: 43%;
     margin: 3%;
     display: inline-block;
-  }
+    color: white;
+    transition: all .2s ease-in-out;
+    }
 
   #exploreresult>div>img {
     width: 100%;
   }
 
-  .g {
-    height: 100%;
-    height: 40;
+  .g,#About img {
+    height: 50;
   }
 
   .section:nth-child(odd) {
     background-color: #cce6ff;
   }
 
-  td,
+  nav td,.welcomeredirect td,
   th {
     width: 45%;
     font-weight: bold;
     font-size: 30px;
     height: 30%;
     width: 50%;
-    cursor: pointer;
     text-align: center;
   }
 
@@ -348,7 +347,7 @@ sudo service apache2 restart
   }
 
   #exploreresult>div>a {
-    color: grey
+    color: lightgray
   }
 
   #exploreresult>div>p {
@@ -363,12 +362,25 @@ sudo service apache2 restart
     padding-left: 5%;
     padding-right: 5%;
   }
+  .dark #Explore input{
+    color: white;
+  }
+  #Explore input{
+    border-bottom-left-radius: 30px;
+    border-top-left-radius: 30px;
+    padding: 20px;
+  }
 
-  td:hover,
   #exploreresult>div:hover,
   #signin2:hover {
     cursor: pointer;
+
   }
+  #exploreresult>div:hover{
+    transform: scale(1.1); 
+  
+  }
+
 
   #signin {
     width: 100%;
@@ -477,7 +489,7 @@ sudo service apache2 restart
   }
 
   #logo {
-    padding-top: 25%;
+    padding-top: 10%;
   }
 
   video,
@@ -593,12 +605,38 @@ height: 0;
     margin-top: 8vh;
 }
 #Explore button{
+  line-height: 2;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
   background-color: #0080ff;
   border: none;
   border-style: none;
   color: white;
 padding: 1%;
 margin: 1%;
+margin-left:0;
+transition: transform 250ms;
+
+}
+#Explore button:hover{
+  background-color: white;
+  color: #0080ff;
+  transform: translateY(-10px);
+
+}
+#About td:nth-child(2),.terms td:first-child{
+  font-size: 20px;
+  padding: 5%;
+}
+.show{
+  display: none;
+}
+.line{
+  border-bottom: 10px solid white;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  height:8vh;
+
 }
 </style>
 <nav>
@@ -606,11 +644,11 @@ margin: 1%;
     <tr>
       <th class=sidebarbutton onclick="sidebarbtn()">☰</th>
       <th id=f><a href='/'><div><img src=static/icon_wht.png>Fandom Map</div></a></th>
-      <td><a href=#About><div>About</div></a></td>
-      <td><a href=#Features><div>Features</div></a></td>
-      <td><a href=#T&S><div>Terms & Service</div></a></td>
-      <td><a href=#FAQ><div>FAQ</div></a></td>
-      <td><a href=#Explore><div>Explore</div></a></td>
+      <td class=About><a href=#About><div>About</div></a></td>
+      <td class=Features><a href=#Features><div>Features</div></a></td>
+      <td class=Terms><a href=#T&S><div>Terms & Service</div></a></td>
+      <td class=FAQ><a href=#FAQ><div>FAQ</div></a></td>
+      <td class=Explore><a href=#Explore><div>Explore</div></a></td>
       <th class=userbutton onclick="userbarbtn()"><img src=static/user.png height=50%></th>
     </tr>
   </table>
@@ -630,7 +668,7 @@ margin: 1%;
   <div id='profile'>You had not signed in</div>
   <a href=/profile><div class=profile>Profile</div></a>
   <div id=theme> Theme<br>
-    <select id=select theme="google" width="400" placeholder="Choose theme..." data-search="true">
+    <select id=select theme="google" width="600" placeholder="Choose theme..." data-search="true">
       <option value="white">White</option>
       <option value="dark">Dark</option>
     </select>
@@ -669,22 +707,24 @@ margin: 1%;
   <!--welcome-->
 </div>
 <!--fullpage-->
-<div id="About" class="section">
-  <img class=icon src=static/wp.png>
-  <h2>About</h2><br> <span>Fandom Map</span> is a website made for a univsersity final year project, using Amazon AWS
+<div id="About" class="section" line=About>
+
+<table><tr><td class=hide><iframe width=50vw  style=width:50vw;height:28vw src=https://www.youtube.com/embed/u7N2zPHwrms></iframe></td>
+<td> <img class=icon src=static/wp.png>
+  <h2>About</h2><br><br><span>Fandom Map</span> is a website made for a univsersity final year project, using Amazon AWS
   cloud to host community based serving website, featuring create your own <span>creative interactive map</span> and to
   share with others. Please fill <a href=https://forms.gle/jJarQ8e6vK9y839f7>this
     questionnaire</a> for any issues and needs. Thank you <br><a href=https://forms.gle/jJarQ8e6vK9y839f7><img class=g
       src=static/goo.png> Google Form Support Ticket / Bug Report / Suggestion Form</a>
   <br><a href=http://github.com/fandommap/fandommap.github.io><img src=static/git.png> Github Repository</a>
-  <br><img class=g src=static/goo.png> Gmail law.zachary@gamil.com <br>
-  <br>
-  <iframe width=600vh height=339vh src=https://www.youtube.com/embed/u7N2zPHwrms></iframe>
+  <br><img class=g src=static/goo.png> Gmail law.zachary@gamil.com <br></td>
+</tr></table>
+  <iframe  class=show style=width:80vw;height:45vw  src=https://www.youtube.com/embed/u7N2zPHwrms></iframe>
 </div>
 <!--about-->
-<div id=Features class=section>
+<div id=Features class=section line=Features>
   <img class=icon src=static/wp.png>
-  <h2>Features</h2><br>
+  <h2>Features</h2><br><br>
   <b>Customization ↬</b><br> Inserting your very own image of maps, provided with <span>waypoints</span> and route
   creation tools. Can create infinitie amount of enjoyment to spread your creation to anyone! <br><br><b>Description
     🛈</b><br> Attach your formatted text as <span>markdowns</span> to waypoints as descriptions! Support any website
@@ -697,17 +737,27 @@ margin: 1%;
   times less iterations <iframe src='$tsp' id=tsp></iframe>
 </div>
 <!--features-->
-<div id=T&S class=section>
-  <img class=icon src=static/wp.png>
-  <h2>Terms & Service</h2>
+<div id=T&S class='section terms' line=Terms>
+<table><tr><td><img class=icon src=static/wp.png>
+  <h2>Terms & Service</h2><br>
   <br> We are committed to providing a <span>friendly, safe and welcome environment</span> for all fandom communities,
   regardless of <span>gender identity</span> and expression. The below terms established what you can expect from our
   website services. And what we expect from you: <br> • Using website resources resonably. <br> • Collaborate with other
   community fandom members, gracefully accept criticism against your map. <br> • Being <span>respectful</span> of others
-  viewpoints and experience to not creating offensive materials.
+  viewpoints and experience to not creating offensive materials.</td>
+  <td class=hide>  <video width=50vw autoplay loop muted style=width:50vw>
+  <source src="static/bk3.mp4" type="video/mp4" /> Your browser does not support the video tag.
+</video></td></tr></table>
+  <video class=show width=100% autoplay loop muted>
+    <source src="static/bk3.mp4" type="video/mp4" /> Your browser does not support the video tag.
+  </video>
+
+
+
+
 </div>
 <!--COC-->
-<div id="FAQ" class="section">
+<div id="FAQ" class="section" line=FAQ>
   <img class=icon src=static/wp.png>
   <h2>FAQ Frequently Asked Questions</h2><br>
   <p>What is <span>Fandom Map</span> and how does it work?</p> <span>Fandom users </span>are free to create their maps.
@@ -719,12 +769,10 @@ margin: 1%;
     free?</p> All the reasources are free, unlimited access to <span>public</span> avaliable maps with unlimited map
   creation power! <p>I have issues, bugs or other questions!</p> Please filling <a
     href=https://forms.gle/jJarQ8e6vK9y839f7>this questionnaire</a>.<br>
-  <video width="640vh" height="360vh" autoplay loop muted>
-    <source src="static/bk3.mp4" type="video/mp4" /> Your browser does not support the video tag.
-  </video>
+
 </div>
 <!--faq-->
-<div id="Explore" class="section  fp-auto-height" data-anchor='$Explore'>
+<div id="Explore" class="section  fp-auto-height" data-anchor='$Explore' line=Explore>
   <img class=icon src=static/wp.png>
   <h2>Explore</h2><br>
 
@@ -757,8 +805,8 @@ margin: 1%;
     verticalwindow = false
     if ($('#fadein').height() / $('#fadein').width() > 1) verticalwindow = true
     if (verticalwindow) {
-      $('nav td').hide()
-      $('.sidebarbutton').show()
+      $('nav td, .hide').hide()
+      $('.sidebarbutton, .show').show()
       $('#sidebar,.righty').css('width', '50%')
       $('#exploreresult div').css('width', '86%')
     }
@@ -794,7 +842,6 @@ margin: 1%;
         'margin': '5%',
         'padding': '5%',
         'background-color': '#0080FF'
-
       })
 
     }
@@ -962,12 +1009,10 @@ margin: 1%;
     return elementBottom > viewportTop && elementTop < viewportBottom;
   };
   $('#createtd,#exploretd,#exploreresult>div,#signin2').hover(function () {
-    $(this).css('background-color', '#0080ff')
     $(this).find('button').css('background-color', 'white')
     $(this).find('button').css('color', '#0080ff')
   }, function () {
     $(this).find('button').css('background-color', '#0080ff')
-    $(this).css('background-color', 'rgba(0,0,0,0)')
     $(this).find('button').css('color', 'white')
   }
   )
@@ -977,18 +1022,19 @@ margin: 1%;
     if ($('#fadein').height() / $('#fadein').width() > 1) verticalwindow = true
     else verticalwindow = false
     if (verticalwindow) {
-      $('nav td').hide()
-      $('.sidebarbutton').show()
+      $('nav td, .hide').hide()
+      $('.sidebarbutton, .show').show()
+
       $('.section:not(#Welcome)').css('padding-left', '10%')
       $('.section:not(#Welcome)').css('padding-right', '10%')
       $('#exploreresult div').css('width', '86%')
       $('#sidebar,.righty').css('width', '50%')
     }
     else {
-        $('nav td').show()
-      $('.sidebarbutton').hide()
-      $('.section:not(#Welcome)').css('padding-left','25%')
-      $('.section:not(#Welcome)').css('padding-right','25%')
+      $('nav td, .hide').show()
+      $('.sidebarbutton, .show').hide()
+      $('.section:not(#Welcome)').css('padding-left','10%')
+      $('.section:not(#Welcome)').css('padding-right','10%')
       $('#exploreresult div').css('width', '43%')
       $('#sidebar,.righty').css('width', '25%')
     }
@@ -1001,11 +1047,22 @@ margin: 1%;
     var wt = $(window).scrollTop(), et = $(el).offset().top
     return (($('#fadein').height() + wt) <= et || wt >= (et + $(el).height()))
   }
-  function check(e) { e.each(function () { $(this)[(isInv(this) ? 'add' : 'remove') + 'Class']('inv') }) }
+  function check(e) { e.each(function () { 
+    $(this)[(isInv(this) ? 'add' : 'remove') + 'Class']('inv');
+    
+if (!$(this).is('.inv'))  $('nav .'+$(this).attr('line')).addClass('line')
+ else  $('nav .'+$(this).attr('line')).removeClass('line')
+  
+  }) }
 
   $.fn.visible = function () {
     var e = this, scrollTimer = null;
     check(e);
+//if (!$(this).is(':visable')) console.log($(this));
+
+    //if(isInv(this)) $('.'+$(this).attr('id')).addClass('line')
+    //else $('.'+$(this).attr('id')).removeClass('line')
+   // $('.'+$(this).attr('id'))[(isInv(this) ? 'add' : 'remove') + 'Class']('inv')
     $(window).bind("scroll resize", function () {
       clearTimeout(scrollTimer);
       scrollTimer = setTimeout(function () { check(e); }, scrollWait);
