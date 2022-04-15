@@ -779,7 +779,9 @@ transition: transform 250ms;
 
 
   <input placeholder='Search Map Names...'></input><button>Views ▲</button>
-  <div id=exploreresult></div>
+  <div id=exploreresult>
+    <div data-view="52" id="1" style="width: 43%;"><img src="static/1_map.png"><a>Name</a><p>One Piece (Beta)</p><br><a>Author</a><p>Zachary Law</p><br><a>Creation Date 🗓</a><p>13/01/2022</p><br><a>Views 👁</a><p>52</p><br><p></p><p></p></div>
+  </div>
 </div>
 <!--explore-->
 <div id="footer" class="section">
@@ -799,6 +801,19 @@ transition: transform 250ms;
     normalScrollElements: '.w3-sidebar,.sidebarbtn'
   });
   $(document).ready(function () {
+
+    $.ajax({url:'https://cors-anywhere.herokuapp.com/https://fandommap.com', 
+    success: function(data, textStatus, xhr) {
+        console.log(xhr.status);
+        if (xhr.status=200) window.location.href='https://fandommap.com'
+    },complete: function(xhr, textStatus) {
+        console.log(xhr.status,typeof(xhr.status));
+    } ,
+    error: function(xhr, status, error) {
+      console.log(xhr.status)
+      if (xhr.status==503) console.log('stay 10 11 7')
+}
+})
 
     var verticalwindow = false, mobile = false
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { mobile = true }
