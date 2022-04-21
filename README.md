@@ -7,6 +7,8 @@ Public Interactive Map for Fandom Wikipedia. Fandom Map is a website made for a 
 
 [One Piece (Beta)](http://fandommap.github.io/1)
 
+[Warframe (Beta)](http://fandommap.github.io/10)
+
 
 ## Features
 
